@@ -1,6 +1,6 @@
 # cerquita-api
 
-Backend de [Cerquita](https://github.com/TU_USUARIO/cerquita-web): juegos en español para parejas a distancia, sincronizados en tiempo real.
+Backend de [Cerquita](https://github.com/Melisa775/cerquita-web): juegos en español para parejas a distancia, sincronizados en tiempo real.
 
 FastAPI + WebSockets. Las salas viven en memoria; el servidor es la única fuente de verdad del juego.
 
