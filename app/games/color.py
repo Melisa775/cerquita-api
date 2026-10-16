@@ -13,16 +13,26 @@ la sala se encarga de los tiempos y de transmitir el estado.
 import random
 
 from app.colors import HSB, random_color, score
+from app.games.common import DEFAULT_ROUNDS, parse_rounds
 
 MEMORIZE_SECONDS = 5
 GUESS_SECONDS = 30
-DEFAULT_ROUNDS = 5
 
 
 class ColorGame:
     name = "color"
+    actions = {"color_guess", "next_round"}
 
-    def __init__(self, players: list[str], rounds: int = DEFAULT_ROUNDS, rng: random.Random | None = None):
+    def __init__(
+        self,
+        players: list[str],
+        rounds: int = DEFAULT_ROUNDS,
+        rng: random.Random | None = None,
+        timings: dict | None = None,
+    ):
+        timings = timings or {}
+        self.memorize_seconds = timings.get("memorize", MEMORIZE_SECONDS)
+        self.guess_seconds = timings.get("guess", GUESS_SECONDS)
         self.players = list(players)
         self.total_rounds = rounds
         self.rng = rng or random.Random()
@@ -33,6 +43,42 @@ class ColorGame:
         self.round_scores: dict[str, float] = {}
         self.totals: dict[str, float] = {p: 0.0 for p in self.players}
         self.history: list[dict] = []
+
+    @classmethod
+    def from_options(cls, players: list[str], options: dict, rng: random.Random, timings: dict | None = None):
+        return cls(players, rounds=parse_rounds(options), rng=rng, timings=timings)
+
+    # --- interfaz con la sala -------------------------------------------
+    @property
+    def in_progress(self) -> bool:
+        return self.phase not in ("idle", "finished")
+
+    @property
+    def timer_key(self):
+        return (self.phase, self.round) if self.phase in ("memorize", "guess") else None
+
+    @property
+    def timer_seconds(self) -> float | None:
+        return {"memorize": self.memorize_seconds, "guess": self.guess_seconds}.get(self.phase)
+
+    def start(self) -> None:
+        self.start_round()
+
+    def on_timeout(self) -> None:
+        if self.phase == "memorize":
+            self.begin_guess()
+        elif self.phase == "guess":
+            self.reveal()
+
+    def handle(self, player: str, msg: dict) -> None:
+        kind = msg.get("type")
+        if kind == "color_guess":
+            if self.submit(player, HSB.from_dict(msg.get("color") or {})):
+                self.reveal()
+        elif kind == "next_round":
+            if self.phase != "reveal":
+                raise ValueError("Todavía no hay siguiente ronda")
+            self.start_round()
 
     # --- transiciones -------------------------------------------------
     def start_round(self) -> None:
@@ -101,6 +147,7 @@ class ColorGame:
             "roundScores": self.round_scores if show_guesses else {},
             "totals": self.totals,
             "history": self.history if self.phase == "finished" else [],
-            "memorizeSeconds": MEMORIZE_SECONDS,
-            "guessSeconds": GUESS_SECONDS,
+            "memorizeSeconds": self.memorize_seconds,
+            "guessSeconds": self.guess_seconds,
+            "options": {"rounds": self.total_rounds},
         }

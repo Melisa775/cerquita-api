@@ -4,13 +4,14 @@ import string
 import time
 from typing import Protocol
 
-from app.colors import HSB
-from app.games import color as color_game
 from app.games.color import ColorGame
+from app.games.stop import StopGame
+from app.games.toolate import TooLateGame
 
 MAX_PLAYERS = 2
-CODE_ALPHABET = "".join(c for c in string.ascii_uppercase if c not in "IO")  
-GAMES = {"color"}
+CODE_ALPHABET = "".join(c for c in string.ascii_uppercase if c not in "IO")
+GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame)}
+GAME_ACTIONS = set().union(*(cls.actions for cls in GAMES.values()))
 
 
 class Connection(Protocol):
@@ -22,14 +23,23 @@ class RoomError(Exception):
 
 
 class Room:
-    def __init__(self, code: str, memorize_seconds: float | None = None, guess_seconds: float | None = None):
+    """Sala de dos jugadores.
+
+    Los juegos son clases puras: reciben acciones, cambian su estado y dicen
+    si su fase actual tiene un límite de tiempo (`timer_key` y
+    `timer_seconds`). La sala se encarga de la red, del bloqueo y de los
+    temporizadores, así que agregar un juego no exige tocar este archivo
+    más allá de registrarlo en GAMES.
+    """
+
+    def __init__(self, code: str, timings: dict | None = None):
         self.code = code
+        self.timings = timings or {}  # para acelerar los tiempos en tests
         self.connections: dict[str, Connection] = {}
         self.order: list[str] = []  # orden de llegada; el primero es anfitrión
-        self.game: ColorGame | None = None
-        self.memorize_seconds = memorize_seconds if memorize_seconds is not None else color_game.MEMORIZE_SECONDS
-        self.guess_seconds = guess_seconds if guess_seconds is not None else color_game.GUESS_SECONDS
+        self.game = None
         self._timer: asyncio.Task | None = None
+        self._timer_for: tuple | None = None  # (juego, clave de la fase)
         self._phase_ends_at: float | None = None
         self._lock = asyncio.Lock()
 
@@ -55,7 +65,7 @@ class Room:
         self.connections.pop(name, None)
         # Si no hay juego en curso, libera el lugar. Si lo hay, se conserva
         # para que pueda reconectarse con el mismo nombre.
-        if self.game is None or self.game.phase in ("idle", "finished"):
+        if self.game is None or not self.game.in_progress:
             if name in self.order:
                 self.order.remove(name)
             if self.game:
@@ -71,79 +81,56 @@ class Room:
         kind = msg.get("type")
         async with self._lock:
             if kind == "start_game":
-                await self._start_game(msg)
-            elif kind == "next_round":
-                await self._next_round()
-            elif kind == "color_guess":
-                await self._color_guess(player, msg)
+                self._start_game(msg)
             elif kind == "back_to_lobby":
-                self._cancel_timer()
                 self.game = None
-                self._phase_ends_at = None
-                await self.broadcast()
+            elif kind in GAME_ACTIONS:
+                if not self.game:
+                    raise RoomError("No hay juego en curso")
+                if kind not in self.game.actions:
+                    raise RoomError("Esa acción no es de este juego")
+                try:
+                    self.game.handle(player, msg)
+                except ValueError as exc:
+                    raise RoomError(str(exc)) from exc
             else:
                 raise RoomError("Acción desconocida")
+            self._sync_timer()
+            await self.broadcast()
 
-    async def _start_game(self, msg: dict) -> None:
-        if msg.get("game") not in GAMES:
+    def _start_game(self, msg: dict) -> None:
+        cls = GAMES.get(msg.get("game"))
+        if not cls:
             raise RoomError("Juego no disponible")
-        rounds = int(msg.get("rounds", color_game.DEFAULT_ROUNDS))
-        if not 1 <= rounds <= 10:
-            raise RoomError("Elige entre 1 y 10 rondas")
-        self._cancel_timer()
-        self.game = ColorGame(self.players, rounds=rounds, rng=random.Random())
-        await self._start_round()
-
-    async def _next_round(self) -> None:
-        if not self.game or self.game.phase != "reveal":
-            raise RoomError("Todavía no hay siguiente ronda")
-        await self._start_round()
-
-    async def _start_round(self) -> None:
-        assert self.game
-        self.game.start_round()
-        self._schedule(self.memorize_seconds, self._end_memorize)
-        await self.broadcast()
-
-    async def _end_memorize(self) -> None:
-        async with self._lock:
-            if self.game and self.game.phase == "memorize":
-                self.game.begin_guess()
-                self._schedule(self.guess_seconds, self._end_guess)
-                await self.broadcast()
-
-    async def _end_guess(self) -> None:
-        async with self._lock:
-            if self.game and self.game.phase == "guess":
-                self._reveal()
-                await self.broadcast()
-
-    async def _color_guess(self, player: str, msg: dict) -> None:
-        if not self.game:
-            raise RoomError("No hay juego en curso")
         try:
-            guess = HSB.from_dict(msg.get("color") or {})
-            done = self.game.submit(player, guess)
+            game = cls.from_options(self.players, msg, rng=random.Random(), timings=self.timings)
         except ValueError as exc:
             raise RoomError(str(exc)) from exc
-        if done:
-            self._reveal()
-        await self.broadcast()
-
-    def _reveal(self) -> None:
-        assert self.game
-        self._cancel_timer()
-        self._phase_ends_at = None
-        self.game.reveal()
+        game.start()
+        self.game = game
 
     # --- temporizadores -------------------------------------------------
-    def _schedule(self, seconds: float, callback) -> None:
+    def _sync_timer(self) -> None:
+        """Arranca, reinicia o cancela el reloj según la fase del juego."""
+        game = self.game
+        key = game.timer_key if game else None
+        wanted = (game, key) if key is not None else None
+        if wanted == self._timer_for:
+            return
         self._cancel_timer()
+        if wanted is None:
+            return
+        seconds = game.timer_seconds
+        self._timer_for = wanted
         self._phase_ends_at = time.monotonic() + seconds
 
         async def runner():
             await asyncio.sleep(seconds)
-            await callback()
+            async with self._lock:
+                if self.game is game and game.timer_key == key:
+                    game.on_timeout()
+                    self._sync_timer()
+                    await self.broadcast()
 
         self._timer = asyncio.create_task(runner())
 
@@ -152,6 +139,8 @@ class Room:
         if self._timer and not self._timer.done() and self._timer is not current:
             self._timer.cancel()
         self._timer = None
+        self._timer_for = None
+        self._phase_ends_at = None
 
     def close(self) -> None:
         self._cancel_timer()
