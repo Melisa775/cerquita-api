@@ -260,7 +260,7 @@ class TooLateGame:
             self.start_round()
 
     # --- estado para los clientes ---------------------------------------
-    def snapshot(self) -> dict:
+    def snapshot(self, viewer: str | None = None) -> dict:
         return {
             "name": self.name,
             "phase": self.phase,

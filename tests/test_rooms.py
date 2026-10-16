@@ -173,3 +173,20 @@ async def test_restarting_a_game_restarts_its_timer(room):
     await asyncio.sleep(0.05)
     assert ana.last["game"]["phase"] == "guess"
     room.close()
+
+
+async def test_boggle_sends_each_player_only_their_words():
+    room = Room("DADOS", timings={"play": 5})
+    ana, leo = FakeConn(), FakeConn()
+    await room.join("Ana", ana)
+    await room.join("Leo", leo)
+    await room.handle("Ana", {"type": "start_game", "game": "boggle", "rounds": 1, "size": 4, "minutes": 2})
+    game = room.game
+    word = sorted(game.solutions)[0]
+    await room.handle("Ana", {"type": "boggle_word", "word": word})
+    assert [w["word"] for w in ana.last["game"]["mine"]] == [word]
+    assert leo.last["game"]["mine"] == [] and leo.last["game"]["counts"]["Ana"] == 1
+    await room.handle("Ana", {"type": "boggle_done"})
+    await room.handle("Leo", {"type": "boggle_done"})
+    assert leo.last["game"]["phase"] == "review"
+    assert leo.last["phaseEndsInMs"] is None

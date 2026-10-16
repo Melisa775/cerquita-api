@@ -132,7 +132,7 @@ class ColorGame:
             self.players.remove(player)
 
     # --- estado para los clientes ---------------------------------------
-    def snapshot(self) -> dict:
+    def snapshot(self, viewer: str | None = None) -> dict:
         show_target = self.phase in ("memorize", "reveal", "finished")
         show_guesses = self.phase in ("reveal", "finished")
         return {

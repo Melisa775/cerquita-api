@@ -4,13 +4,14 @@ import string
 import time
 from typing import Protocol
 
+from app.games.boggle import BoggleGame
 from app.games.color import ColorGame
 from app.games.stop import StopGame
 from app.games.toolate import TooLateGame
 
 MAX_PLAYERS = 2
 CODE_ALPHABET = "".join(c for c in string.ascii_uppercase if c not in "IO")
-GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame)}
+GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame)}
 GAME_ACTIONS = set().union(*(cls.actions for cls in GAMES.values()))
 
 
@@ -146,7 +147,8 @@ class Room:
         self._cancel_timer()
 
     # --- estado ---------------------------------------------------------
-    def snapshot(self) -> dict:
+    def snapshot(self, viewer: str | None = None) -> dict:
+        """Foto de la sala. Algunos juegos le muestran a cada jugador solo lo suyo."""
         ends_in = None
         if self._phase_ends_at is not None:
             ends_in = max(0, int((self._phase_ends_at - time.monotonic()) * 1000))
@@ -155,16 +157,15 @@ class Room:
             "code": self.code,
             "players": [{"name": p, "online": p in self.connections} for p in self.order],
             "host": self.order[0] if self.order else None,
-            "game": self.game.snapshot() if self.game else None,
+            "game": self.game.snapshot(viewer) if self.game else None,
             "phaseEndsInMs": ends_in,
         }
 
     async def broadcast(self) -> None:
-        state = self.snapshot()
         dead = []
         for name, conn in list(self.connections.items()):
             try:
-                await conn.send_json(state)
+                await conn.send_json(self.snapshot(name))
             except Exception:
                 dead.append(name)
         for name in dead:

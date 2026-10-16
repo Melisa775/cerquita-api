@@ -209,7 +209,7 @@ class StopGame:
         return {p: sum(cell["points"] for cell in cells.values()) for p, cells in results.items()}
 
     # --- estado para los clientes ---------------------------------------
-    def snapshot(self) -> dict:
+    def snapshot(self, viewer: str | None = None) -> dict:
         reviewing = self.phase == "review"
         results = self.results() if reviewing else None
         return {
