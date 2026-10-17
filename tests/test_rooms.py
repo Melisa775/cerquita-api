@@ -100,7 +100,7 @@ async def test_stop_round_flow_over_the_room():
     ana, leo = FakeConn(), FakeConn()
     await room.join("Ana", ana)
     await room.join("Leo", leo)
-    await room.handle("Ana", {"type": "start_game", "game": "stop", "rounds": 1})
+    await room.handle("Ana", {"type": "start_game", "game": "stop", "rounds": 1, "spelling": False})
     game = ana.last["game"]
     assert game["phase"] == "writing" and game["letter"]
     assert ana.last["phaseEndsInMs"] > 4000

@@ -1,0 +1,6 @@
+ciudades.txt.gz se genera con scripts/build_ciudades.py a partir de los datos de
+GeoNames (https://www.geonames.org/), distribuidos por el paquete geonamescache
+(https://github.com/yaph/geonamescache, licencia MIT).
+
+Los datos de GeoNames están bajo la licencia Creative Commons Attribution 4.0:
+https://creativecommons.org/licenses/by/4.0/

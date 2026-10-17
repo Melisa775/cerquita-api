@@ -70,3 +70,42 @@ def test_totals_accumulate_across_rounds():
         g.reveal()
     assert g.totals == {"Ana": 20, "Leo": 20}
     assert g.phase == "finished"
+
+
+def test_levels_change_time_colors_and_scoring():
+    normal = ColorGame.from_options(["Ana"], {"level": "normal"}, random.Random(1))
+    hard = ColorGame.from_options(["Ana"], {"level": "dificil"}, random.Random(1))
+    expert = ColorGame.from_options(["Ana"], {"level": "experto"}, random.Random(1))
+    assert normal.memorize_seconds > hard.memorize_seconds > expert.memorize_seconds
+    assert normal.guess_seconds > hard.guess_seconds > expert.guess_seconds
+    assert expert.snapshot()["hints"] is False and normal.snapshot()["hints"] is True
+    with pytest.raises(ValueError):
+        ColorGame.from_options(["Ana"], {"level": "imposible"}, random.Random(1))
+
+    # El mismo error vale menos en los niveles difíciles
+    results = []
+    for g in (normal, hard, expert):
+        g.start()
+        g.target = HSB(200, 60, 70)
+        g.on_timeout()
+        if g.phase == "distract":
+            g.on_timeout()
+        g.submit("Ana", HSB(215, 55, 75))
+        g.reveal()
+        results.append(g.round_scores["Ana"])
+    assert results[0] > results[1] > results[2] > 0
+
+
+def test_expert_shows_a_distractor_before_guessing():
+    g = ColorGame(["Ana", "Leo"], rounds=1, rng=random.Random(3), level="experto")
+    g.start()
+    assert g.timer_key == ("memorize", 1)
+    g.on_timeout()
+    snap = g.snapshot()
+    assert snap["phase"] == "distract"
+    assert snap["target"] is None and snap["distractor"] is not None
+    hue_gap = abs(g.distractor.h - g.target.h) % 360
+    assert 90 <= min(hue_gap, 360 - hue_gap)  # tono bien distinto
+    assert g.timer_seconds == 1.5
+    g.on_timeout()
+    assert g.phase == "guess" and g.snapshot()["distractor"] is None

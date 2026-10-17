@@ -61,16 +61,22 @@ def delta_e(a: HSB, b: HSB) -> float:
     return math.dist(la, lb)
 
 
-def score(target: HSB, guess: HSB) -> float:
+def score(target: HSB, guess: HSB, tolerance: float = 45) -> float:
     """Puntaje de 0 a 10. Idéntico = 10; muy lejos = 0.
 
     La curva castiga suave los errores pequeños y fuerte los grandes,
-    para que acercarse "bastante" se sienta recompensado.
+    para que acercarse "bastante" se sienta recompensado. Con menos
+    tolerancia, el mismo error vale menos puntos (niveles difíciles).
     """
     d = delta_e(target, guess)
-    return round(10 * math.exp(-((d / 45) ** 1.6)), 2)
+    return round(10 * math.exp(-((d / tolerance) ** 1.6)), 2)
 
 
-def random_color(rng: random.Random) -> HSB:
-    # Evita grises y casi negros: son aburridos y casi imposibles de recordar.
-    return HSB(rng.uniform(0, 360), rng.uniform(35, 100), rng.uniform(40, 100))
+def random_color(
+    rng: random.Random,
+    saturation: tuple[float, float] = (35, 100),
+    brightness: tuple[float, float] = (40, 100),
+) -> HSB:
+    # Por defecto evita grises y casi negros: son casi imposibles de recordar.
+    # Los niveles difíciles abren el rango a colores apagados y oscuros.
+    return HSB(rng.uniform(0, 360), rng.uniform(*saturation), rng.uniform(*brightness))

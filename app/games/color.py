@@ -2,12 +2,17 @@
 
 Flujo de cada ronda:
   memorize -> se muestra el color unos segundos
+  distract -> (solo en Experto) aparece otro color para confundir
   guess    -> cada jugador recrea el color de memoria
   reveal   -> se muestran el color real, los intentos y los puntajes
 Tras la última ronda la fase es "finished".
 
 La clase es lógica pura (sin red ni temporizadores) para poder probarla;
 la sala se encarga de los tiempos y de transmitir el estado.
+
+Niveles: a más dificultad, menos tiempo para ver y para responder, colores
+más apagados y oscuros (más difíciles de recordar), un puntaje más exigente
+y, en Experto, deslizadores sin pistas de color y un color distractor.
 """
 
 import random
@@ -15,8 +20,23 @@ import random
 from app.colors import HSB, random_color, score
 from app.games.common import DEFAULT_ROUNDS, parse_rounds
 
-MEMORIZE_SECONDS = 5
-GUESS_SECONDS = 30
+LEVELS = {
+    "normal": {
+        "label": "Normal", "memorize": 5, "guess": 30, "distract": 0,
+        "saturation": (35, 100), "brightness": (40, 100), "tolerance": 45, "hints": True,
+    },
+    "dificil": {
+        "label": "Difícil", "memorize": 3, "guess": 20, "distract": 0,
+        "saturation": (20, 100), "brightness": (30, 95), "tolerance": 35, "hints": True,
+    },
+    "experto": {
+        "label": "Experto", "memorize": 2, "guess": 15, "distract": 1.5,
+        "saturation": (10, 90), "brightness": (25, 90), "tolerance": 28, "hints": False,
+    },
+}
+DEFAULT_LEVEL = "normal"
+MEMORIZE_SECONDS = LEVELS[DEFAULT_LEVEL]["memorize"]
+GUESS_SECONDS = LEVELS[DEFAULT_LEVEL]["guess"]
 
 
 class ColorGame:
@@ -29,10 +49,15 @@ class ColorGame:
         rounds: int = DEFAULT_ROUNDS,
         rng: random.Random | None = None,
         timings: dict | None = None,
+        level: str = DEFAULT_LEVEL,
     ):
         timings = timings or {}
-        self.memorize_seconds = timings.get("memorize", MEMORIZE_SECONDS)
-        self.guess_seconds = timings.get("guess", GUESS_SECONDS)
+        self.level = level
+        self.config = LEVELS[level]
+        self.memorize_seconds = timings.get("memorize", self.config["memorize"])
+        self.guess_seconds = timings.get("guess", self.config["guess"])
+        self.distract_seconds = timings.get("distract", self.config["distract"])
+        self.distractor: HSB | None = None
         self.players = list(players)
         self.total_rounds = rounds
         self.rng = rng or random.Random()
@@ -46,7 +71,10 @@ class ColorGame:
 
     @classmethod
     def from_options(cls, players: list[str], options: dict, rng: random.Random, timings: dict | None = None):
-        return cls(players, rounds=parse_rounds(options), rng=rng, timings=timings)
+        level = options.get("level", DEFAULT_LEVEL)
+        if level not in LEVELS:
+            raise ValueError("Nivel no válido")
+        return cls(players, rounds=parse_rounds(options), rng=rng, timings=timings, level=level)
 
     # --- interfaz con la sala -------------------------------------------
     @property
@@ -55,17 +83,23 @@ class ColorGame:
 
     @property
     def timer_key(self):
-        return (self.phase, self.round) if self.phase in ("memorize", "guess") else None
+        return (self.phase, self.round) if self.phase in ("memorize", "distract", "guess") else None
 
     @property
     def timer_seconds(self) -> float | None:
-        return {"memorize": self.memorize_seconds, "guess": self.guess_seconds}.get(self.phase)
+        return {
+            "memorize": self.memorize_seconds,
+            "distract": self.distract_seconds,
+            "guess": self.guess_seconds,
+        }.get(self.phase)
 
     def start(self) -> None:
         self.start_round()
 
     def on_timeout(self) -> None:
-        if self.phase == "memorize":
+        if self.phase == "memorize" and self.distract_seconds:
+            self.distract()
+        elif self.phase in ("memorize", "distract"):
             self.begin_guess()
         elif self.phase == "guess":
             self.reveal()
@@ -88,12 +122,23 @@ class ColorGame:
             raise ValueError("El juego ya terminó")
         self.round += 1
         self.phase = "memorize"
-        self.target = random_color(self.rng)
+        self.target = random_color(self.rng, self.config["saturation"], self.config["brightness"])
+        self.distractor = None
         self.guesses = {}
         self.round_scores = {}
 
-    def begin_guess(self) -> None:
+    def distract(self) -> None:
+        """Muestra otro color, con un tono bien distinto, para confundir."""
         if self.phase != "memorize":
+            raise ValueError("No se está memorizando")
+        assert self.target is not None
+        hue = (self.target.h + self.rng.uniform(90, 270)) % 360
+        other = random_color(self.rng, self.config["saturation"], self.config["brightness"])
+        self.distractor = HSB(hue, other.s, other.b)
+        self.phase = "distract"
+
+    def begin_guess(self) -> None:
+        if self.phase not in ("memorize", "distract"):
             raise ValueError("No se está memorizando")
         self.phase = "guess"
 
@@ -116,7 +161,7 @@ class ColorGame:
             raise ValueError("No hay nada que revelar")
         assert self.target is not None
         for p in self.players:
-            pts = score(self.target, self.guesses[p]) if p in self.guesses else 0.0
+            pts = score(self.target, self.guesses[p], self.config["tolerance"]) if p in self.guesses else 0.0
             self.round_scores[p] = pts
             self.totals[p] = round(self.totals[p] + pts, 2)
         self.history.append({
@@ -141,6 +186,7 @@ class ColorGame:
             "round": self.round,
             "totalRounds": self.total_rounds,
             "target": self.target.to_dict() if (show_target and self.target) else None,
+            "distractor": self.distractor.to_dict() if (self.phase == "distract" and self.distractor) else None,
             # Durante "guess" solo se revela QUIÉN ya respondió, no su color.
             "submitted": sorted(self.guesses),
             "guesses": {p: g.to_dict() for p, g in self.guesses.items()} if show_guesses else {},
@@ -149,5 +195,8 @@ class ColorGame:
             "history": self.history if self.phase == "finished" else [],
             "memorizeSeconds": self.memorize_seconds,
             "guessSeconds": self.guess_seconds,
-            "options": {"rounds": self.total_rounds},
+            "level": self.level,
+            "levelLabel": self.config["label"],
+            "hints": self.config["hints"],
+            "options": {"rounds": self.total_rounds, "level": self.level},
         }

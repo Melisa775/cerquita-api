@@ -9,13 +9,17 @@ Flujo de cada ronda:
 Tras la última ronda la fase es "finished".
 
 Puntaje por casilla: 100 si la respuesta es válida y única, 50 si los dos
-escribieron lo mismo, 0 si está vacía o no es válida. La hoja guarda una
+escribieron lo mismo, 0 si está vacía o no es válida. Una respuesta es
+válida si empieza por la letra y, salvo nombre y apellido, está bien
+escrita (ver app/spelling.py); los jugadores pueden corregir al revisar. La hoja guarda una
 fila por letra con su total, como en papel.
 """
 
 import random
 
 from app.games.common import DEFAULT_ROUNDS, normalize, parse_rounds
+from app.spelling import CHECKED as SPELL_CHECKED
+from app.spelling import spelled_ok, suggestion
 
 CATEGORIES = [
     ("nombre", "Nombre"),
@@ -46,8 +50,10 @@ class StopGame:
         rounds: int = DEFAULT_ROUNDS,
         rng: random.Random | None = None,
         timings: dict | None = None,
+        spelling: bool = True,
     ):
         timings = timings or {}
+        self.spelling = spelling
         self.write_seconds = timings.get("write", WRITE_SECONDS)
         self.grace_seconds = timings.get("grace", GRACE_SECONDS)
         self.players = list(players)
@@ -65,7 +71,13 @@ class StopGame:
 
     @classmethod
     def from_options(cls, players: list[str], options: dict, rng: random.Random, timings: dict | None = None):
-        return cls(players, rounds=parse_rounds(options), rng=rng, timings=timings)
+        return cls(
+            players,
+            rounds=parse_rounds(options),
+            rng=rng,
+            timings=timings,
+            spelling=bool(options.get("spelling", True)),
+        )
 
     # --- interfaz con la sala -------------------------------------------
     @property
@@ -172,9 +184,20 @@ class StopGame:
             self.start_round()
 
     # --- puntaje --------------------------------------------------------
+    def _issue(self, player: str, category: str) -> str | None:
+        """Por qué el sistema no acepta la respuesta: empty, letter o spelling."""
+        raw = self.answers.get(player, {}).get(category, "")
+        answer = normalize(raw)
+        if not answer:
+            return "empty"
+        if not answer.startswith(normalize(self.letter or "")):
+            return "letter"
+        if self.spelling and not spelled_ok(category, raw):
+            return "spelling"
+        return None
+
     def _auto_valid(self, player: str, category: str) -> bool:
-        answer = normalize(self.answers.get(player, {}).get(category, ""))
-        return bool(answer) and answer.startswith(normalize(self.letter or ""))
+        return self._issue(player, category) is None
 
     def _valid(self, player: str, category: str) -> bool:
         if not self.answers.get(player, {}).get(category):
@@ -196,11 +219,14 @@ class StopGame:
                         for q in self.players
                     )
                     points = SHARED_POINTS if shared else UNIQUE_POINTS
+                issue = self._issue(p, cat)
                 out[p][cat] = {
                     "answer": answer,
                     "valid": valid,
                     "overridden": (p, cat) in self.overrides,
                     "points": points,
+                    "issue": issue,
+                    "suggestion": suggestion(cat, answer) if issue == "spelling" else None,
                 }
         return out
 
@@ -229,5 +255,6 @@ class StopGame:
             "writeSeconds": self.write_seconds,
             "graceSeconds": self.grace_seconds,
             "points": {"unique": UNIQUE_POINTS, "shared": SHARED_POINTS},
-            "options": {"rounds": self.total_rounds},
+            "spellChecked": sorted(SPELL_CHECKED) if self.spelling else [],
+            "options": {"rounds": self.total_rounds, "spelling": self.spelling},
         }

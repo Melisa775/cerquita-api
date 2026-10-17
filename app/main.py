@@ -1,14 +1,25 @@
 import asyncio
 import os
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.dictionary import spanish
 from app.rooms import RoomError, RoomManager
+from app.spelling import cities
 
 EMPTY_ROOM_TTL_SECONDS = 120  # margen para recargar la página sin perder la sala
 
-app = FastAPI(title="Cerquita API")
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    # Carga el diccionario y las ciudades en segundo plano para que la
+    # primera partida no tenga que esperarlos.
+    asyncio.get_running_loop().run_in_executor(None, lambda: (spanish(), cities()))
+    yield
+
+
+app = FastAPI(title="Cerquita API", lifespan=lifespan)
 manager = RoomManager()
 
 app.add_middleware(

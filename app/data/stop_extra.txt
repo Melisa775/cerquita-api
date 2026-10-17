@@ -1,0 +1,73 @@
+# Palabras que el diccionario general no trae pero son respuestas válidas en el Stop.
+# Una por línea; se comparan sin tildes ni mayúsculas. Agrega aquí las que falten.
+
+# Frutas
+uchuva
+feijoa
+borojó
+kiwi
+gulupa
+cholupa
+copoazú
+arazá
+noni
+pitaya
+blueberry
+cranberry
+
+# Colores
+vinotinto
+beige
+turquí
+magenta
+fucsia
+cyan
+lavanda
+nude
+
+# Animales
+chigüiro
+koala
+yak
+bocachico
+guatín
+gurre
+ñeque
+pitbull
+poodle
+husky
+beagle
+chihuahua
+
+# Cosas
+aguapanela
+bikini
+bluyín
+brasier
+buñuelo
+chocorramo
+colbón
+internet
+jean
+jeans
+jogger
+laptop
+mouse
+pandebono
+pandeyuca
+papitas
+sánduche
+sándwich
+shorts
+sushi
+tablet
+wifi
+kumis
+smartphone
+selfie
+blog
+router
+email
+chat
+jacuzzi
+jersey

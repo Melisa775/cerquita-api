@@ -6,8 +6,8 @@ from app.games.common import normalize
 from app.games.stop import CATEGORY_KEYS, LETTERS, StopGame
 
 
-def make_game(rounds=2, letter="M"):
-    g = StopGame(["Ana", "Leo"], rounds=rounds, rng=random.Random(1))
+def make_game(rounds=2, letter="M", spelling=False):
+    g = StopGame(["Ana", "Leo"], rounds=rounds, rng=random.Random(1), spelling=spelling)
     g.start()
     g.letter = letter  # fija la letra para que los tests sean legibles
     return g
@@ -70,7 +70,8 @@ def test_scoring_unique_shared_empty_and_wrong_letter():
     assert r["Leo"]["nombre"]["points"] == 100
     assert r["Ana"]["apellido"]["points"] == 50  # Martínez == martinez
     assert r["Leo"]["fruta"]["points"] == 50
-    assert r["Leo"]["ciudad"] == {"answer": "Bogotá", "valid": False, "overridden": False, "points": 0}
+    assert r["Leo"]["ciudad"]["valid"] is False and r["Leo"]["ciudad"]["points"] == 0
+    assert r["Leo"]["ciudad"]["issue"] == "letter"
     assert r["Ana"]["ciudad"]["points"] == 100  # la de Leo no cuenta
     assert r["Leo"]["color"]["points"] == 0  # vacía
     assert g.round_totals(r) == {"Ana": 600, "Leo": 200}
@@ -131,3 +132,36 @@ def test_answers_are_trimmed_and_unknown_boxes_dropped():
     g.save("Ana", {"nombre": "  Mía  ", "pais": "México", "cosa": 5, "fruta": "x" * 100})
     assert g.answers["Ana"] == {"nombre": "Mía", "fruta": "x" * 40}
     assert set(CATEGORY_KEYS) >= set(g.answers["Ana"])
+
+
+def test_spelling_is_checked_except_for_names():
+    g = make_game(letter="A", spelling=True)
+    g.call_stop("Ana", {
+        "nombre": "Axzqwe", "apellido": "Arbelaez", "ciudad": "Armenia", "fruta": "Aguacate",
+        "color": "Amarilo", "animal": "Ardilla", "cosa": "Arbol",
+    })
+    g.save("Leo", {"ciudad": "Armeniaa", "animal": "Avestrus", "fruta": "Arandano verde"})
+    g.on_timeout()
+    r = g.results()
+    assert r["Ana"]["nombre"]["valid"]  # los nombres no se revisan
+    assert r["Ana"]["ciudad"]["valid"] and r["Ana"]["animal"]["valid"]
+    assert r["Ana"]["color"]["issue"] == "spelling"
+    assert r["Ana"]["color"]["suggestion"] == "amarillo"
+    assert r["Leo"]["ciudad"]["issue"] == "spelling"
+    assert r["Leo"]["ciudad"]["suggestion"] == "armenia"
+    assert r["Leo"]["animal"]["suggestion"] == "avestruz"
+    assert r["Leo"]["fruta"]["valid"]  # varias palabras, todas bien escritas
+
+    g.toggle("Ana", "color")  # la dan por buena igual
+    assert g.results()["Ana"]["color"]["points"] == 100
+
+
+def test_spelling_can_be_turned_off():
+    g = StopGame.from_options(["Ana"], {"spelling": False}, random.Random(1))
+    g.start()
+    g.letter = "A"
+    g.save("Ana", {"color": "Amarilo"})
+    g.on_timeout()
+    g.on_timeout()
+    assert g.results()["Ana"]["color"]["valid"]
+    assert g.snapshot()["spellChecked"] == []
