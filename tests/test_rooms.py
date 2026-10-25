@@ -217,3 +217,17 @@ async def test_wordle_duel_shows_only_colors_of_the_other_board():
     assert leo.last["game"]["boards"]["Ana"][0]["word"] is None
     with pytest.raises(RoomError, match="diccionario"):
         await room.handle("Leo", {"type": "wordle_guess", "word": "qxzpt"})
+
+
+async def test_wordsearch_marks_words_for_both_players():
+    room = Room("SOPAS")
+    ana, leo = FakeConn(), FakeConn()
+    await room.join("Ana", ana)
+    await room.join("Leo", leo)
+    await room.handle("Ana", {"type": "start_game", "game": "wordsearch", "mode": "race", "level": "facil"})
+    item = room.game.placed[0]
+    await room.handle("Leo", {"type": "ws_select", "start": list(item["cells"][0]), "end": list(item["cells"][1])})
+    assert "Leo" in ana.last["game"]["selecting"]
+    await room.handle("Leo", {"type": "ws_mark", "start": list(item["cells"][0]), "end": list(item["cells"][-1])})
+    assert ana.last["game"]["found"][item["word"]]["player"] == "Leo"
+    assert ana.last["game"]["selecting"] == {}

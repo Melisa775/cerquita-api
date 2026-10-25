@@ -10,10 +10,11 @@ from app.games.hangman import HangmanGame
 from app.games.stop import StopGame
 from app.games.toolate import TooLateGame
 from app.games.wordle import WordleGame
+from app.games.wordsearch import WordSearchGame
 
 MAX_PLAYERS = 2
 CODE_ALPHABET = "".join(c for c in string.ascii_uppercase if c not in "IO")
-GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame)}
+GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame)}
 GAME_ACTIONS = set().union(*(cls.actions for cls in GAMES.values()))
 
 
