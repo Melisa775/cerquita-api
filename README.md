@@ -56,6 +56,7 @@ Cliente → servidor:
 { "type": "start_game", "game": "wordsearch", "mode": "race", "level": "normal", "rounds": 1 }  // race | team; facil | normal | dificil
 { "type": "start_game", "game": "guesswho", "boardSize": 24, "rounds": 3 }   // 16 | 24
 { "type": "start_game", "game": "pinturillo", "drawSeconds": 90, "rounds": 2 }   // 60 | 90 | 120
+{ "type": "start_game", "game": "charades", "level": "mezcla", "seconds": 90, "rounds": 2, "showCategory": true }  // facil | dificil | mezcla
 { "type": "next_round" }
 { "type": "back_to_lobby" }
 
@@ -100,6 +101,9 @@ Cliente → servidor:
 { "type": "pz_points", "id": "a1", "points": [[124, 338], [130, 335]] }
 { "type": "pz_undo" }  { "type": "pz_clear" }
 { "type": "pz_guess", "text": "búho" }
+
+// Caras y gestos (solo quien actúa)
+{ "type": "cg_start" }  { "type": "cg_hit" }  { "type": "cg_pass" }
 
 // Enredo de letras
 { "type": "boggle_word", "word": "casa" }
@@ -152,6 +156,7 @@ app/
   games/wordsearch.py Sopa de letras: generación por niveles, carrera o juntos
   games/guesswho.py Adivina quién: personajes, preguntas automáticas y escritas
   games/pinturillo.py Pinturillo: turnos, pistas, trazos y puntaje por rapidez
+  games/charades.py Caras y gestos: mazo por categoría y dificultad (data/caras_gestos.txt)
   dictionary.py    diccionario de español (data/palabras.txt.gz, licencia MIT)
   spelling.py      ortografía del Stop: ciudades, diccionario, extras y sugerencias
   data/            palabras, ciudades (GeoNames, CC BY 4.0) y extras del Stop

@@ -1,0 +1,192 @@
+# Mazo de Caras y gestos. Cada sección es "## Categoría (fácil)" o "## Categoría (difícil)"
+# y debajo va una carta por línea. Agrega o cambia las que quieras.
+
+## Animales (fácil)
+gato
+perro
+mono
+elefante
+canguro
+pingüino
+serpiente
+gallina
+conejo
+pez
+mariposa
+león
+pulpo
+rana
+caballo
+
+## Animales (difícil)
+camaleón
+pavo real
+perezoso
+murciélago
+avestruz
+flamenco
+cangrejo
+mapache
+pez globo
+cocodrilo
+jirafa bebé
+oso hormiguero
+
+## Acciones (fácil)
+bailar
+nadar
+dormir
+cocinar
+llorar
+reír
+manejar
+cepillarse los dientes
+bostezar
+estornudar
+aplaudir
+saltar la cuerda
+montar en bicicleta
+tomar una foto
+pescar
+
+## Acciones (difícil)
+hacer malabares
+pisar un lego
+buscar las llaves
+perder el bus
+tomarse una selfie
+ponerse lentes de contacto
+inflar un globo
+pelar una cebolla
+bañar a un perro
+empacar una maleta
+cambiar un pañal
+caminar en la luna
+
+## Profesiones (fácil)
+doctora
+bombero
+policía
+chef
+profesora
+piloto
+pintor
+cantante
+futbolista
+peluquero
+mesero
+fotógrafa
+
+## Profesiones (difícil)
+astronauta
+mimo
+domador de leones
+salvavidas
+arqueóloga
+director de orquesta
+DJ
+mago
+cirujana
+jardinero
+youtuber
+detective
+
+## Películas (fácil)
+Titanic
+Shrek
+El Rey León
+Frozen
+Spider-Man
+Toy Story
+Harry Potter
+Buscando a Nemo
+Batman
+Encanto
+Coco
+Superman
+
+## Películas (difícil)
+Jurassic Park
+Mi pobre angelito
+Volver al futuro
+La La Land
+Avatar
+El Mago de Oz
+Up
+Intensamente
+Rápidos y furiosos
+Piratas del Caribe
+King Kong
+El Exorcista
+
+## Deportes (fácil)
+fútbol
+tenis
+natación
+boxeo
+baloncesto
+ciclismo
+karate
+golf
+béisbol
+voleibol
+
+## Deportes (difícil)
+patinaje artístico
+esgrima
+surf
+lanzamiento de jabalina
+tejo
+escalada
+yoga
+bolos
+remo
+gimnasia
+
+## Cosas de Colombia (fácil)
+arepa
+café
+cumbia
+sombrero vueltiao
+salsa
+hamaca
+chiva
+aguacate
+bandeja paisa
+fútbol
+
+## Cosas de Colombia (difícil)
+tejo
+silleteros
+Carnaval de Barranquilla
+trancón
+hacer fila en el banco
+tomar tinto
+Feria de las Flores
+pedir la ñapa
+el Pibe Valderrama
+la Selección Colombia
+
+## Para ustedes (fácil)
+beso
+abrazo
+videollamada
+mandar un mensaje
+cocinar juntos
+ver una película
+caminar de la mano
+tomarse una foto
+dar un regalo
+extrañar
+
+## Para ustedes (difícil)
+pedir matrimonio
+primera cita
+reencuentro en el aeropuerto
+quedarse dormido en la llamada
+serenata
+preparar una sorpresa
+celos
+cuenta regresiva
+mandar un audio largo
+bailar lento
