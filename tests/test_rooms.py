@@ -231,3 +231,23 @@ async def test_wordsearch_marks_words_for_both_players():
     await room.handle("Leo", {"type": "ws_mark", "start": list(item["cells"][0]), "end": list(item["cells"][-1])})
     assert ana.last["game"]["found"][item["word"]]["player"] == "Leo"
     assert ana.last["game"]["selecting"] == {}
+
+
+async def test_pinturillo_relays_strokes_without_full_snapshots():
+    room = Room("PINTA")
+    ana, leo = FakeConn(), FakeConn()
+    await room.join("Ana", ana)
+    await room.join("Leo", leo)
+    await room.handle("Ana", {"type": "start_game", "game": "pinturillo", "rounds": 1})
+    await room.handle("Ana", {"type": "pz_choose", "index": 0})
+    sent_to_ana = len(ana.messages)
+    await room.handle("Ana", {"type": "pz_stroke", "id": "a", "color": "#22252E", "size": 6, "points": [[1, 2]]})
+    assert leo.last == {"type": "game_event", "event": {"kind": "stroke", "stroke": room.game.strokes[0]}}
+    assert len(ana.messages) == sent_to_ana  # a quien dibuja no se le reenvía nada
+    word = room.game.word
+    await room.handle("Leo", {"type": "pz_guess", "text": word[:-1] + ("x" if word[-1] != "x" else "y")})
+    if len(word.replace(" ", "")) >= 4:
+        assert leo.last["type"] == "error" and "Casi" in leo.last["message"]
+    await room.handle("Leo", {"type": "pz_guess", "text": word})
+    assert ana.last["game"]["phase"] == "turn_over"
+    room.close()

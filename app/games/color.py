@@ -1,20 +1,3 @@
-"""Juego "Color de memoria".
-
-Flujo de cada ronda:
-  memorize -> se muestra el color unos segundos
-  distract -> (solo en Experto) aparece otro color para confundir
-  guess    -> cada jugador recrea el color de memoria
-  reveal   -> se muestran el color real, los intentos y los puntajes
-Tras la última ronda la fase es "finished".
-
-La clase es lógica pura (sin red ni temporizadores) para poder probarla;
-la sala se encarga de los tiempos y de transmitir el estado.
-
-Niveles: a más dificultad, menos tiempo para ver y para responder, colores
-más apagados y oscuros (más difíciles de recordar), un puntaje más exigente
-y, en Experto, deslizadores sin pistas de color y un color distractor.
-"""
-
 import random
 
 from app.colors import HSB, random_color, score
@@ -128,7 +111,6 @@ class ColorGame:
         self.round_scores = {}
 
     def distract(self) -> None:
-        """Muestra otro color, con un tono bien distinto, para confundir."""
         if self.phase != "memorize":
             raise ValueError("No se está memorizando")
         assert self.target is not None
@@ -143,7 +125,6 @@ class ColorGame:
         self.phase = "guess"
 
     def submit(self, player: str, color: HSB) -> bool:
-        """Registra un intento. Devuelve True si ya respondieron todos."""
         if self.phase != "guess":
             raise ValueError("No es momento de adivinar")
         if player not in self.players:

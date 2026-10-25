@@ -1,18 +1,3 @@
-"""Adivina quién.
-
-Cada uno tiene un personaje secreto del mismo tablero. Por turnos, uno hace
-una pregunta de sí o no:
-  - de la lista (¿tiene gafas?, ¿es pelirrojo?...): la app responde sola,
-    así nunca hay respuestas equivocadas;
-  - o escrita a mano ("¿se parece a mí?"): la responde la pareja.
-Con las respuestas, cada uno va bajando en su tablero los personajes que
-descarta. Cuando alguien cree saberlo, arriesga: si acierta gana la ronda,
-si falla la pierde.
-
-Los personajes son originales de Cerquita y el frontend los dibuja a partir
-de sus rasgos.
-"""
-
 import random
 
 from app.games.common import parse_rounds
@@ -197,7 +182,7 @@ class GuessWhoGame:
         self.phase = "playing"
 
     def flip(self, player: str, cid) -> None:
-        """Bajar o volver a subir un personaje en el tablero propio."""
+        #Bajar o volver a subir un personaje en el tablero propio
         if self.phase != "playing" or player not in self.players:
             return
         if cid not in self.board:
@@ -206,7 +191,7 @@ class GuessWhoGame:
         mine.symmetric_difference_update({cid})
 
     def ask(self, player: str, key) -> None:
-        """Pregunta de la lista: la responde la app con el personaje del otro."""
+        #Pregunta de la lista: la responde la app con el personaje del otro.
         self._require_turn(player)
         if key not in QUESTIONS:
             raise ValueError("Pregunta no válida")
@@ -216,7 +201,7 @@ class GuessWhoGame:
         self._pass_turn()
 
     def ask_free(self, player: str, raw) -> None:
-        """Pregunta escrita: queda esperando a que la pareja responda."""
+        #Pregunta escrita: queda esperando a que la pareja responda.
         self._require_turn(player)
         text = " ".join(str(raw or "").split())[:MAX_QUESTION]
         if len(text) < 3:
@@ -237,7 +222,7 @@ class GuessWhoGame:
         self._pass_turn()
 
     def guess(self, player: str, cid) -> None:
-        """Arriesgar: si acierta gana la ronda; si falla, la gana el otro."""
+        #Arriesgar: si acierta gana la ronda; si falla, la gana el otro.
         self._require_turn(player)
         if cid not in self.board:
             raise ValueError("Ese personaje no está en el tablero")

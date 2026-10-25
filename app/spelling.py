@@ -1,16 +1,3 @@
-"""Revisión de ortografía para el Stop.
-
-Ciudad se compara con una lista de ciudades (GeoNames). Fruta, color, animal
-y cosa se revisan palabra por palabra contra el diccionario general más una
-lista de palabras extra (frutas colombianas, préstamos del inglés, etc.).
-Nombre y apellido no se revisan.
-
-Si algo no pasa, se sugiere la palabra más parecida. Para eso se comparan
-"claves fonéticas": en español "girafa" y "jirafa", o "guayava" y "guayaba",
-suenan igual, así que la sugerencia correcta es la que suena igual aunque
-otra palabra se escriba más parecido.
-"""
-
 import gzip
 import re
 from bisect import bisect_left

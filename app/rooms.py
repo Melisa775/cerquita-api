@@ -8,6 +8,7 @@ from app.games.boggle import BoggleGame
 from app.games.color import ColorGame
 from app.games.guesswho import GuessWhoGame
 from app.games.hangman import HangmanGame
+from app.games.pinturillo import PinturilloGame
 from app.games.stop import StopGame
 from app.games.toolate import TooLateGame
 from app.games.wordle import WordleGame
@@ -15,7 +16,7 @@ from app.games.wordsearch import WordSearchGame
 
 MAX_PLAYERS = 2
 CODE_ALPHABET = "".join(c for c in string.ascii_uppercase if c not in "IO")
-GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame, GuessWhoGame)}
+GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame, GuessWhoGame, PinturilloGame)}
 GAME_ACTIONS = set().union(*(cls.actions for cls in GAMES.values()))
 
 
@@ -84,6 +85,8 @@ class Room:
     # --- acciones -------------------------------------------------------
     async def handle(self, player: str, msg: dict) -> None:
         kind = msg.get("type")
+        relay = None
+        notice = None
         async with self._lock:
             if kind == "start_game":
                 self._start_game(msg)
@@ -95,13 +98,24 @@ class Room:
                 if kind not in self.game.actions:
                     raise RoomError("Esa acción no es de este juego")
                 try:
-                    self.game.handle(player, msg)
+                    result = self.game.handle(player, msg)
                 except ValueError as exc:
                     raise RoomError(str(exc)) from exc
+                if isinstance(result, dict):
+                    relay = result.get("relay")
+                    notice = result.get("notice")
             else:
                 raise RoomError("Acción desconocida")
             self._sync_timer()
-            await self.broadcast()
+            if relay is not None:
+                # Cambios muy frecuentes (como los trazos del Pinturillo) viajan
+                # como un evento pequeño en vez de la foto completa de la sala.
+                await self.relay(player, relay)
+            else:
+                await self.broadcast()
+            if notice and player in self.connections:
+                # Aviso solo para quien hizo la acción (p. ej. "¡casi!" en el Pinturillo)
+                await self.connections[player].send_json({"type": "error", "message": notice})
 
     def _start_game(self, msg: dict) -> None:
         cls = GAMES.get(msg.get("game"))
@@ -164,6 +178,16 @@ class Room:
             "game": self.game.snapshot(viewer) if self.game else None,
             "phaseEndsInMs": ends_in,
         }
+
+    async def relay(self, sender: str, event: dict) -> None:
+        msg = {"type": "game_event", "event": event}
+        for name, conn in list(self.connections.items()):
+            if name == sender:
+                continue
+            try:
+                await conn.send_json(msg)
+            except Exception:
+                self.connections.pop(name, None)
 
     async def broadcast(self) -> None:
         dead = []

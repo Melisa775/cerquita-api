@@ -1,9 +1,3 @@
-"""Diccionario de español para validar palabras.
-
-Unas 636.000 palabras sin tildes (la ñ se conserva), incluidas las
-conjugaciones. Se carga una sola vez, la primera vez que se necesita.
-"""
-
 import gzip
 from bisect import bisect_left
 from functools import cache

@@ -1,27 +1,10 @@
-"""Enredo de letras (estilo Boggle).
-
-Se lanza un tablero de dados con letras. Contra el reloj, cada uno arma
-palabras uniendo letras vecinas (también en diagonal) sin repetir un dado
-en la misma palabra. Al final:
-  - las palabras que encontraron los dos se tachan y no suman,
-  - las que no están en el diccionario no suman, pero cualquiera de los dos
-    puede darlas por buenas (y anular una que sí esté),
-  - el resto suma según su largo.
-
-Flujo de cada ronda:
-  playing -> buscan palabras (cada uno ve solo las suyas)
-  review  -> se comparan las listas y se muestran las que se escaparon
-Tras la última ronda la fase es "finished".
-"""
-
 import random
 import re
 
 from app.dictionary import Dictionary, spanish
 from app.games.common import normalize, parse_rounds
 
-# Dados pensados para el español: muchas vocales, la S, la R y la N
-# frecuentes, y un dado con las letras difíciles (la Q siempre trae su U).
+
 DICE_4 = [
     "AEASRN", "EAOLRS", "EOANTD", "AEICSL",
     "OEARMN", "EIATSP", "AOEDNR", "UOECLS",
@@ -32,9 +15,9 @@ DICE_5 = DICE_4 + [
     "AEIOSN", "EAORLT", "AEUSRC", "OEIDNM", "AEOLSR",
     "IAETNP", "EOARBC", "AUESLD", "EIOGVR",
 ]
-SCORES = {3: 1, 4: 1, 5: 2, 6: 3, 7: 5}  # 8 letras o más: 11
+SCORES = {3: 1, 4: 1, 5: 2, 6: 3, 7: 5}  
 LONG_WORD_POINTS = 11
-MIN_SOLUTIONS = {4: 100, 5: 250}  # para no repartir tableros pobres
+MIN_SOLUTIONS = {4: 100, 5: 250}  
 MAX_MISSED_SHOWN = 15
 
 
@@ -85,7 +68,6 @@ def find_path(board: list[str], size: int, word: str) -> list[int] | None:
 
 
 def solve(board: list[str], size: int, dictionary: Dictionary, min_len: int) -> set[str]:
-    """Todas las palabras del diccionario que se pueden armar en el tablero."""
     nbrs = neighbors(size)
     found: set[str] = set()
 

@@ -1,22 +1,3 @@
-"""Wordle a dúo.
-
-Hay que adivinar una palabra secreta en 6 intentos. Después de cada intento
-cada letra se marca: correct (en su lugar), present (está, en otro lugar) o
-absent (no está). Las tildes no cuentan; la ñ sí es su propia letra.
-
-Dos modos:
-  - "duel": los dos buscan la misma palabra, cada uno en su tablero. Cada
-    uno ve los colores del otro, pero no sus letras. Gana quien la saque en
-    menos intentos; si empatan, quien la sacó primero.
-  - "team": un solo tablero; se turnan para escribir y lo resuelven juntos.
-    Mientras uno escribe, el otro ve las letras en vivo.
-
-Flujo de cada ronda:
-  playing    -> intentos
-  round_over -> se revela la palabra
-Tras la última ronda la fase es "finished".
-"""
-
 import random
 import re
 from collections import Counter

@@ -1,10 +1,3 @@
-"""Conversión de colores y puntuación del juego de color.
-
-Los jugadores eligen colores en HSB (tono, saturación, brillo) porque es
-como piensa la gente; la distancia se mide en CIELAB, que se aproxima a
-cómo percibe el ojo humano las diferencias de color.
-"""
-
 from dataclasses import dataclass
 import math
 import random

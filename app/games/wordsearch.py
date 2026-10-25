@@ -1,22 +1,3 @@
-"""Sopa de letras compartida.
-
-Los dos ven la misma sopa y buscan las mismas palabras de una categoría.
-Para marcar una palabra se arrastra desde su primera letra hasta la última
-(o se tocan las dos puntas). Mientras uno arrastra, el otro ve en vivo por
-dónde va.
-
-Dos modos:
-  - "race" (carrera): cada palabra es de quien la encuentre primero.
-  - "team" (juntos): las buscan entre los dos y se mide cuánto tardan.
-
-Niveles: el tamaño de la sopa y las direcciones posibles.
-  facil   10×10: derecha, abajo y diagonal hacia abajo
-  normal  12×12: además al revés (izquierda, arriba) y diagonal hacia arriba
-  dificil 14×14: las 8 direcciones
-Las direcciones se reparten por igual entre las palabras, para que no
-salgan casi todas horizontales o verticales.
-"""
-
 import random
 import time
 import unicodedata

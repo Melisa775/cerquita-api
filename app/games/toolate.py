@@ -1,18 +1,3 @@
-"""Stop contrarreloj (estilo Too Late).
-
-Hay un tablero de letras y una categoría. Por turnos, cada jugador dice en
-voz alta una palabra de la categoría y toca la letra con la que empieza:
-esa letra se apaga y el reloj vuelve a empezar para el otro. Si a alguien
-se le acaba el tiempo, pierde la ronda y el otro gana un punto. Si entre
-los dos apagan todas las letras, lo lograron y ganan un punto cada uno.
-
-Flujo de cada ronda:
-  ready      -> se muestra la categoría; se puede cambiar antes de empezar
-  playing    -> turnos contrarreloj
-  round_over -> se acabó el tiempo o completaron el tablero
-Tras la última ronda la fase es "finished".
-"""
-
 import random
 
 from app.games.common import DEFAULT_ROUNDS, parse_rounds

@@ -1,4 +1,5 @@
-"""Utilidades compartidas por los juegos."""
+
+#Utilidades compartidas por los juegos.
 
 import re
 import unicodedata
@@ -17,10 +18,7 @@ def parse_rounds(options: dict, default: int = DEFAULT_ROUNDS) -> int:
 
 
 def normalize(text: str) -> str:
-    """Minúsculas, sin tildes (la ñ se conserva) y sin signos.
-
-    "  Ángela  " -> "angela", "Ñandú" -> "ñandu", "San-Andrés" -> "sanandres"
-    """
+   
     text = text.strip().lower().replace("ñ", "\0")
     text = "".join(c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn")
     text = text.replace("\0", "ñ")

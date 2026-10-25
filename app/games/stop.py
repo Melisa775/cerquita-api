@@ -1,20 +1,3 @@
-"""Stop clásico.
-
-Flujo de cada ronda:
-  writing  -> sale una letra y cada uno llena sus casillas
-  stopping -> alguien cantó ¡Stop! (o se acabó el tiempo); los clientes
-              bloquean sus casillas y envían lo último que escribieron
-  review   -> se comparan las respuestas; cualquiera puede anular o
-              validar una casilla antes de pasar a la siguiente letra
-Tras la última ronda la fase es "finished".
-
-Puntaje por casilla: 100 si la respuesta es válida y única, 50 si los dos
-escribieron lo mismo, 0 si está vacía o no es válida. Una respuesta es
-válida si empieza por la letra y, salvo nombre y apellido, está bien
-escrita (ver app/spelling.py); los jugadores pueden corregir al revisar. La hoja guarda una
-fila por letra con su total, como en papel.
-"""
-
 import random
 
 from app.games.common import DEFAULT_ROUNDS, normalize, parse_rounds

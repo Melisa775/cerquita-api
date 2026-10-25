@@ -1,23 +1,3 @@
-"""Ahorcado.
-
-Dos modos:
-  - "turns" (nos turnamos): en cada ronda uno escribe una palabra o frase
-    corta, con una pista opcional, y el otro la adivina letra por letra. Si
-    la adivina gana un punto; si se le acaban las vidas, el punto es para
-    quien la eligió. Los papeles se alternan.
-  - "random" (Cerquita elige): sale una palabra al azar de una categoría y
-    los dos la adivinan juntos, compartiendo las vidas.
-
-Las letras se comparan sin tildes (la "a" destapa también la "á"), pero la
-ñ es su propia letra.
-
-Flujo de cada ronda:
-  choosing   -> (solo en "turns") quien elige escribe la palabra
-  guessing   -> se adivinan letras o se arriesga la palabra completa
-  round_over -> se revela la palabra
-Tras la última ronda la fase es "finished".
-"""
-
 import random
 import re
 import unicodedata
