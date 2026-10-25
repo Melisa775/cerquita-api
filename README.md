@@ -26,6 +26,7 @@ FastAPI + WebSockets. Las salas viven en memoria; el servidor es la única fuent
 - **Ahorcado sin filtraciones.** En el modo por turnos, el servidor le manda la palabra completa solo a quien la eligió; a quien adivina le llegan únicamente las letras descubiertas. Las letras se comparan sin tildes (la «o» destapa la «ó»), pero la ñ cuenta como letra propia.
 - **Wordle a dúo.** Las palabras secretas salen de una lista editable de unas 470 palabras comunes y bonitas (`app/data/wordle_respuestas.txt`); como intento vale cualquier palabra del diccionario. Los colores se calculan en dos pasadas para que las letras repetidas se marquen bien (si la palabra tiene una sola L, solo una L sale amarilla). En duelo, a cada jugador le llegan sus letras y del otro solo los colores.
 - **Sopa de letras.** Cada sopa se genera al momento: las palabras de la categoría se colocan de la más larga a la más corta, en las direcciones que permite el nivel (Fácil: derecha, abajo y diagonal; Normal: también al revés; Difícil: las 8) y repartiendo las direcciones por igual entre las palabras, y el resto se rellena con letras según su frecuencia en español para que se vea natural. El servidor valida lo que se marca comparando las letras de la línea, así que vale encontrar una palabra al derecho o al revés.
+- **Adivina quién sin trampas.** Cada uno recibe solo su personaje secreto y su propio tablero; del otro solo sabe cuántos personajes le quedan. Las preguntas de la lista se responden en el servidor con los rasgos del personaje, así que no hay respuestas equivocadas; un test verifica que cada pregunta divida el tablero.
 - **Cada jugador ve solo lo suyo.** La sala arma una foto distinta para cada conexión, así en Enredo de letras cada uno recibe sus palabras y del otro solo cuántas lleva.
 - **Puntaje perceptual.** Los jugadores eligen en HSB (tono, saturación, brillo), pero la distancia se mide en CIELAB (ΔE76), que se parece a cómo el ojo percibe la diferencia entre colores.
 - **Reconexión.** Si alguien se desconecta a mitad de juego, conserva su lugar y puede volver con el mismo nombre.
@@ -52,6 +53,7 @@ Cliente → servidor:
 { "type": "start_game", "game": "hangman", "mode": "turns", "lives": 6, "rounds": 4 }  // turns | random
 { "type": "start_game", "game": "wordle", "mode": "duel", "length": 5, "rounds": 3 }   // duel | team
 { "type": "start_game", "game": "wordsearch", "mode": "race", "level": "normal", "rounds": 1 }  // race | team; facil | normal | dificil
+{ "type": "start_game", "game": "guesswho", "boardSize": 24, "rounds": 3 }   // 16 | 24
 { "type": "next_round" }
 { "type": "back_to_lobby" }
 
@@ -82,6 +84,13 @@ Cliente → servidor:
 { "type": "ws_select", "start": [0, 3], "end": [0, 7] }  // selección en curso, para que el otro la vea
 { "type": "ws_mark", "start": [0, 3], "end": [0, 7] }    // marcar una palabra (al derecho o al revés)
 { "type": "ws_give_up" }
+
+// Adivina quién
+{ "type": "gw_ask", "question": "gafas" }               // de la lista: responde la app
+{ "type": "gw_ask_free", "text": "¿se parece a mí?" }  // escrita: responde la pareja
+{ "type": "gw_answer", "yes": true }
+{ "type": "gw_flip", "id": "camila" }                   // bajar o subir en el tablero propio
+{ "type": "gw_guess", "id": "camila" }                  // arriesgar: si falla, pierde la ronda
 
 // Enredo de letras
 { "type": "boggle_word", "word": "casa" }
@@ -132,6 +141,7 @@ app/
   games/hangman.py Ahorcado: modos, letras sin tildes (la ñ aparte) y palabras por categoría
   games/wordle.py  Wordle a dúo: duelo o juntos, colores con letras repetidas bien contadas
   games/wordsearch.py Sopa de letras: generación por niveles, carrera o juntos
+  games/guesswho.py Adivina quién: personajes, preguntas automáticas y escritas
   dictionary.py    diccionario de español (data/palabras.txt.gz, licencia MIT)
   spelling.py      ortografía del Stop: ciudades, diccionario, extras y sugerencias
   data/            palabras, ciudades (GeoNames, CC BY 4.0) y extras del Stop
