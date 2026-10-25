@@ -190,3 +190,17 @@ async def test_boggle_sends_each_player_only_their_words():
     await room.handle("Leo", {"type": "boggle_done"})
     assert leo.last["game"]["phase"] == "review"
     assert leo.last["phaseEndsInMs"] is None
+
+
+async def test_hangman_hides_the_word_from_the_guesser():
+    room = Room("HORCA")
+    ana, leo = FakeConn(), FakeConn()
+    await room.join("Ana", ana)
+    await room.join("Leo", leo)
+    await room.handle("Ana", {"type": "start_game", "game": "hangman", "mode": "turns", "rounds": 2})
+    assert ana.last["game"]["phase"] == "choosing" and ana.last["phaseEndsInMs"] is None
+    await room.handle("Ana", {"type": "hangman_word", "word": "gato", "hint": "Maúlla"})
+    assert [s["char"] for s in ana.last["game"]["slots"]] == list("gato")
+    assert [s["char"] for s in leo.last["game"]["slots"]] == [None] * 4
+    await room.handle("Leo", {"type": "hangman_guess", "letter": "a"})
+    assert [s["char"] for s in leo.last["game"]["slots"]] == [None, "a", None, None]
