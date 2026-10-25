@@ -204,3 +204,16 @@ async def test_hangman_hides_the_word_from_the_guesser():
     assert [s["char"] for s in leo.last["game"]["slots"]] == [None] * 4
     await room.handle("Leo", {"type": "hangman_guess", "letter": "a"})
     assert [s["char"] for s in leo.last["game"]["slots"]] == [None, "a", None, None]
+
+
+async def test_wordle_duel_shows_only_colors_of_the_other_board():
+    room = Room("PALAB")
+    ana, leo = FakeConn(), FakeConn()
+    await room.join("Ana", ana)
+    await room.join("Leo", leo)
+    await room.handle("Ana", {"type": "start_game", "game": "wordle", "mode": "duel", "length": 5, "rounds": 1})
+    await room.handle("Ana", {"type": "wordle_guess", "word": "perro"})
+    assert ana.last["game"]["boards"]["Ana"][0]["word"] == "perro"
+    assert leo.last["game"]["boards"]["Ana"][0]["word"] is None
+    with pytest.raises(RoomError, match="diccionario"):
+        await room.handle("Leo", {"type": "wordle_guess", "word": "qxzpt"})
