@@ -19,7 +19,12 @@ async def lifespan(_app: FastAPI):
     yield
 
 
-app = FastAPI(title="Cerquita API", lifespan=lifespan)
+app = FastAPI(
+    title="Cerquita API",
+    description="Backend de Cerquita, juegos en español para parejas a distancia. Desarrollado por Melisa Gomez Gomez.",
+    contact={"name": "Melisa Gomez Gomez", "url": "https://github.com/Melisa775"},
+    lifespan=lifespan,
+)
 manager = RoomManager()
 
 app.add_middleware(
