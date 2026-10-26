@@ -31,6 +31,7 @@ FastAPI + WebSockets. Las salas viven en memoria; el servidor es la única fuent
 - **Murdoku generado al momento.** Cada caso arma habitaciones creciendo desde semillas al azar, pone muebles, escoge una solución (una persona por fila y columna) en la que exactamente un sospechoso comparte habitación con la víctima, y agrega pistas verdaderas hasta que un buscador con vuelta atrás confirme que esa es la única solución posible; después quita las que sobran. Ninguna pista dice directamente quién estaba con la víctima. Un caso de 6×6 se genera en unos 100 ms.
 - **Trivia al estilo Preguntados.** La ruleta gira en el servidor (los clientes solo animan hacia la casilla que les llega), así nadie puede elegir su categoría. Las 365 preguntas viven en `app/data/preguntas.json`, unas 20 por categoría y nivel (fácil, medio y difícil), con la respuesta correcta siempre de primera; el orden de las opciones se baraja en cada pregunta y la respuesta no viaja al navegador hasta que se revela. No se repite una pregunta de la misma categoría hasta agotarlas. Como los dos ven los mismos botones, «Girar» y «Seguir» mandan el giro o la pregunta que estaban viendo (`at`); si el otro ya avanzó, el toque se ignora en silencio.
 - **Ajedrez con motor propio.** Las reglas (`app/games/chess_rules.py`) están escritas desde cero, sin librerías: jugadas pseudolegales filtradas por si dejan al rey en jaque, enroque, captura al paso, coronación, triple repetición, regla de los 50 movimientos y material insuficiente. Se validan con conteos *perft* conocidos (por ejemplo, 197.281 posiciones a 4 jugadas desde el inicio y la posición «Kiwipete»). El servidor le manda las jugadas legales solo a quien tiene el turno, así el navegador no necesita saber las reglas. La notación va en español (R, D, T, A, C) y el reloj usa el mismo temporizador de la sala.
+- **Batalla naval sin espías.** El servidor guarda dónde está cada barco y valida la flota que manda cada cliente (dentro del tablero, sin encimarse y, con la regla clásica, sin tocarse ni en diagonal). A cada jugador le llega su tablero completo y del otro solo los disparos que ya hizo y los barcos que ya hundió; al hundir uno, las casillas de alrededor se marcan como agua porque ahí no puede haber nada.
 - **Cada jugador ve solo lo suyo.** La sala arma una foto distinta para cada conexión, así en Enredo de letras cada uno recibe sus palabras y del otro solo cuántas lleva.
 - **Puntaje perceptual.** Los jugadores eligen en HSB (tono, saturación, brillo), pero la distancia se mide en CIELAB (ΔE76), que se parece a cómo el ojo percibe la diferencia entre colores.
 - **Reconexión.** Si alguien se desconecta a mitad de juego, conserva su lugar y puede volver con el mismo nombre.
@@ -63,6 +64,7 @@ Cliente → servidor:
 { "type": "start_game", "game": "murdoku", "mode": "team", "level": "facil", "rounds": 1 }   // team | race; facil (5×5) | normal (6×6)
 { "type": "start_game", "game": "trivia", "mode": "coronas", "goal": 6, "seconds": 20, "questions": 10, "level": "mezcla" }  // coronas (meta 3 | 6) | duelo (10 | 15 | 20 preguntas); facil | medio | dificil | mezcla
 { "type": "start_game", "game": "chess", "timeControl": "5+3", "hints": true, "white": "Meli" }  // libre | 3+2 | 5+3 | 10+0 | 15+10; white opcional (si no, al azar)
+{ "type": "start_game", "game": "battleship", "size": 10, "noTouch": true, "bonus": true }   // 8 | 10; noTouch: barcos sin tocarse; bonus: si aciertas, repites
 { "type": "next_round" }
 { "type": "back_to_lobby" }
 
@@ -128,6 +130,11 @@ Cliente → servidor:
 { "type": "ch_undo" }  { "type": "ch_undo_decline" }   // pedir o aceptar deshacer; rechazar
 { "type": "ch_resign" }
 
+// Batalla naval
+{ "type": "bn_place", "ships": [{ "id": "crucero", "row": 4, "col": 0, "dir": "h" }, …] }  // la flota completa
+{ "type": "bn_unready" }                    // volver a mover los barcos
+{ "type": "bn_fire", "row": 3, "col": 7 }
+
 // Enredo de letras
 { "type": "boggle_word", "word": "casa" }
 { "type": "boggle_done" }                  // ya no encuentro más
@@ -184,6 +191,7 @@ app/
   games/trivia.py  Trivia: ruleta, coronas o duelo, preguntas de data/preguntas.json
   games/chess_rules.py Reglas del ajedrez: jugadas legales, notación en español, perft
   games/chess.py   Ajedrez: colores, reloj, tablas, deshacer y final de la partida
+  games/battleship.py Batalla naval: flotas validadas, disparos y vista privada de cada tablero
   dictionary.py    diccionario de español (data/palabras.txt.gz, licencia MIT)
   spelling.py      ortografía del Stop: ciudades, diccionario, extras y sugerencias
   data/            palabras, ciudades (GeoNames, CC BY 4.0) y extras del Stop
