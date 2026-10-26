@@ -9,6 +9,7 @@ from app.games.boggle import BoggleGame
 from app.games.charades import CharadesGame
 from app.games.chess import ChessGame
 from app.games.color import ColorGame
+from app.games.domino import DominoGame
 from app.games.guesswho import GuessWhoGame
 from app.games.hangman import HangmanGame
 from app.games.murdoku import MurdokuGame
@@ -21,7 +22,7 @@ from app.games.wordsearch import WordSearchGame
 
 MAX_PLAYERS = 2
 CODE_ALPHABET = "".join(c for c in string.ascii_uppercase if c not in "IO")
-GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame, GuessWhoGame, PinturilloGame, CharadesGame, MurdokuGame, TriviaGame, ChessGame, BattleshipGame)}
+GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame, GuessWhoGame, PinturilloGame, CharadesGame, MurdokuGame, TriviaGame, ChessGame, BattleshipGame, DominoGame)}
 GAME_ACTIONS = set().union(*(cls.actions for cls in GAMES.values()))
 
 
