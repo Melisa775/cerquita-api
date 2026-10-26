@@ -33,6 +33,7 @@ FastAPI + WebSockets. Las salas viven en memoria; el servidor es la única fuent
 - **Ajedrez con motor propio.** Las reglas (`app/games/chess_rules.py`) están escritas desde cero, sin librerías: jugadas pseudolegales filtradas por si dejan al rey en jaque, enroque, captura al paso, coronación, triple repetición, regla de los 50 movimientos y material insuficiente. Se validan con conteos *perft* conocidos (por ejemplo, 197.281 posiciones a 4 jugadas desde el inicio y la posición «Kiwipete»). El servidor le manda las jugadas legales solo a quien tiene el turno, así el navegador no necesita saber las reglas. La notación va en español (R, D, T, A, C) y el reloj usa el mismo temporizador de la sala.
 - **Batalla naval sin espías.** El servidor guarda dónde está cada barco y valida la flota que manda cada cliente (dentro del tablero, sin encimarse y, con la regla clásica, sin tocarse ni en diagonal). A cada jugador le llega su tablero completo y del otro solo los disparos que ya hizo y los barcos que ya hundió; al hundir uno, las casillas de alrededor se marcan como agua porque ahí no puede haber nada.
 - **Dominó con pases automáticos.** Las fichas de cada uno solo viajan a su dueño (del otro se sabe cuántas tiene) y el servidor calcula las jugadas posibles. Si alguien no puede jugar ni robar, pasa solo; si pasan los dos seguidos, es tranque y gana quien tenga menos puntos en la mano. Un test juega 30 partidas completas al azar y comprueba que siempre terminan y que nunca se pierde ni se duplica una ficha.
+- **Parqués a la colombiana.** Cada ficha se guarda como su avance desde la salida (cárcel, circuito de 68, llegada de 7, cielo) y la casilla real se calcula según el brazo de cada jugador, así las reglas no dependen del dibujo. El servidor tira los dados y calcula qué fichas se pueden mover con cada uno; los dados que no sirven se descartan solos. El cliente gira el tablero para que cada uno vea su cárcel abajo.
 - **Cada jugador ve solo lo suyo.** La sala arma una foto distinta para cada conexión, así en Enredo de letras cada uno recibe sus palabras y del otro solo cuántas lleva.
 - **Puntaje perceptual.** Los jugadores eligen en HSB (tono, saturación, brillo), pero la distancia se mide en CIELAB (ΔE76), que se parece a cómo el ojo percibe la diferencia entre colores.
 - **Reconexión.** Si alguien se desconecta a mitad de juego, conserva su lugar y puede volver con el mismo nombre.
@@ -67,6 +68,7 @@ Cliente → servidor:
 { "type": "start_game", "game": "chess", "timeControl": "5+3", "hints": true, "white": "Meli" }  // libre | 3+2 | 5+3 | 10+0 | 15+10; white opcional (si no, al azar)
 { "type": "start_game", "game": "battleship", "size": 10, "noTouch": true, "bonus": true }   // 8 | 10; noTouch: barcos sin tocarse; bonus: si aciertas, repites
 { "type": "start_game", "game": "domino", "goal": 100, "boneyard": true }   // meta 50 | 100 | 150; boneyard: con o sin pozo
+{ "type": "start_game", "game": "parques", "pieces": 4 }   // 2 | 4 fichas por jugador
 { "type": "next_round" }
 { "type": "back_to_lobby" }
 
@@ -141,6 +143,12 @@ Cliente → servidor:
 { "type": "dm_play", "tile": [3, 5], "side": "left" }   // side: left | right
 { "type": "dm_draw" }                                     // robar del pozo (solo si no tienes jugada)
 
+// Parqués (solo quien tiene el turno)
+{ "type": "pa_roll" }
+{ "type": "pa_move", "piece": 2, "die": 0 }   // die: índice del dado (0 o 1)
+{ "type": "pa_release" }                     // con pares: sacar las fichas de la cárcel
+{ "type": "pa_bonus", "piece": 1 }           // tercer par: esa ficha va al cielo
+
 // Enredo de letras
 { "type": "boggle_word", "word": "casa" }
 { "type": "boggle_done" }                  // ya no encuentro más
@@ -199,6 +207,7 @@ app/
   games/chess.py   Ajedrez: colores, reloj, tablas, deshacer y final de la partida
   games/battleship.py Batalla naval: flotas validadas, disparos y vista privada de cada tablero
   games/domino.py  Dominó: reparto, salida, pozo, pases, tranque y puntos por mano
+  games/parques.py Parqués: cárcel con pares, dados por separado, seguros, comer y cielo
   dictionary.py    diccionario de español (data/palabras.txt.gz, licencia MIT)
   spelling.py      ortografía del Stop: ciudades, diccionario, extras y sugerencias
   data/            palabras, ciudades (GeoNames, CC BY 4.0) y extras del Stop
