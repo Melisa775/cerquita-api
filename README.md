@@ -35,6 +35,7 @@ FastAPI + WebSockets. Las salas viven en memoria; el servidor es la única fuent
 - **Dominó con pases automáticos.** Las fichas de cada uno solo viajan a su dueño (del otro se sabe cuántas tiene) y el servidor calcula las jugadas posibles. Si alguien no puede jugar ni robar, pasa solo; si pasan los dos seguidos, es tranque y gana quien tenga menos puntos en la mano. Un test juega 30 partidas completas al azar y comprueba que siempre terminan y que nunca se pierde ni se duplica una ficha.
 - **Parqués a la colombiana.** Cada ficha se guarda como su avance desde la salida (cárcel, circuito de 68, llegada de 7, cielo) y la casilla real se calcula según el brazo de cada jugador, así las reglas no dependen del dibujo. El servidor tira los dados y calcula qué fichas se pueden mover con cada uno; los dados que no sirven se descartan solos. El cliente gira el tablero para que cada uno vea su cárcel abajo.
 - **Palabras cruzadas con reglas en el servidor.** Cada atril solo viaja a su dueño. El servidor revisa que las letras queden en una fila o columna, seguidas y tocando lo que ya hay, encuentra todas las palabras que se forman (la principal y las cruzadas) y las busca en el diccionario; si alguna no existe, la jugada se rechaza sin perder el turno. El tablero, los premios y el reparto de las 100 fichas son propios. Como el diccionario general empieza en tres letras, las palabras de dos letras salen de una lista aparte (`app/data/palabras_cortas.txt`).
+- **Una (al estilo UNO) para dos.** Mazo de 108 cartas con las reglas para dos jugadores (Salta y Reversa repiten turno; +2 y +4 hacen robar y repiten), robo con opción de jugar la carta robada y la opción de acumular +2 y +4. El «¡Una!» tiene ventana: si alguien se queda con una carta sin decirlo, el otro puede pillarlo hasta que haga su propia jugada. Cuando el mazo se acaba se baraja el descarte; un test juega 25 partidas al azar y comprueba que siempre hay 108 cartas.
 - **Cada jugador ve solo lo suyo.** La sala arma una foto distinta para cada conexión, así en Enredo de letras cada uno recibe sus palabras y del otro solo cuántas lleva.
 - **Puntaje perceptual.** Los jugadores eligen en HSB (tono, saturación, brillo), pero la distancia se mide en CIELAB (ΔE76), que se parece a cómo el ojo percibe la diferencia entre colores.
 - **Reconexión.** Si alguien se desconecta a mitad de juego, conserva su lugar y puede volver con el mismo nombre.
@@ -71,6 +72,7 @@ Cliente → servidor:
 { "type": "start_game", "game": "domino", "goal": 100, "boneyard": true }   // meta 50 | 100 | 150; boneyard: con o sin pozo
 { "type": "start_game", "game": "parques", "pieces": 4 }   // 2 | 4 fichas por jugador
 { "type": "start_game", "game": "crosswords", "check": true }   // check: revisar con el diccionario
+{ "type": "start_game", "game": "una", "goal": 0, "stacking": false }   // goal: 0 (una mano) | 200 | 500
 { "type": "next_round" }
 { "type": "back_to_lobby" }
 
@@ -156,6 +158,11 @@ Cliente → servidor:
 { "type": "cw_exchange", "letters": ["Q", "X"] }
 { "type": "cw_pass" }
 
+// Una
+{ "type": "un_play", "card": 57, "color": "r" }   // color solo con comodines: r | y | g | b
+{ "type": "un_draw" }  { "type": "un_pass" }       // robar; pasar después de robar
+{ "type": "un_una" }  { "type": "un_catch" }       // decir ¡Una!; pillar al otro
+
 // Enredo de letras
 { "type": "boggle_word", "word": "casa" }
 { "type": "boggle_done" }                  // ya no encuentro más
@@ -216,6 +223,7 @@ app/
   games/domino.py  Dominó: reparto, salida, pozo, pases, tranque y puntos por mano
   games/parques.py Parqués: cárcel con pares, dados por separado, seguros, comer y cielo
   games/crosswords.py Palabras cruzadas: bolsa, atriles, validación de jugadas y puntaje con premios
+  games/una.py     Una (estilo UNO): mazo, especiales para dos, ¡Una! y puntos por mano
   dictionary.py    diccionario de español (data/palabras.txt.gz, licencia MIT)
   spelling.py      ortografía del Stop: ciudades, diccionario, extras y sugerencias
   data/            palabras, ciudades (GeoNames, CC BY 4.0) y extras del Stop
