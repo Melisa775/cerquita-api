@@ -29,6 +29,7 @@ FastAPI + WebSockets. Las salas viven en memoria; el servidor es la única fuent
 - **Adivina quién sin trampas.** Cada uno recibe solo su personaje secreto y su propio tablero; del otro solo sabe cuántos personajes le quedan. Las preguntas de la lista se responden en el servidor con los rasgos del personaje, así que no hay respuestas equivocadas; un test verifica que cada pregunta divida el tablero.
 - **Pinturillo con eventos livianos.** Mandar la foto completa de la sala con cada trazo sería carísimo, así que un juego puede devolver un `relay`: la sala lo reenvía como `game_event` solo al otro jugador. La foto completa sigue incluyendo el dibujo, para quien se reconecta. Si un intento queda a una letra de la palabra, el juego devuelve un `notice` que solo le llega a quien lo escribió ("¡Casi!"). Las pistas destapan una letra a la mitad y a los tres cuartos del tiempo.
 - **Murdoku generado al momento.** Cada caso arma habitaciones creciendo desde semillas al azar, pone muebles, escoge una solución (una persona por fila y columna) en la que exactamente un sospechoso comparte habitación con la víctima, y agrega pistas verdaderas hasta que un buscador con vuelta atrás confirme que esa es la única solución posible; después quita las que sobran. Ninguna pista dice directamente quién estaba con la víctima. Un caso de 6×6 se genera en unos 100 ms.
+- **Trivia al estilo Preguntados.** La ruleta gira en el servidor (los clientes solo animan hacia la casilla que les llega), así nadie puede elegir su categoría. Las 365 preguntas viven en `app/data/preguntas.json`, unas 20 por categoría y nivel (fácil, medio y difícil), con la respuesta correcta siempre de primera; el orden de las opciones se baraja en cada pregunta y la respuesta no viaja al navegador hasta que se revela. No se repite una pregunta de la misma categoría hasta agotarlas. Como los dos ven los mismos botones, «Girar» y «Seguir» mandan el giro o la pregunta que estaban viendo (`at`); si el otro ya avanzó, el toque se ignora en silencio.
 - **Cada jugador ve solo lo suyo.** La sala arma una foto distinta para cada conexión, así en Enredo de letras cada uno recibe sus palabras y del otro solo cuántas lleva.
 - **Puntaje perceptual.** Los jugadores eligen en HSB (tono, saturación, brillo), pero la distancia se mide en CIELAB (ΔE76), que se parece a cómo el ojo percibe la diferencia entre colores.
 - **Reconexión.** Si alguien se desconecta a mitad de juego, conserva su lugar y puede volver con el mismo nombre.
@@ -59,6 +60,7 @@ Cliente → servidor:
 { "type": "start_game", "game": "pinturillo", "drawSeconds": 90, "rounds": 2 }   // 60 | 90 | 120
 { "type": "start_game", "game": "charades", "level": "mezcla", "seconds": 90, "rounds": 2, "showCategory": true }  // facil | dificil | mezcla
 { "type": "start_game", "game": "murdoku", "mode": "team", "level": "facil", "rounds": 1 }   // team | race; facil (5×5) | normal (6×6)
+{ "type": "start_game", "game": "trivia", "mode": "coronas", "goal": 6, "seconds": 20, "questions": 10, "level": "mezcla" }  // coronas (meta 3 | 6) | duelo (10 | 15 | 20 preguntas); facil | medio | dificil | mezcla
 { "type": "next_round" }
 { "type": "back_to_lobby" }
 
@@ -111,6 +113,12 @@ Cliente → servidor:
 { "type": "md_place", "person": 2, "cell": [1, 3] }   // cell: null para quitar
 { "type": "md_note", "cell": [0, 0] }                 // marcar o desmarcar una X
 { "type": "md_clear" }
+
+// Trivia
+{ "type": "tv_spin", "at": 3 }                  // girar la ruleta (at: giro que se estaba viendo)
+{ "type": "tv_crown", "category": "arte" }      // elegir por qué corona jugar
+{ "type": "tv_answer", "choice": 2 }            // índice de la opción
+{ "type": "next_round", "at": 5 }               // en la trivia, at: pregunta que se estaba viendo
 
 // Enredo de letras
 { "type": "boggle_word", "word": "casa" }
@@ -165,6 +173,7 @@ app/
   games/pinturillo.py Pinturillo: turnos, pistas, trazos y puntaje por rapidez
   games/charades.py Caras y gestos: mazo por categoría y dificultad (data/caras_gestos.txt)
   games/murdoku.py Murdoku: generador de casos con solución única y buscador con vuelta atrás
+  games/trivia.py  Trivia: ruleta, coronas o duelo, preguntas de data/preguntas.json
   dictionary.py    diccionario de español (data/palabras.txt.gz, licencia MIT)
   spelling.py      ortografía del Stop: ciudades, diccionario, extras y sugerencias
   data/            palabras, ciudades (GeoNames, CC BY 4.0) y extras del Stop

@@ -251,3 +251,19 @@ async def test_pinturillo_relays_strokes_without_full_snapshots():
     await room.handle("Leo", {"type": "pz_guess", "text": word})
     assert ana.last["game"]["phase"] == "turn_over"
     room.close()
+
+
+async def test_trivia_spin_and_question_run_on_timers():
+    room = Room("TRIVI", timings={"spin": 0.05, "question": 0.15})
+    ana, leo = FakeConn(), FakeConn()
+    await room.join("Ana", ana)
+    await room.join("Leo", leo)
+    await room.handle("Ana", {"type": "start_game", "game": "trivia", "mode": "duelo"})
+    await room.handle("Leo", {"type": "tv_spin"})
+    assert leo.last["game"]["phase"] == "spinning"
+    await asyncio.sleep(0.1)
+    snap = ana.last["game"]
+    assert snap["phase"] == "question" and "answer" not in snap["question"]
+    await asyncio.sleep(0.25)
+    assert ana.last["game"]["phase"] == "reveal"
+    room.close()
