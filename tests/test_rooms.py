@@ -267,3 +267,19 @@ async def test_trivia_spin_and_question_run_on_timers():
     await asyncio.sleep(0.25)
     assert ana.last["game"]["phase"] == "reveal"
     room.close()
+
+
+async def test_chess_clock_flags_over_the_room():
+    room = Room("RELOJ", timings={"base": 0.3, "increment": 0})
+    ana, leo = FakeConn(), FakeConn()
+    await room.join("Ana", ana)
+    await room.join("Leo", leo)
+    await room.handle("Ana", {"type": "start_game", "game": "chess", "white": "Ana", "timeControl": "3+2"})
+    await room.handle("Ana", {"type": "ch_move", "from": "e2", "to": "e4"})
+    await room.handle("Leo", {"type": "ch_move", "from": "e7", "to": "e5"})
+    assert ana.last["game"]["clockRunning"] and ana.last["game"]["legal"]
+    assert leo.last["game"]["legal"] == {}
+    await asyncio.sleep(0.45)
+    result = leo.last["game"]["result"]
+    assert result["winner"] == "Leo" and result["reason"] == "tiempo"
+    room.close()

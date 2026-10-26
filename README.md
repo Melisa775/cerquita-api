@@ -30,6 +30,7 @@ FastAPI + WebSockets. Las salas viven en memoria; el servidor es la única fuent
 - **Pinturillo con eventos livianos.** Mandar la foto completa de la sala con cada trazo sería carísimo, así que un juego puede devolver un `relay`: la sala lo reenvía como `game_event` solo al otro jugador. La foto completa sigue incluyendo el dibujo, para quien se reconecta. Si un intento queda a una letra de la palabra, el juego devuelve un `notice` que solo le llega a quien lo escribió ("¡Casi!"). Las pistas destapan una letra a la mitad y a los tres cuartos del tiempo.
 - **Murdoku generado al momento.** Cada caso arma habitaciones creciendo desde semillas al azar, pone muebles, escoge una solución (una persona por fila y columna) en la que exactamente un sospechoso comparte habitación con la víctima, y agrega pistas verdaderas hasta que un buscador con vuelta atrás confirme que esa es la única solución posible; después quita las que sobran. Ninguna pista dice directamente quién estaba con la víctima. Un caso de 6×6 se genera en unos 100 ms.
 - **Trivia al estilo Preguntados.** La ruleta gira en el servidor (los clientes solo animan hacia la casilla que les llega), así nadie puede elegir su categoría. Las 365 preguntas viven en `app/data/preguntas.json`, unas 20 por categoría y nivel (fácil, medio y difícil), con la respuesta correcta siempre de primera; el orden de las opciones se baraja en cada pregunta y la respuesta no viaja al navegador hasta que se revela. No se repite una pregunta de la misma categoría hasta agotarlas. Como los dos ven los mismos botones, «Girar» y «Seguir» mandan el giro o la pregunta que estaban viendo (`at`); si el otro ya avanzó, el toque se ignora en silencio.
+- **Ajedrez con motor propio.** Las reglas (`app/games/chess_rules.py`) están escritas desde cero, sin librerías: jugadas pseudolegales filtradas por si dejan al rey en jaque, enroque, captura al paso, coronación, triple repetición, regla de los 50 movimientos y material insuficiente. Se validan con conteos *perft* conocidos (por ejemplo, 197.281 posiciones a 4 jugadas desde el inicio y la posición «Kiwipete»). El servidor le manda las jugadas legales solo a quien tiene el turno, así el navegador no necesita saber las reglas. La notación va en español (R, D, T, A, C) y el reloj usa el mismo temporizador de la sala.
 - **Cada jugador ve solo lo suyo.** La sala arma una foto distinta para cada conexión, así en Enredo de letras cada uno recibe sus palabras y del otro solo cuántas lleva.
 - **Puntaje perceptual.** Los jugadores eligen en HSB (tono, saturación, brillo), pero la distancia se mide en CIELAB (ΔE76), que se parece a cómo el ojo percibe la diferencia entre colores.
 - **Reconexión.** Si alguien se desconecta a mitad de juego, conserva su lugar y puede volver con el mismo nombre.
@@ -61,6 +62,7 @@ Cliente → servidor:
 { "type": "start_game", "game": "charades", "level": "mezcla", "seconds": 90, "rounds": 2, "showCategory": true }  // facil | dificil | mezcla
 { "type": "start_game", "game": "murdoku", "mode": "team", "level": "facil", "rounds": 1 }   // team | race; facil (5×5) | normal (6×6)
 { "type": "start_game", "game": "trivia", "mode": "coronas", "goal": 6, "seconds": 20, "questions": 10, "level": "mezcla" }  // coronas (meta 3 | 6) | duelo (10 | 15 | 20 preguntas); facil | medio | dificil | mezcla
+{ "type": "start_game", "game": "chess", "timeControl": "5+3", "hints": true, "white": "Meli" }  // libre | 3+2 | 5+3 | 10+0 | 15+10; white opcional (si no, al azar)
 { "type": "next_round" }
 { "type": "back_to_lobby" }
 
@@ -120,6 +122,12 @@ Cliente → servidor:
 { "type": "tv_answer", "choice": 2 }            // índice de la opción
 { "type": "next_round", "at": 5 }               // en la trivia, at: pregunta que se estaba viendo
 
+// Ajedrez
+{ "type": "ch_move", "from": "e7", "to": "e8", "promotion": "q" }   // promotion solo al coronar
+{ "type": "ch_draw" }  { "type": "ch_draw_decline" }   // ofrecer o aceptar tablas; rechazar
+{ "type": "ch_undo" }  { "type": "ch_undo_decline" }   // pedir o aceptar deshacer; rechazar
+{ "type": "ch_resign" }
+
 // Enredo de letras
 { "type": "boggle_word", "word": "casa" }
 { "type": "boggle_done" }                  // ya no encuentro más
@@ -174,6 +182,8 @@ app/
   games/charades.py Caras y gestos: mazo por categoría y dificultad (data/caras_gestos.txt)
   games/murdoku.py Murdoku: generador de casos con solución única y buscador con vuelta atrás
   games/trivia.py  Trivia: ruleta, coronas o duelo, preguntas de data/preguntas.json
+  games/chess_rules.py Reglas del ajedrez: jugadas legales, notación en español, perft
+  games/chess.py   Ajedrez: colores, reloj, tablas, deshacer y final de la partida
   dictionary.py    diccionario de español (data/palabras.txt.gz, licencia MIT)
   spelling.py      ortografía del Stop: ciudades, diccionario, extras y sugerencias
   data/            palabras, ciudades (GeoNames, CC BY 4.0) y extras del Stop
