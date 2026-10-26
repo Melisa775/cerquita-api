@@ -36,6 +36,7 @@ FastAPI + WebSockets. Las salas viven en memoria; el servidor es la única fuent
 - **Parqués a la colombiana.** Cada ficha se guarda como su avance desde la salida (cárcel, circuito de 68, llegada de 7, cielo) y la casilla real se calcula según el brazo de cada jugador, así las reglas no dependen del dibujo. El servidor tira los dados y calcula qué fichas se pueden mover con cada uno; los dados que no sirven se descartan solos. El cliente gira el tablero para que cada uno vea su cárcel abajo.
 - **Palabras cruzadas con reglas en el servidor.** Cada atril solo viaja a su dueño. El servidor revisa que las letras queden en una fila o columna, seguidas y tocando lo que ya hay, encuentra todas las palabras que se forman (la principal y las cruzadas) y las busca en el diccionario; si alguna no existe, la jugada se rechaza sin perder el turno. El tablero, los premios y el reparto de las 100 fichas son propios. Como el diccionario general empieza en tres letras, las palabras de dos letras salen de una lista aparte (`app/data/palabras_cortas.txt`).
 - **Una (al estilo UNO) para dos.** Mazo de 108 cartas con las reglas para dos jugadores (Salta y Reversa repiten turno; +2 y +4 hacen robar y repiten), robo con opción de jugar la carta robada y la opción de acumular +2 y +4. El «¡Una!» tiene ventana: si alguien se queda con una carta sin decirlo, el otro puede pillarlo hasta que haga su propia jugada. Cuando el mazo se acaba se baraja el descarte; un test juega 25 partidas al azar y comprueba que siempre hay 108 cartas.
+- **Mini golf con física en el servidor.** Un tiro es un ángulo y una fuerza; el servidor lo simula a 240 pasos por segundo (paredes, bumpers, arena, agua, rampas, portales y el hoyo, que atrae un poco a la bola lenta) y manda el camino muestreado a 60 cuadros por segundo para que los dos navegadores lo animen igual. Mientras alguien apunta, la dirección y la fuerza viajan como eventos livianos (`relay`) para que su pareja lo vea en vivo. Un test comprueba con búsqueda por fuerza bruta que los nueve hoyos se pueden meter y que la bola nunca se sale del green.
 - **Cada jugador ve solo lo suyo.** La sala arma una foto distinta para cada conexión, así en Enredo de letras cada uno recibe sus palabras y del otro solo cuántas lleva.
 - **Puntaje perceptual.** Los jugadores eligen en HSB (tono, saturación, brillo), pero la distancia se mide en CIELAB (ΔE76), que se parece a cómo el ojo percibe la diferencia entre colores.
 - **Reconexión.** Si alguien se desconecta a mitad de juego, conserva su lugar y puede volver con el mismo nombre.
@@ -73,6 +74,7 @@ Cliente → servidor:
 { "type": "start_game", "game": "parques", "pieces": 4 }   // 2 | 4 fichas por jugador
 { "type": "start_game", "game": "crosswords", "check": true }   // check: revisar con el diccionario
 { "type": "start_game", "game": "una", "goal": 0, "stacking": false }   // goal: 0 (una mano) | 200 | 500
+{ "type": "start_game", "game": "golf", "holes": 9 }   // 3 | 6 | 9 hoyos
 { "type": "next_round" }
 { "type": "back_to_lobby" }
 
@@ -163,6 +165,10 @@ Cliente → servidor:
 { "type": "un_draw" }  { "type": "un_pass" }       // robar; pasar después de robar
 { "type": "un_una" }  { "type": "un_catch" }       // decir ¡Una!; pillar al otro
 
+// Mini golf (solo quien tiene el turno)
+{ "type": "gf_aim", "angle": 1.57, "power": 0.6 }    // se reenvía a la pareja, no cambia el estado
+{ "type": "gf_shoot", "angle": 1.57, "power": 0.6 }  // ángulo en radianes; fuerza de 0 a 1
+
 // Enredo de letras
 { "type": "boggle_word", "word": "casa" }
 { "type": "boggle_done" }                  // ya no encuentro más
@@ -224,6 +230,9 @@ app/
   games/parques.py Parqués: cárcel con pares, dados por separado, seguros, comer y cielo
   games/crosswords.py Palabras cruzadas: bolsa, atriles, validación de jugadas y puntaje con premios
   games/una.py     Una (estilo UNO): mazo, especiales para dos, ¡Una! y puntos por mano
+  games/golf.py    Mini golf: turnos, golpes y tarjeta
+  games/golf_physics.py Física del mini golf (rebotes, arena, agua, rampas, portales)
+  games/golf_courses.py Los nueve hoyos
   dictionary.py    diccionario de español (data/palabras.txt.gz, licencia MIT)
   spelling.py      ortografía del Stop: ciudades, diccionario, extras y sugerencias
   data/            palabras, ciudades (GeoNames, CC BY 4.0) y extras del Stop
