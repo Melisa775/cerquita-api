@@ -1,8 +1,8 @@
 [
  {
-  "id": "geografia-facil-1",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-1",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Cuál es la capital de Colombia?",
   "options": [
    "Bogotá",
@@ -13,9 +13,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-2",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-2",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Qué río atraviesa Colombia de sur a norte y desemboca en el Caribe?",
   "options": [
    "Magdalena",
@@ -26,9 +26,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-3",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-3",
+  "category": "geography",
+  "level": "easy",
   "question": "¿En qué continente está Egipto?",
   "options": [
    "África",
@@ -39,9 +39,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-4",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-4",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Cuál es el océano más grande del mundo?",
   "options": [
    "Pacífico",
@@ -52,9 +52,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-5",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-5",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Cuál es la capital de Japón?",
   "options": [
    "Tokio",
@@ -65,9 +65,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-6",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-6",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Qué país tiene forma de bota?",
   "options": [
    "Italia",
@@ -78,9 +78,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-7",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-7",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Cuál es la montaña más alta del mundo?",
   "options": [
    "Everest",
@@ -91,9 +91,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-8",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-8",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Cuál es el país más grande de Sudamérica?",
   "options": [
    "Brasil",
@@ -104,9 +104,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-9",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-9",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Con qué océanos tiene costa Colombia?",
   "options": [
    "Pacífico y Atlántico",
@@ -117,9 +117,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-10",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-10",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Cuál es el desierto cálido más grande del mundo?",
   "options": [
    "Sahara",
@@ -130,9 +130,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-11",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-11",
+  "category": "geography",
+  "level": "easy",
   "question": "¿En qué departamento colombiano queda Cartagena?",
   "options": [
    "Bolívar",
@@ -143,9 +143,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-12",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-12",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Qué país está entre Colombia y Costa Rica?",
   "options": [
    "Panamá",
@@ -156,9 +156,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-13",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-13",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Cuál es el río más caudaloso del mundo?",
   "options": [
    "Amazonas",
@@ -169,9 +169,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-14",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-14",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Qué ciudad colombiana es conocida como «la ciudad de la eterna primavera»?",
   "options": [
    "Medellín",
@@ -182,9 +182,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-15",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-15",
+  "category": "geography",
+  "level": "easy",
   "question": "¿En qué país está la Torre Eiffel?",
   "options": [
    "Francia",
@@ -195,9 +195,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-16",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-16",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Cuál es la capital de Perú?",
   "options": [
    "Lima",
@@ -208,9 +208,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-17",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-17",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Qué isla colombiana es famosa por el «mar de siete colores»?",
   "options": [
    "San Andrés",
@@ -221,9 +221,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-18",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-18",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Qué cordillera recorre Sudamérica de norte a sur?",
   "options": [
    "Los Andes",
@@ -234,9 +234,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-1",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-1",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es el país más pequeño del mundo?",
   "options": [
    "Ciudad del Vaticano",
@@ -247,9 +247,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-19",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-19",
+  "category": "geography",
+  "level": "easy",
   "question": "¿Cuál es la capital de Argentina?",
   "options": [
    "Buenos Aires",
@@ -260,9 +260,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-facil-20",
-  "category": "geografia",
-  "level": "facil",
+  "id": "geography-easy-20",
+  "category": "geography",
+  "level": "easy",
   "question": "¿En qué país está Machu Picchu?",
   "options": [
    "Perú",
@@ -273,9 +273,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-2",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-2",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál de estos países tiene más islas?",
   "options": [
    "Indonesia",
@@ -286,9 +286,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-3",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-3",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es la capital de Turquía?",
   "options": [
    "Ankara",
@@ -299,9 +299,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-4",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-4",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es el lago navegable más alto del mundo?",
   "options": [
    "Titicaca",
@@ -312,9 +312,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-5",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-5",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Qué estrecho separa a Europa de África?",
   "options": [
    "Gibraltar",
@@ -325,9 +325,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-6",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-6",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es la capital de Nueva Zelanda?",
   "options": [
    "Wellington",
@@ -338,9 +338,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-7",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-7",
+  "category": "geography",
+  "level": "medium",
   "question": "¿En qué departamento queda el Parque Nacional Natural Tayrona?",
   "options": [
    "Magdalena",
@@ -351,9 +351,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-8",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-8",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es el río más largo de Europa?",
   "options": [
    "Volga",
@@ -364,9 +364,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-9",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-9",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es la capital de Marruecos?",
   "options": [
    "Rabat",
@@ -377,9 +377,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-10",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-10",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál de estos países no tiene salida al mar?",
   "options": [
    "Bolivia",
@@ -390,9 +390,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-11",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-11",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es la capital de Suiza?",
   "options": [
    "Berna",
@@ -403,9 +403,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-12",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-12",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es el país más grande del mundo por superficie?",
   "options": [
    "Rusia",
@@ -416,9 +416,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-13",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-13",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Qué desierto del norte de Chile es uno de los más secos del mundo?",
   "options": [
    "Atacama",
@@ -429,9 +429,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-14",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-14",
+  "category": "geography",
+  "level": "medium",
   "question": "¿En qué departamento está Caño Cristales, el «río de los cinco colores»?",
   "options": [
    "Meta",
@@ -442,9 +442,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-15",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-15",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es el país más poblado de África?",
   "options": [
    "Nigeria",
@@ -455,9 +455,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-16",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-16",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es la capital de Corea del Sur?",
   "options": [
    "Seúl",
@@ -468,9 +468,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-17",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-17",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Qué canal une el mar Mediterráneo con el mar Rojo?",
   "options": [
    "Canal de Suez",
@@ -481,9 +481,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-18",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-18",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es la isla más grande del mundo?",
   "options": [
    "Groenlandia",
@@ -494,9 +494,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-medio-19",
-  "category": "geografia",
-  "level": "medio",
+  "id": "geography-medium-19",
+  "category": "geography",
+  "level": "medium",
   "question": "¿Cuál es la capital de Vietnam?",
   "options": [
    "Hanói",
@@ -507,9 +507,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-1",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-1",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la capital de Kazajistán?",
   "options": [
    "Astaná",
@@ -520,9 +520,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-2",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-2",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Dónde está el punto más profundo de los océanos?",
   "options": [
    "En la fosa de las Marianas",
@@ -533,9 +533,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-3",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-3",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la capital de Bután?",
   "options": [
    "Timbu",
@@ -546,9 +546,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-4",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-4",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la capital de Burkina Faso?",
   "options": [
    "Uagadugú",
@@ -559,9 +559,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-5",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-5",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Qué río marca gran parte de la frontera entre Estados Unidos y México?",
   "options": [
    "El río Bravo",
@@ -572,9 +572,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-6",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-6",
+  "category": "geography",
+  "level": "hard",
   "question": "¿En qué país está el lago Baikal, el más profundo del mundo?",
   "options": [
    "Rusia",
@@ -585,9 +585,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-7",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-7",
+  "category": "geography",
+  "level": "hard",
   "question": "¿En qué país de Sudamérica el idioma oficial es el neerlandés?",
   "options": [
    "Surinam",
@@ -598,9 +598,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-8",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-8",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la sede de gobierno más alta del mundo?",
   "options": [
    "La Paz",
@@ -611,9 +611,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-9",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-9",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuántos departamentos tiene Colombia?",
   "options": [
    "32",
@@ -624,9 +624,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-10",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-10",
+  "category": "geography",
+  "level": "hard",
   "question": "¿En qué departamento nace el río Magdalena?",
   "options": [
    "Huila",
@@ -637,9 +637,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-11",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-11",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la capital de Islandia?",
   "options": [
    "Reikiavik",
@@ -650,9 +650,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-12",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-12",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es el país más grande de África?",
   "options": [
    "Argelia",
@@ -663,9 +663,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-13",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-13",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Qué cordillera se considera la frontera entre Europa y Asia?",
   "options": [
    "Los Urales",
@@ -676,9 +676,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-14",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-14",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la capital de Mongolia?",
   "options": [
    "Ulán Bator",
@@ -689,9 +689,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-15",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-15",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Qué país tiene más husos horarios, contando sus territorios de ultramar?",
   "options": [
    "Francia",
@@ -702,9 +702,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-16",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-16",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la capital del departamento de Putumayo?",
   "options": [
    "Mocoa",
@@ -715,9 +715,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-17",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-17",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Qué país africano tiene tres capitales?",
   "options": [
    "Sudáfrica",
@@ -728,9 +728,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-18",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-18",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la capital de Canadá?",
   "options": [
    "Ottawa",
@@ -741,9 +741,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-19",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-19",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la capital de Australia?",
   "options": [
    "Canberra",
@@ -754,9 +754,9 @@
   "answer": 0
  },
  {
-  "id": "geografia-dificil-20",
-  "category": "geografia",
-  "level": "dificil",
+  "id": "geography-hard-20",
+  "category": "geography",
+  "level": "hard",
   "question": "¿Cuál es la capital del departamento de Amazonas?",
   "options": [
    "Leticia",
@@ -767,9 +767,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-1",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-1",
+  "category": "history",
+  "level": "easy",
   "question": "¿En qué año llegó Cristóbal Colón a América?",
   "options": [
    "1492",
@@ -780,9 +780,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-2",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-2",
+  "category": "history",
+  "level": "easy",
   "question": "¿A quién se le conoce como «El Libertador»?",
   "options": [
    "Simón Bolívar",
@@ -793,9 +793,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-3",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-3",
+  "category": "history",
+  "level": "easy",
   "question": "¿En qué año fue el Grito de Independencia de Colombia?",
   "options": [
    "1810",
@@ -806,9 +806,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-4",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-4",
+  "category": "history",
+  "level": "easy",
   "question": "¿Qué civilización construyó las pirámides de Giza?",
   "options": [
    "Los egipcios",
@@ -819,9 +819,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-5",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-5",
+  "category": "history",
+  "level": "easy",
   "question": "¿En qué año empezó la Segunda Guerra Mundial?",
   "options": [
    "1939",
@@ -832,9 +832,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-6",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-6",
+  "category": "history",
+  "level": "easy",
   "question": "¿Quién fue el primer ser humano en pisar la Luna?",
   "options": [
    "Neil Armstrong",
@@ -845,9 +845,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-7",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-7",
+  "category": "history",
+  "level": "easy",
   "question": "¿En qué año llegó el ser humano a la Luna por primera vez?",
   "options": [
    "1969",
@@ -858,9 +858,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-8",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-8",
+  "category": "history",
+  "level": "easy",
   "question": "¿Qué muro cayó en 1989?",
   "options": [
    "El Muro de Berlín",
@@ -871,9 +871,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-9",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-9",
+  "category": "history",
+  "level": "easy",
   "question": "¿Qué batalla de 1819 selló la independencia de la Nueva Granada?",
   "options": [
    "Batalla de Boyacá",
@@ -884,9 +884,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-10",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-10",
+  "category": "history",
+  "level": "easy",
   "question": "¿Qué imperio tenía su capital en Cusco?",
   "options": [
    "Inca",
@@ -897,9 +897,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-1",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-1",
+  "category": "history",
+  "level": "medium",
   "question": "¿Quién fue el primer emperador romano?",
   "options": [
    "Augusto",
@@ -910,9 +910,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-11",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-11",
+  "category": "history",
+  "level": "easy",
   "question": "¿En qué año terminó la Primera Guerra Mundial?",
   "options": [
    "1918",
@@ -923,9 +923,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-12",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-12",
+  "category": "history",
+  "level": "easy",
   "question": "¿Qué barco se hundió en 1912 tras chocar con un iceberg?",
   "options": [
    "Titanic",
@@ -936,9 +936,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-2",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-2",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué cultura precolombina colombiana dio origen a la leyenda de El Dorado?",
   "options": [
    "Muisca",
@@ -949,9 +949,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-13",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-13",
+  "category": "history",
+  "level": "easy",
   "question": "¿En qué año se promulgó la Constitución actual de Colombia?",
   "options": [
    "1991",
@@ -962,9 +962,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-14",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-14",
+  "category": "history",
+  "level": "easy",
   "question": "¿Qué país le regaló la Estatua de la Libertad a Estados Unidos?",
   "options": [
    "Francia",
@@ -975,9 +975,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-15",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-15",
+  "category": "history",
+  "level": "easy",
   "question": "¿Quién fue la primera mujer en ganar un Premio Nobel?",
   "options": [
    "Marie Curie",
@@ -988,9 +988,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-16",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-16",
+  "category": "history",
+  "level": "easy",
   "question": "¿Qué inventó Johannes Gutenberg hacia 1450?",
   "options": [
    "La imprenta de tipos móviles",
@@ -1001,9 +1001,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-3",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-3",
+  "category": "history",
+  "level": "medium",
   "question": "¿Cuál de las naves de Colón encalló en La Española en 1492?",
   "options": [
    "La Santa María",
@@ -1014,9 +1014,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-17",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-17",
+  "category": "history",
+  "level": "easy",
   "question": "¿En qué país comenzó la Revolución Industrial?",
   "options": [
    "Gran Bretaña",
@@ -1027,9 +1027,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-18",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-18",
+  "category": "history",
+  "level": "easy",
   "question": "¿Qué líder indio promovió la resistencia no violenta?",
   "options": [
    "Mahatma Gandhi",
@@ -1040,9 +1040,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-19",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-19",
+  "category": "history",
+  "level": "easy",
   "question": "¿Cómo se conoce a Policarpa Salavarrieta, heroína de la independencia?",
   "options": [
    "La Pola",
@@ -1053,9 +1053,9 @@
   "answer": 0
  },
  {
-  "id": "historia-facil-20",
-  "category": "historia",
-  "level": "facil",
+  "id": "history-easy-20",
+  "category": "history",
+  "level": "easy",
   "question": "¿Qué civilización construyó Chichén Itzá?",
   "options": [
    "Maya",
@@ -1066,9 +1066,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-4",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-4",
+  "category": "history",
+  "level": "medium",
   "question": "¿Quién fue el primer presidente de Estados Unidos?",
   "options": [
    "George Washington",
@@ -1079,9 +1079,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-5",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-5",
+  "category": "history",
+  "level": "medium",
   "question": "¿En qué año comenzó la Revolución francesa?",
   "options": [
    "1789",
@@ -1092,9 +1092,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-6",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-6",
+  "category": "history",
+  "level": "medium",
   "question": "¿Cómo se llamaba el florero que se rompió el 20 de julio de 1810?",
   "options": [
    "El florero de Llorente",
@@ -1105,9 +1105,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-7",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-7",
+  "category": "history",
+  "level": "medium",
   "question": "¿Quién fue el primer presidente de la Gran Colombia?",
   "options": [
    "Simón Bolívar",
@@ -1118,9 +1118,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-8",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-8",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué pueblo gobernaba Moctezuma cuando llegó Hernán Cortés?",
   "options": [
    "Los aztecas",
@@ -1131,9 +1131,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-9",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-9",
+  "category": "history",
+  "level": "medium",
   "question": "¿En qué año declaró su independencia Estados Unidos?",
   "options": [
    "1776",
@@ -1144,9 +1144,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-10",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-10",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué emperador francés fue derrotado en Waterloo?",
   "options": [
    "Napoleón Bonaparte",
@@ -1157,9 +1157,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-11",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-11",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué navegantes escandinavos llegaron a América hacia el año 1000?",
   "options": [
    "Los vikingos",
@@ -1170,9 +1170,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-12",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-12",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué ciudad romana quedó sepultada por la erupción del Vesubio en el año 79?",
   "options": [
    "Pompeya",
@@ -1183,9 +1183,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-13",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-13",
+  "category": "history",
+  "level": "medium",
   "question": "¿Quién fue el último zar de Rusia?",
   "options": [
    "Nicolás II",
@@ -1196,9 +1196,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-14",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-14",
+  "category": "history",
+  "level": "medium",
   "question": "¿Quién fundó Bogotá en 1538?",
   "options": [
    "Gonzalo Jiménez de Quesada",
@@ -1209,9 +1209,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-15",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-15",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué reyes financiaron el primer viaje de Colón?",
   "options": [
    "Isabel y Fernando, los Reyes Católicos",
@@ -1222,9 +1222,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-16",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-16",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué guerra civil colombiana terminó en 1902?",
   "options": [
    "La Guerra de los Mil Días",
@@ -1235,9 +1235,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-17",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-17",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué país lanzó al espacio el Sputnik, el primer satélite artificial?",
   "options": [
    "La Unión Soviética",
@@ -1248,9 +1248,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-18",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-18",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué faraón es famoso porque su tumba se encontró casi intacta en 1922?",
   "options": [
    "Tutankamón",
@@ -1261,9 +1261,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-19",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-19",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué político liberal fue asesinado en Bogotá el 9 de abril de 1948?",
   "options": [
    "Jorge Eliécer Gaitán",
@@ -1274,9 +1274,9 @@
   "answer": 0
  },
  {
-  "id": "historia-medio-20",
-  "category": "historia",
-  "level": "medio",
+  "id": "history-medium-20",
+  "category": "history",
+  "level": "medium",
   "question": "¿Qué científico fue juzgado por la Inquisición en 1633 por defender que la Tierra gira alrededor del Sol?",
   "options": [
    "Galileo Galilei",
@@ -1287,9 +1287,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-1",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-1",
+  "category": "history",
+  "level": "hard",
   "question": "¿En qué año cayó el Imperio romano de Occidente?",
   "options": [
    "476",
@@ -1300,9 +1300,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-2",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-2",
+  "category": "history",
+  "level": "hard",
   "question": "¿Qué tratado de 1494 repartió las tierras descubiertas entre España y Portugal?",
   "options": [
    "Tratado de Tordesillas",
@@ -1313,9 +1313,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-3",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-3",
+  "category": "history",
+  "level": "hard",
   "question": "¿Quién comandó a los patriotas en la batalla de Ayacucho (1824)?",
   "options": [
    "Antonio José de Sucre",
@@ -1326,9 +1326,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-4",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-4",
+  "category": "history",
+  "level": "hard",
   "question": "¿En qué año se separó Panamá de Colombia?",
   "options": [
    "1903",
@@ -1339,9 +1339,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-5",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-5",
+  "category": "history",
+  "level": "hard",
   "question": "¿Durante qué dinastía china se construyó la mayor parte de la Gran Muralla que se ve hoy?",
   "options": [
    "Ming",
@@ -1352,9 +1352,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-6",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-6",
+  "category": "history",
+  "level": "hard",
   "question": "¿Qué monarca británica reinó durante más tiempo?",
   "options": [
    "Isabel II",
@@ -1365,9 +1365,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-7",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-7",
+  "category": "history",
+  "level": "hard",
   "question": "¿En qué batalla naval de 1571, contra los otomanos, perdió Cervantes el uso de una mano?",
   "options": [
    "Lepanto",
@@ -1378,9 +1378,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-8",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-8",
+  "category": "history",
+  "level": "hard",
   "question": "¿Qué expedición científica dirigió José Celestino Mutis en la Nueva Granada?",
   "options": [
    "La Real Expedición Botánica",
@@ -1391,9 +1391,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-9",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-9",
+  "category": "history",
+  "level": "hard",
   "question": "¿Quién dirigió la Comisión Corográfica que cartografió Colombia en el siglo XIX?",
   "options": [
    "Agustín Codazzi",
@@ -1404,9 +1404,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-10",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-10",
+  "category": "history",
+  "level": "hard",
   "question": "¿Qué rey de Babilonia es famoso por su código de leyes?",
   "options": [
    "Hammurabi",
@@ -1417,9 +1417,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-11",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-11",
+  "category": "history",
+  "level": "hard",
   "question": "¿En qué año se firmó la Carta Magna en Inglaterra?",
   "options": [
    "1215",
@@ -1430,9 +1430,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-12",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-12",
+  "category": "history",
+  "level": "hard",
   "question": "¿Qué general cartaginés cruzó los Alpes con elefantes?",
   "options": [
    "Aníbal",
@@ -1443,9 +1443,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-13",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-13",
+  "category": "history",
+  "level": "hard",
   "question": "¿Qué levantamiento contra los impuestos comenzó en el Socorro (Santander) en 1781?",
   "options": [
    "La Revolución de los Comuneros",
@@ -1456,9 +1456,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-14",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-14",
+  "category": "history",
+  "level": "hard",
   "question": "¿Qué cacica lideró una rebelión indígena contra los españoles en el actual Huila?",
   "options": [
    "La Gaitana",
@@ -1469,9 +1469,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-15",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-15",
+  "category": "history",
+  "level": "hard",
   "question": "¿Quién fue el primer emperador de la China unificada?",
   "options": [
    "Qin Shi Huang",
@@ -1482,9 +1482,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-16",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-16",
+  "category": "history",
+  "level": "hard",
   "question": "¿En qué año llegó Hernán Cortés a México?",
   "options": [
    "1519",
@@ -1495,9 +1495,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-17",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-17",
+  "category": "history",
+  "level": "hard",
   "question": "¿En qué año fue la toma del Palacio de Justicia en Bogotá?",
   "options": [
    "1985",
@@ -1508,9 +1508,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-18",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-18",
+  "category": "history",
+  "level": "hard",
   "question": "¿Por qué ciudad se enfrentaron Colombia y Perú en la guerra de 1932-1933?",
   "options": [
    "Leticia",
@@ -1521,9 +1521,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-19",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-19",
+  "category": "history",
+  "level": "hard",
   "question": "¿En qué año cayó Constantinopla en manos de los otomanos?",
   "options": [
    "1453",
@@ -1534,9 +1534,9 @@
   "answer": 0
  },
  {
-  "id": "historia-dificil-20",
-  "category": "historia",
-  "level": "dificil",
+  "id": "history-hard-20",
+  "category": "history",
+  "level": "hard",
   "question": "¿Qué civilización inventó la escritura cuneiforme?",
   "options": [
    "Los sumerios",
@@ -1547,9 +1547,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-1",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-1",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuál es el planeta más grande del sistema solar?",
   "options": [
    "Júpiter",
@@ -1560,9 +1560,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-2",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-2",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuál es la fórmula química del agua?",
   "options": [
    "H₂O",
@@ -1573,9 +1573,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-3",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-3",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuántos huesos tiene el cuerpo de una persona adulta?",
   "options": [
    "206",
@@ -1586,9 +1586,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-4",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-4",
+  "category": "science",
+  "level": "easy",
   "question": "¿Qué gas absorben las plantas para hacer la fotosíntesis?",
   "options": [
    "Dióxido de carbono",
@@ -1599,9 +1599,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-5",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-5",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuál es el planeta más cercano al Sol?",
   "options": [
    "Mercurio",
@@ -1612,9 +1612,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-6",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-6",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuál es el órgano más grande del cuerpo humano?",
   "options": [
    "La piel",
@@ -1625,9 +1625,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-7",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-7",
+  "category": "science",
+  "level": "easy",
   "question": "¿A qué temperatura hierve el agua al nivel del mar?",
   "options": [
    "100 °C",
@@ -1638,9 +1638,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-8",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-8",
+  "category": "science",
+  "level": "easy",
   "question": "¿Quién formuló la ley de la gravitación universal?",
   "options": [
    "Isaac Newton",
@@ -1651,9 +1651,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-9",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-9",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuántas patas tiene una araña?",
   "options": [
    "8",
@@ -1664,9 +1664,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-10",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-10",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuál es el símbolo químico del oro?",
   "options": [
    "Au",
@@ -1677,9 +1677,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-11",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-11",
+  "category": "science",
+  "level": "easy",
   "question": "¿Qué tipo de animal es la ballena?",
   "options": [
    "Mamífero",
@@ -1690,9 +1690,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-12",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-12",
+  "category": "science",
+  "level": "easy",
   "question": "¿Qué planeta es conocido como el planeta rojo?",
   "options": [
    "Marte",
@@ -1703,9 +1703,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-1",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-1",
+  "category": "science",
+  "level": "medium",
   "question": "¿Cuál es, aproximadamente, la velocidad de la luz?",
   "options": [
    "300.000 km/s",
@@ -1716,9 +1716,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-13",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-13",
+  "category": "science",
+  "level": "easy",
   "question": "¿En qué parte de la célula está el ADN de animales y plantas?",
   "options": [
    "En el núcleo",
@@ -1729,9 +1729,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-14",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-14",
+  "category": "science",
+  "level": "easy",
   "question": "¿Qué vitamina produce el cuerpo con la luz del sol?",
   "options": [
    "Vitamina D",
@@ -1742,9 +1742,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-2",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-2",
+  "category": "science",
+  "level": "medium",
   "question": "¿Qué metal es líquido a temperatura ambiente?",
   "options": [
    "Mercurio",
@@ -1755,9 +1755,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-15",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-15",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuántos planetas tiene el sistema solar?",
   "options": [
    "8",
@@ -1768,9 +1768,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-16",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-16",
+  "category": "science",
+  "level": "easy",
   "question": "¿Quién propuso la teoría de la evolución por selección natural?",
   "options": [
    "Charles Darwin",
@@ -1781,9 +1781,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-17",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-17",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuál es el ave más grande del mundo?",
   "options": [
    "El avestruz",
@@ -1794,9 +1794,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-18",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-18",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuál de estos números es primo?",
   "options": [
    "29",
@@ -1807,9 +1807,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-19",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-19",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuántos lados tiene un hexágono?",
   "options": [
    "6",
@@ -1820,9 +1820,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-20",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-20",
+  "category": "science",
+  "level": "easy",
   "question": "¿Cuál es el animal más grande que ha existido?",
   "options": [
    "La ballena azul",
@@ -1833,9 +1833,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-facil-21",
-  "category": "ciencia",
-  "level": "facil",
+  "id": "science-easy-21",
+  "category": "science",
+  "level": "easy",
   "question": "¿Qué órgano filtra la sangre y produce la orina?",
   "options": [
    "Los riñones",
@@ -1846,9 +1846,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-3",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-3",
+  "category": "science",
+  "level": "medium",
   "question": "¿Cuál es el elemento químico más abundante en el universo?",
   "options": [
    "Hidrógeno",
@@ -1859,9 +1859,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-4",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-4",
+  "category": "science",
+  "level": "medium",
   "question": "¿Qué gas es el más abundante en la atmósfera terrestre?",
   "options": [
    "Nitrógeno",
@@ -1872,9 +1872,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-5",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-5",
+  "category": "science",
+  "level": "medium",
   "question": "¿Cuál es el hueso más largo del cuerpo humano?",
   "options": [
    "El fémur",
@@ -1885,9 +1885,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-6",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-6",
+  "category": "science",
+  "level": "medium",
   "question": "¿Cuántos corazones tiene un pulpo?",
   "options": [
    "3",
@@ -1898,9 +1898,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-7",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-7",
+  "category": "science",
+  "level": "medium",
   "question": "¿Cuál es el símbolo químico del sodio?",
   "options": [
    "Na",
@@ -1911,9 +1911,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-8",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-8",
+  "category": "science",
+  "level": "medium",
   "question": "¿Qué planeta tiene más lunas confirmadas?",
   "options": [
    "Saturno",
@@ -1924,9 +1924,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-9",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-9",
+  "category": "science",
+  "level": "medium",
   "question": "¿Quién descubrió la penicilina?",
   "options": [
    "Alexander Fleming",
@@ -1937,9 +1937,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-10",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-10",
+  "category": "science",
+  "level": "medium",
   "question": "¿Qué parte de la célula produce la mayor parte de su energía?",
   "options": [
    "La mitocondria",
@@ -1950,9 +1950,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-11",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-11",
+  "category": "science",
+  "level": "medium",
   "question": "¿A cuántos grados Fahrenheit se congela el agua?",
   "options": [
    "32 °F",
@@ -1963,9 +1963,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-12",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-12",
+  "category": "science",
+  "level": "medium",
   "question": "¿Qué tipo de sangre se considera donante universal de glóbulos rojos?",
   "options": [
    "O negativo",
@@ -1976,9 +1976,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-13",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-13",
+  "category": "science",
+  "level": "medium",
   "question": "¿Cuántos dientes tiene un adulto contando las muelas del juicio?",
   "options": [
    "32",
@@ -1989,9 +1989,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-14",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-14",
+  "category": "science",
+  "level": "medium",
   "question": "¿Cuál es el metal más abundante en la corteza terrestre?",
   "options": [
    "El aluminio",
@@ -2002,9 +2002,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-15",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-15",
+  "category": "science",
+  "level": "medium",
   "question": "¿Qué mide la escala de Richter?",
   "options": [
    "La magnitud de los sismos",
@@ -2015,9 +2015,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-16",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-16",
+  "category": "science",
+  "level": "medium",
   "question": "¿Qué valor de pH se considera neutro?",
   "options": [
    "7",
@@ -2028,9 +2028,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-17",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-17",
+  "category": "science",
+  "level": "medium",
   "question": "¿Cuál es la estrella más cercana a la Tierra?",
   "options": [
    "El Sol",
@@ -2041,9 +2041,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-18",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-18",
+  "category": "science",
+  "level": "medium",
   "question": "¿Qué parte del ojo le da su color?",
   "options": [
    "El iris",
@@ -2054,9 +2054,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-19",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-19",
+  "category": "science",
+  "level": "medium",
   "question": "¿Cuál es el planeta más caliente del sistema solar?",
   "options": [
    "Venus",
@@ -2067,9 +2067,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-medio-20",
-  "category": "ciencia",
-  "level": "medio",
+  "id": "science-medium-20",
+  "category": "science",
+  "level": "medium",
   "question": "¿Qué órgano produce la insulina?",
   "options": [
    "El páncreas",
@@ -2080,9 +2080,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-1",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-1",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuál es el número atómico del carbono?",
   "options": [
    "6",
@@ -2093,9 +2093,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-2",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-2",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuál es el símbolo químico del potasio?",
   "options": [
    "K",
@@ -2106,9 +2106,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-3",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-3",
+  "category": "science",
+  "level": "hard",
   "question": "¿Qué partícula del átomo no tiene carga eléctrica?",
   "options": [
    "El neutrón",
@@ -2119,9 +2119,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-4",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-4",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuál es el hueso más pequeño del cuerpo humano?",
   "options": [
    "El estribo",
@@ -2132,9 +2132,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-5",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-5",
+  "category": "science",
+  "level": "hard",
   "question": "¿Quién descubrió las leyes de la herencia experimentando con guisantes?",
   "options": [
    "Gregor Mendel",
@@ -2145,9 +2145,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-6",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-6",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuál es la fórmula química de la sal de mesa?",
   "options": [
    "NaCl",
@@ -2158,9 +2158,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-7",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-7",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuánto tarda, más o menos, la luz del Sol en llegar a la Tierra?",
   "options": [
    "Unos 8 minutos",
@@ -2171,9 +2171,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-8",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-8",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuál es el gas noble más abundante en el aire?",
   "options": [
    "Argón",
@@ -2184,9 +2184,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-9",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-9",
+  "category": "science",
+  "level": "hard",
   "question": "¿Qué tipo de enlace une el oxígeno con los hidrógenos dentro de una molécula de agua?",
   "options": [
    "Covalente",
@@ -2197,9 +2197,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-10",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-10",
+  "category": "science",
+  "level": "hard",
   "question": "¿Qué científico propuso en 1911 que el átomo tiene un núcleo pequeño y denso?",
   "options": [
    "Ernest Rutherford",
@@ -2210,9 +2210,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-11",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-11",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuál es la glándula más grande del cuerpo humano?",
   "options": [
    "El hígado",
@@ -2223,9 +2223,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-12",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-12",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuántos pares de costillas tiene normalmente una persona?",
   "options": [
    "12",
@@ -2236,9 +2236,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-13",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-13",
+  "category": "science",
+  "level": "hard",
   "question": "¿Qué planeta gira casi «acostado», con su eje inclinado unos 98°?",
   "options": [
    "Urano",
@@ -2249,9 +2249,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-14",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-14",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuánto es 2 elevado a la 10?",
   "options": [
    "1024",
@@ -2262,9 +2262,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-15",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-15",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cómo se llama la división celular que produce dos células idénticas?",
   "options": [
    "Mitosis",
@@ -2275,9 +2275,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-16",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-16",
+  "category": "science",
+  "level": "hard",
   "question": "¿Qué vitamina es clave para la coagulación de la sangre?",
   "options": [
    "Vitamina K",
@@ -2288,9 +2288,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-17",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-17",
+  "category": "science",
+  "level": "hard",
   "question": "¿Qué científico colombiano es conocido por desarrollar vacunas sintéticas contra la malaria?",
   "options": [
    "Manuel Elkin Patarroyo",
@@ -2301,9 +2301,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-18",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-18",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuál es la unidad de fuerza en el Sistema Internacional?",
   "options": [
    "El newton",
@@ -2314,9 +2314,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-19",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-19",
+  "category": "science",
+  "level": "hard",
   "question": "¿Cuántos cromosomas tiene normalmente una persona?",
   "options": [
    "46",
@@ -2327,9 +2327,9 @@
   "answer": 0
  },
  {
-  "id": "ciencia-dificil-20",
-  "category": "ciencia",
-  "level": "dificil",
+  "id": "science-hard-20",
+  "category": "science",
+  "level": "hard",
   "question": "¿En qué unidad se mide la corriente eléctrica?",
   "options": [
    "Amperio",
@@ -2340,9 +2340,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-1",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-1",
+  "category": "art",
+  "level": "easy",
   "question": "¿Quién pintó la Mona Lisa?",
   "options": [
    "Leonardo da Vinci",
@@ -2353,9 +2353,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-2",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-2",
+  "category": "art",
+  "level": "easy",
   "question": "¿Quién escribió «Cien años de soledad»?",
   "options": [
    "Gabriel García Márquez",
@@ -2366,9 +2366,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-3",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-3",
+  "category": "art",
+  "level": "easy",
   "question": "¿Qué artista colombiano es famoso por sus figuras voluminosas?",
   "options": [
    "Fernando Botero",
@@ -2379,9 +2379,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-4",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-4",
+  "category": "art",
+  "level": "easy",
   "question": "¿Quién escribió «Don Quijote de la Mancha»?",
   "options": [
    "Miguel de Cervantes",
@@ -2392,9 +2392,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-5",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-5",
+  "category": "art",
+  "level": "easy",
   "question": "¿Quién pintó «La noche estrellada»?",
   "options": [
    "Vincent van Gogh",
@@ -2405,9 +2405,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-6",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-6",
+  "category": "art",
+  "level": "easy",
   "question": "¿En qué pueblo ficticio sucede «Cien años de soledad»?",
   "options": [
    "Macondo",
@@ -2418,9 +2418,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-7",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-7",
+  "category": "art",
+  "level": "easy",
   "question": "¿Qué pintora mexicana es famosa por sus autorretratos?",
   "options": [
    "Frida Kahlo",
@@ -2431,9 +2431,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-8",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-8",
+  "category": "art",
+  "level": "easy",
   "question": "¿Quién esculpió el David de mármol que está en Florencia?",
   "options": [
    "Miguel Ángel",
@@ -2444,9 +2444,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-9",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-9",
+  "category": "art",
+  "level": "easy",
   "question": "¿Quién escribió «Romeo y Julieta»?",
   "options": [
    "William Shakespeare",
@@ -2457,9 +2457,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-10",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-10",
+  "category": "art",
+  "level": "easy",
   "question": "¿Qué instrumento tiene normalmente 88 teclas?",
   "options": [
    "El piano",
@@ -2470,9 +2470,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-1",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-1",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién compuso la Novena Sinfonía con el «Himno a la alegría»?",
   "options": [
    "Beethoven",
@@ -2483,9 +2483,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-11",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-11",
+  "category": "art",
+  "level": "easy",
   "question": "¿En qué museo está la Mona Lisa?",
   "options": [
    "El Louvre",
@@ -2496,9 +2496,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-12",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-12",
+  "category": "art",
+  "level": "easy",
   "question": "¿Quién pintó el «Guernica»?",
   "options": [
    "Pablo Picasso",
@@ -2509,9 +2509,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-13",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-13",
+  "category": "art",
+  "level": "easy",
   "question": "¿Qué poeta chileno escribió «Veinte poemas de amor y una canción desesperada»?",
   "options": [
    "Pablo Neruda",
@@ -2522,9 +2522,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-14",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-14",
+  "category": "art",
+  "level": "easy",
   "question": "¿Cuántas cuerdas tiene una guitarra clásica?",
   "options": [
    "6",
@@ -2535,9 +2535,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-15",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-15",
+  "category": "art",
+  "level": "easy",
   "question": "¿Quién escribió «El principito»?",
   "options": [
    "Antoine de Saint-Exupéry",
@@ -2548,9 +2548,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-16",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-16",
+  "category": "art",
+  "level": "easy",
   "question": "¿Cuáles son los colores primarios tradicionales en la pintura?",
   "options": [
    "Rojo, amarillo y azul",
@@ -2561,9 +2561,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-17",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-17",
+  "category": "art",
+  "level": "easy",
   "question": "¿Quién pintó el techo de la Capilla Sixtina?",
   "options": [
    "Miguel Ángel",
@@ -2574,9 +2574,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-18",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-18",
+  "category": "art",
+  "level": "easy",
   "question": "¿Qué género musical es típico de Valledupar?",
   "options": [
    "Vallenato",
@@ -2587,9 +2587,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-19",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-19",
+  "category": "art",
+  "level": "easy",
   "question": "¿A quién se le atribuye «La Odisea»?",
   "options": [
    "Homero",
@@ -2600,9 +2600,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-2",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-2",
+  "category": "art",
+  "level": "medium",
   "question": "¿De qué movimiento artístico fue figura Salvador Dalí?",
   "options": [
    "Surrealismo",
@@ -2613,9 +2613,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-20",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-20",
+  "category": "art",
+  "level": "easy",
   "question": "¿Qué ritmo tradicional de la costa Caribe colombiana se baila con velas encendidas?",
   "options": [
    "Cumbia",
@@ -2626,9 +2626,9 @@
   "answer": 0
  },
  {
-  "id": "arte-facil-21",
-  "category": "arte",
-  "level": "facil",
+  "id": "art-easy-21",
+  "category": "art",
+  "level": "easy",
   "question": "¿De qué país es originario el tango?",
   "options": [
    "Argentina",
@@ -2639,9 +2639,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-3",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-3",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién escribió el poema «El renacuajo paseador»?",
   "options": [
    "Rafael Pombo",
@@ -2652,9 +2652,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-4",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-4",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién pintó «La última cena»?",
   "options": [
    "Leonardo da Vinci",
@@ -2665,9 +2665,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-5",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-5",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién escribió «La metamorfosis», donde Gregorio Samsa amanece convertido en insecto?",
   "options": [
    "Franz Kafka",
@@ -2678,9 +2678,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-6",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-6",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién pintó «El nacimiento de Venus»?",
   "options": [
    "Sandro Botticelli",
@@ -2691,9 +2691,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-7",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-7",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién escribió «La divina comedia»?",
   "options": [
    "Dante Alighieri",
@@ -2704,9 +2704,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-8",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-8",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién pintó «La joven de la perla»?",
   "options": [
    "Johannes Vermeer",
@@ -2717,9 +2717,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-9",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-9",
+  "category": "art",
+  "level": "medium",
   "question": "¿De qué país es el escritor Mario Vargas Llosa?",
   "options": [
    "Perú",
@@ -2730,9 +2730,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-10",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-10",
+  "category": "art",
+  "level": "medium",
   "question": "¿Qué escritor argentino escribió «Rayuela»?",
   "options": [
    "Julio Cortázar",
@@ -2743,9 +2743,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-11",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-11",
+  "category": "art",
+  "level": "medium",
   "question": "¿En qué ciudad está el Museo del Prado?",
   "options": [
    "Madrid",
@@ -2756,9 +2756,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-12",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-12",
+  "category": "art",
+  "level": "medium",
   "question": "¿Qué compositor escribió la ópera «La flauta mágica»?",
   "options": [
    "Wolfgang Amadeus Mozart",
@@ -2769,9 +2769,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-13",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-13",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién escribió «Pedro Páramo»?",
   "options": [
    "Juan Rulfo",
@@ -2782,9 +2782,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-14",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-14",
+  "category": "art",
+  "level": "medium",
   "question": "¿Qué arquitecto diseñó la Sagrada Familia de Barcelona?",
   "options": [
    "Antoni Gaudí",
@@ -2795,9 +2795,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-15",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-15",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién fue la primera persona latinoamericana en ganar el Nobel de Literatura?",
   "options": [
    "Gabriela Mistral",
@@ -2808,9 +2808,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-16",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-16",
+  "category": "art",
+  "level": "medium",
   "question": "¿A qué movimiento artístico pertenece Claude Monet?",
   "options": [
    "Impresionismo",
@@ -2821,9 +2821,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-17",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-17",
+  "category": "art",
+  "level": "medium",
   "question": "¿Qué ritmo es típico de los Llanos Orientales?",
   "options": [
    "Joropo",
@@ -2834,9 +2834,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-18",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-18",
+  "category": "art",
+  "level": "medium",
   "question": "¿Qué artista es famoso por sus cuadros de latas de sopa Campbell?",
   "options": [
    "Andy Warhol",
@@ -2847,9 +2847,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-19",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-19",
+  "category": "art",
+  "level": "medium",
   "question": "¿Qué escritor colombiano escribió «La vorágine»?",
   "options": [
    "José Eustasio Rivera",
@@ -2860,9 +2860,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-20",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-20",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién compuso «Las cuatro estaciones»?",
   "options": [
    "Antonio Vivaldi",
@@ -2873,9 +2873,9 @@
   "answer": 0
  },
  {
-  "id": "arte-medio-21",
-  "category": "arte",
-  "level": "medio",
+  "id": "art-medium-21",
+  "category": "art",
+  "level": "medium",
   "question": "¿Quién pintó «La persistencia de la memoria», el cuadro de los relojes blandos?",
   "options": [
    "Salvador Dalí",
@@ -2886,9 +2886,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-1",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-1",
+  "category": "art",
+  "level": "hard",
   "question": "¿Quién pintó «El jardín de las delicias»?",
   "options": [
    "El Bosco",
@@ -2899,9 +2899,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-2",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-2",
+  "category": "art",
+  "level": "hard",
   "question": "¿Quién escribió «En busca del tiempo perdido»?",
   "options": [
    "Marcel Proust",
@@ -2912,9 +2912,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-3",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-3",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué pintora antioqueña causó escándalo en los años cuarenta por sus desnudos?",
   "options": [
    "Débora Arango",
@@ -2925,9 +2925,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-4",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-4",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué escultor creó «El pensador»?",
   "options": [
    "Auguste Rodin",
@@ -2938,9 +2938,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-5",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-5",
+  "category": "art",
+  "level": "hard",
   "question": "¿En qué año recibió García Márquez el Nobel de Literatura?",
   "options": [
    "1982",
@@ -2951,9 +2951,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-6",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-6",
+  "category": "art",
+  "level": "hard",
   "question": "¿Quién pintó «Las meninas»?",
   "options": [
    "Diego Velázquez",
@@ -2964,9 +2964,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-7",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-7",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué poeta colombiano escribió el «Nocturno» que empieza «Una noche, una noche toda llena de murmullos»?",
   "options": [
    "José Asunción Silva",
@@ -2977,9 +2977,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-8",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-8",
+  "category": "art",
+  "level": "hard",
   "question": "¿Quién escribió «Ficciones» y «El Aleph»?",
   "options": [
    "Jorge Luis Borges",
@@ -2990,9 +2990,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-9",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-9",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué pintor noruego pintó «El grito»?",
   "options": [
    "Edvard Munch",
@@ -3003,9 +3003,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-10",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-10",
+  "category": "art",
+  "level": "hard",
   "question": "¿Quién compuso la ópera «La traviata»?",
   "options": [
    "Giuseppe Verdi",
@@ -3016,9 +3016,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-11",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-11",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué movimiento artístico crearon Picasso y Braque?",
   "options": [
    "Cubismo",
@@ -3029,9 +3029,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-12",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-12",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué escritor ruso escribió «Crimen y castigo»?",
   "options": [
    "Fiódor Dostoievski",
@@ -3042,9 +3042,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-13",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-13",
+  "category": "art",
+  "level": "hard",
   "question": "¿Quién escribió «Cumbres borrascosas»?",
   "options": [
    "Emily Brontë",
@@ -3055,9 +3055,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-14",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-14",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué escultor colombiano es famoso por sus piezas de metal pintado llamadas «Aparatos mágicos»?",
   "options": [
    "Edgar Negret",
@@ -3068,9 +3068,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-15",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-15",
+  "category": "art",
+  "level": "hard",
   "question": "¿Cuántas sinfonías completó Beethoven?",
   "options": [
    "9",
@@ -3081,9 +3081,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-16",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-16",
+  "category": "art",
+  "level": "hard",
   "question": "¿Quién escribió «Así habló Zaratustra»?",
   "options": [
    "Friedrich Nietzsche",
@@ -3094,9 +3094,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-17",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-17",
+  "category": "art",
+  "level": "hard",
   "question": "¿A qué movimiento literario pertenece Rubén Darío?",
   "options": [
    "Modernismo",
@@ -3107,9 +3107,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-18",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-18",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué escritor colombiano escribió «El olvido que seremos»?",
   "options": [
    "Héctor Abad Faciolince",
@@ -3120,9 +3120,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-19",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-19",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué compositor escribió los «Conciertos de Brandeburgo»?",
   "options": [
    "Johann Sebastian Bach",
@@ -3133,9 +3133,9 @@
   "answer": 0
  },
  {
-  "id": "arte-dificil-20",
-  "category": "arte",
-  "level": "dificil",
+  "id": "art-hard-20",
+  "category": "art",
+  "level": "hard",
   "question": "¿Qué escritor colombiano escribió la novela «María»?",
   "options": [
    "Jorge Isaacs",
@@ -3146,9 +3146,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-1",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-1",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Cómo se llama el muñeco de nieve de «Frozen»?",
   "options": [
    "Olaf",
@@ -3159,9 +3159,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-2",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-2",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué película de Disney cuenta la historia de la familia Madrigal en Colombia?",
   "options": [
    "Encanto",
@@ -3172,9 +3172,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-3",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-3",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué cantante colombiana canta «Hips Don't Lie»?",
   "options": [
    "Shakira",
@@ -3185,9 +3185,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-4",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-4",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿De qué color es Shrek?",
   "options": [
    "Verde",
@@ -3198,9 +3198,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-5",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-5",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Cómo se llama el pez payaso de «Buscando a Nemo» que está perdido?",
   "options": [
    "Nemo",
@@ -3211,9 +3211,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-6",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-6",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿En qué ciudad nació el cantante J Balvin?",
   "options": [
    "Medellín",
@@ -3224,9 +3224,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-7",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-7",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿En qué saga aparece Darth Vader?",
   "options": [
    "Star Wars",
@@ -3237,9 +3237,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-8",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-8",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿En qué colegio estudia Harry Potter?",
   "options": [
    "Hogwarts",
@@ -3250,9 +3250,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-9",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-9",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Cómo se llama la telenovela colombiana sobre una secretaria llamada Beatriz?",
   "options": [
    "Yo soy Betty, la fea",
@@ -3263,9 +3263,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-10",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-10",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué oficio tiene Mario, el personaje de Nintendo?",
   "options": [
    "Fontanero",
@@ -3276,9 +3276,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-11",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-11",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Cómo se llama el vaquero de «Toy Story»?",
   "options": [
    "Woody",
@@ -3289,9 +3289,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-12",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-12",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Cómo se llama el león protagonista de «El Rey León»?",
   "options": [
    "Simba",
@@ -3302,9 +3302,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-13",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-13",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué cantante colombiano canta «La bicicleta» con Shakira?",
   "options": [
    "Carlos Vives",
@@ -3315,9 +3315,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-14",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-14",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué personaje dice «¡Hasta el infinito y más allá!»?",
   "options": [
    "Buzz Lightyear",
@@ -3328,9 +3328,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-15",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-15",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Cómo se llama el perro de Mickey Mouse?",
   "options": [
    "Pluto",
@@ -3341,9 +3341,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-1",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-1",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué banda británica cantaba «Hey Jude»?",
   "options": [
    "The Beatles",
@@ -3354,9 +3354,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-16",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-16",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Cómo se llama la serie animada de la familia amarilla de Springfield?",
   "options": [
    "Los Simpson",
@@ -3367,9 +3367,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-17",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-17",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué película de Pixar trata sobre el Día de Muertos en México?",
   "options": [
    "Coco",
@@ -3380,9 +3380,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-18",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-18",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué princesa de Disney pierde una zapatilla de cristal?",
   "options": [
    "Cenicienta",
@@ -3393,9 +3393,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-19",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-19",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué personaje verde odia la Navidad?",
   "options": [
    "El Grinch",
@@ -3406,9 +3406,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-20",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-20",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué superhéroe tiene un martillo llamado Mjolnir?",
   "options": [
    "Thor",
@@ -3419,9 +3419,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-21",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-21",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿A qué cantante colombiana le dicen «La Bichota»?",
   "options": [
    "Karol G",
@@ -3432,9 +3432,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-2",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-2",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué personaje de los Looney Tunes dice «¿Qué hay de nuevo, viejo?»?",
   "options": [
    "Bugs Bunny",
@@ -3445,9 +3445,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-22",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-22",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Cómo se llama el robot protagonista de una película de Pixar que limpia la Tierra?",
   "options": [
    "WALL·E",
@@ -3458,9 +3458,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-facil-23",
-  "category": "entretenimiento",
-  "level": "facil",
+  "id": "entertainment-easy-23",
+  "category": "entertainment",
+  "level": "easy",
   "question": "¿Qué superhéroe vive en Ciudad Gótica?",
   "options": [
    "Batman",
@@ -3471,9 +3471,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-3",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-3",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué actor interpretó a Jack en «Titanic»?",
   "options": [
    "Leonardo DiCaprio",
@@ -3484,9 +3484,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-4",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-4",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿En qué serie los amigos se reúnen en el café Central Perk?",
   "options": [
    "Friends",
@@ -3497,9 +3497,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-5",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-5",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Cuál es el nombre real de Spider-Man?",
   "options": [
    "Peter Parker",
@@ -3510,9 +3510,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-6",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-6",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿En qué serie aparecen las familias Stark y Lannister?",
   "options": [
    "Juego de tronos",
@@ -3523,9 +3523,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-7",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-7",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué cantante colombiano canta «A Dios le pido»?",
   "options": [
    "Juanes",
@@ -3536,9 +3536,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-8",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-8",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué serie surcoreana de 2021 trata de juegos infantiles con premios millonarios y consecuencias mortales?",
   "options": [
    "El juego del calamar",
@@ -3549,9 +3549,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-9",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-9",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Cómo se llama el mago gris de «El Señor de los Anillos»?",
   "options": [
    "Gandalf",
@@ -3562,9 +3562,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-10",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-10",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué película de James Cameron ganó 11 premios Óscar?",
   "options": [
    "Titanic",
@@ -3575,9 +3575,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-11",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-11",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿A qué cantante le dicen «la Reina del Pop»?",
   "options": [
    "Madonna",
@@ -3588,9 +3588,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-12",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-12",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Cómo se llama la hermana de Elsa en «Frozen»?",
   "options": [
    "Anna",
@@ -3601,9 +3601,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-13",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-13",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Cómo se llama el dinosaurio verde amigo de Mario?",
   "options": [
    "Yoshi",
@@ -3614,9 +3614,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-14",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-14",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué actor interpretó a Iron Man en las películas de Marvel?",
   "options": [
    "Robert Downey Jr.",
@@ -3627,9 +3627,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-15",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-15",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Cómo se llama el villano de la saga de Harry Potter?",
   "options": [
    "Lord Voldemort",
@@ -3640,9 +3640,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-16",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-16",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué banda lideraba Freddie Mercury?",
   "options": [
    "Queen",
@@ -3653,9 +3653,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-17",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-17",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿En qué telenovela colombiana se enamoran Gaviota y Sebastián Vallejo?",
   "options": [
    "Café con aroma de mujer",
@@ -3666,9 +3666,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-18",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-18",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿En qué ciudad viven Los Simpson?",
   "options": [
    "Springfield",
@@ -3679,9 +3679,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-19",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-19",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué cantante colombiana grabó «Tusa» con Nicki Minaj?",
   "options": [
    "Karol G",
@@ -3692,9 +3692,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-medio-20",
-  "category": "entretenimiento",
-  "level": "medio",
+  "id": "entertainment-medium-20",
+  "category": "entertainment",
+  "level": "medium",
   "question": "¿Qué serie animada japonesa protagoniza Goku?",
   "options": [
    "Dragon Ball",
@@ -3705,9 +3705,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-1",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-1",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Quién dirigió «Pulp Fiction»?",
   "options": [
    "Quentin Tarantino",
@@ -3718,9 +3718,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-2",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-2",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué película colombiana de Ciro Guerra fue nominada al Óscar a mejor película extranjera?",
   "options": [
    "El abrazo de la serpiente",
@@ -3731,9 +3731,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-3",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-3",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué película surcoreana ganó el Óscar a mejor película en 2020?",
   "options": [
    "Parásitos",
@@ -3744,9 +3744,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-4",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-4",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Quién compuso la música de «Star Wars»?",
   "options": [
    "John Williams",
@@ -3757,9 +3757,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-5",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-5",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Cuál fue el primer largometraje animado de Disney, estrenado en 1937?",
   "options": [
    "Blancanieves y los siete enanitos",
@@ -3770,9 +3770,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-6",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-6",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿En qué año se estrenó la primera «Toy Story»?",
   "options": [
    "1995",
@@ -3783,9 +3783,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-7",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-7",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué director mexicano ganó el Óscar a mejor dirección por «Gravity»?",
   "options": [
    "Alfonso Cuarón",
@@ -3796,9 +3796,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-8",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-8",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué banda grabó el álbum «The Dark Side of the Moon»?",
   "options": [
    "Pink Floyd",
@@ -3809,9 +3809,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-9",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-9",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Cómo se llama el planeta natal de Superman?",
   "options": [
    "Krypton",
@@ -3822,9 +3822,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-10",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-10",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué actor interpretó a Wolverine durante más de veinte años?",
   "options": [
    "Hugh Jackman",
@@ -3835,9 +3835,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-11",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-11",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué empresa japonesa creó la consola PlayStation?",
   "options": [
    "Sony",
@@ -3848,9 +3848,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-12",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-12",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Cómo se llama la nave de Han Solo?",
   "options": [
    "El Halcón Milenario",
@@ -3861,9 +3861,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-13",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-13",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué escritor creó a Sherlock Holmes?",
   "options": [
    "Arthur Conan Doyle",
@@ -3874,9 +3874,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-14",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-14",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿En qué película de 1994 se dice que la vida es como una caja de chocolates?",
   "options": [
    "Forrest Gump",
@@ -3887,9 +3887,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-15",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-15",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué saga de videojuegos de Nintendo protagoniza Link?",
   "options": [
    "The Legend of Zelda",
@@ -3900,9 +3900,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-16",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-16",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué grupo de K-pop canta «Dynamite»?",
   "options": [
    "BTS",
@@ -3913,9 +3913,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-17",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-17",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué actriz colombiana interpreta a Gloria en «Modern Family»?",
   "options": [
    "Sofía Vergara",
@@ -3926,9 +3926,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-18",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-18",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué película de Christopher Nolan trata de robar ideas dentro de los sueños?",
   "options": [
    "El origen",
@@ -3939,9 +3939,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-19",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-19",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Cuántas películas tiene la saga principal de Harry Potter?",
   "options": [
    "8",
@@ -3952,9 +3952,9 @@
   "answer": 0
  },
  {
-  "id": "entretenimiento-dificil-20",
-  "category": "entretenimiento",
-  "level": "dificil",
+  "id": "entertainment-hard-20",
+  "category": "entertainment",
+  "level": "hard",
   "question": "¿Qué cantante colombiano es conocido como «Papi Juancho»?",
   "options": [
    "Maluma",
@@ -3965,9 +3965,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-1",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-1",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Cuántos jugadores de un equipo de fútbol hay en la cancha?",
   "options": [
    "11",
@@ -3978,9 +3978,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-2",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-2",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Cada cuántos años se juega el Mundial de fútbol masculino?",
   "options": [
    "4",
@@ -3991,9 +3991,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-3",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-3",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Qué país ganó el Mundial de fútbol de 2022?",
   "options": [
    "Argentina",
@@ -4004,9 +4004,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-4",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-4",
+  "category": "sports",
+  "level": "easy",
   "question": "¿En qué deporte se usa un volante o pluma?",
   "options": [
    "Bádminton",
@@ -4017,9 +4017,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-5",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-5",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Qué ciclista colombiano ganó el Tour de Francia en 2019?",
   "options": [
    "Egan Bernal",
@@ -4030,9 +4030,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-1",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-1",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Cuál es el deporte nacional de Colombia por ley?",
   "options": [
    "El tejo",
@@ -4043,9 +4043,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-6",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-6",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Cuántos anillos tiene la bandera olímpica?",
   "options": [
    "5",
@@ -4056,9 +4056,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-7",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-7",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Qué futbolista colombiano fue el máximo goleador del Mundial de 2014?",
   "options": [
    "James Rodríguez",
@@ -4069,9 +4069,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-8",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-8",
+  "category": "sports",
+  "level": "easy",
   "question": "¿En qué deporte es famosa Mariana Pajón?",
   "options": [
    "BMX",
@@ -4082,9 +4082,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-9",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-9",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Cuánto dura un partido de fútbol sin contar el tiempo añadido?",
   "options": [
    "90 minutos",
@@ -4095,9 +4095,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-2",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-2",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Qué tenista suizo ganó 20 títulos de Grand Slam?",
   "options": [
    "Roger Federer",
@@ -4108,9 +4108,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-10",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-10",
+  "category": "sports",
+  "level": "easy",
   "question": "¿En qué deporte se batea un jonrón?",
   "options": [
    "Béisbol",
@@ -4121,9 +4121,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-11",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-11",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Cuántos puntos vale un triple en baloncesto?",
   "options": [
    "3",
@@ -4134,9 +4134,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-12",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-12",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Qué atleta jamaiquino tiene el récord mundial de los 100 metros?",
   "options": [
    "Usain Bolt",
@@ -4147,9 +4147,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-13",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-13",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Qué selección ha ganado más Mundiales de fútbol masculino?",
   "options": [
    "Brasil",
@@ -4160,9 +4160,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-14",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-14",
+  "category": "sports",
+  "level": "easy",
   "question": "¿En qué deporte se usa un tee para apoyar la pelota?",
   "options": [
    "Golf",
@@ -4173,9 +4173,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-15",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-15",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Cuántos sets hay que ganar para llevarse un partido de voleibol?",
   "options": [
    "3",
@@ -4186,9 +4186,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-16",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-16",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Cuántos jugadores de un equipo de baloncesto hay en la cancha?",
   "options": [
    "5",
@@ -4199,9 +4199,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-3",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-3",
+  "category": "sports",
+  "level": "medium",
   "question": "¿En qué país se inventó el voleibol?",
   "options": [
    "Estados Unidos",
@@ -4212,9 +4212,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-17",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-17",
+  "category": "sports",
+  "level": "easy",
   "question": "¿En qué juego se dice «jaque mate»?",
   "options": [
    "Ajedrez",
@@ -4225,9 +4225,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-4",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-4",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Cuánto mide una maratón?",
   "options": [
    "42,195 km",
@@ -4238,9 +4238,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-facil-18",
-  "category": "deportes",
-  "level": "facil",
+  "id": "sports-easy-18",
+  "category": "sports",
+  "level": "easy",
   "question": "¿Cada cuántos años se celebran los Juegos Olímpicos de verano?",
   "options": [
    "4",
@@ -4251,9 +4251,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-5",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-5",
+  "category": "sports",
+  "level": "medium",
   "question": "¿En qué país se jugó el Mundial de fútbol de 2014?",
   "options": [
    "Brasil",
@@ -4264,9 +4264,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-6",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-6",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Cuántos jugadores de un equipo de voleibol hay en la cancha?",
   "options": [
    "6",
@@ -4277,9 +4277,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-7",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-7",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Qué futbolista argentino es apodado «la Pulga»?",
   "options": [
    "Lionel Messi",
@@ -4290,9 +4290,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-8",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-8",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Cuánto mide de largo una piscina olímpica?",
   "options": [
    "50 metros",
@@ -4303,9 +4303,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-9",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-9",
+  "category": "sports",
+  "level": "medium",
   "question": "¿En qué año ganó Colombia la Copa América?",
   "options": [
    "2001",
@@ -4316,9 +4316,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-10",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-10",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Qué piloto colombiano corrió en la Fórmula 1 con Williams y McLaren?",
   "options": [
    "Juan Pablo Montoya",
@@ -4329,9 +4329,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-11",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-11",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Cuántos minutos dura cada cuarto de un partido de la NBA?",
   "options": [
    "12",
@@ -4342,9 +4342,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-12",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-12",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Qué nadador tiene el récord de medallas de oro olímpicas?",
   "options": [
    "Michael Phelps",
@@ -4355,9 +4355,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-13",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-13",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Qué torneo de tenis ganó Rafael Nadal 14 veces?",
   "options": [
    "Roland Garros",
@@ -4368,9 +4368,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-14",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-14",
+  "category": "sports",
+  "level": "medium",
   "question": "¿En qué país nacieron los Juegos Olímpicos de la Antigüedad?",
   "options": [
    "Grecia",
@@ -4381,9 +4381,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-15",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-15",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Qué ciclista colombiano ganó la Vuelta a España en 2016?",
   "options": [
    "Nairo Quintana",
@@ -4394,9 +4394,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-16",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-16",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Cuántos jugadores de un equipo de béisbol hay en el campo defendiendo?",
   "options": [
    "9",
@@ -4407,9 +4407,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-17",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-17",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Qué selección ganó el Mundial de fútbol de 2010?",
   "options": [
    "España",
@@ -4420,9 +4420,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-18",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-18",
+  "category": "sports",
+  "level": "medium",
   "question": "¿En qué deporte ganó María Isabel Urrutia el primer oro olímpico de Colombia, en Sídney 2000?",
   "options": [
    "Halterofilia",
@@ -4433,9 +4433,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-19",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-19",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Cuántos hoyos tiene un recorrido estándar de golf?",
   "options": [
    "18",
@@ -4446,9 +4446,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-20",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-20",
+  "category": "sports",
+  "level": "medium",
   "question": "¿Cuántos puntos vale un touchdown en el fútbol americano?",
   "options": [
    "6",
@@ -4459,9 +4459,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-21",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-21",
+  "category": "sports",
+  "level": "medium",
   "question": "¿En qué deporte se disputa la Copa Davis?",
   "options": [
    "Tenis",
@@ -4472,9 +4472,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-medio-22",
-  "category": "deportes",
-  "level": "medio",
+  "id": "sports-medium-22",
+  "category": "sports",
+  "level": "medium",
   "question": "¿En qué deporte se usan un stick y un disco llamado puck?",
   "options": [
    "Hockey sobre hielo",
@@ -4485,9 +4485,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-1",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-1",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Quién ha ganado más Balones de Oro?",
   "options": [
    "Lionel Messi",
@@ -4498,9 +4498,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-2",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-2",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Qué país ganó el primer Mundial de fútbol, en 1930?",
   "options": [
    "Uruguay",
@@ -4511,9 +4511,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-3",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-3",
+  "category": "sports",
+  "level": "hard",
   "question": "¿En qué ciudad se celebraron los Juegos Olímpicos de 1992?",
   "options": [
    "Barcelona",
@@ -4524,9 +4524,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-4",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-4",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Qué pareja colombiana ganó Wimbledon en dobles en 2019?",
   "options": [
    "Juan Sebastián Cabal y Robert Farah",
@@ -4537,9 +4537,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-5",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-5",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Cuántos jugadores de un equipo de rugby a 15 hay en la cancha?",
   "options": [
    "15",
@@ -4550,9 +4550,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-6",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-6",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Qué atleta ganó cuatro medallas de oro en los Juegos de Berlín 1936?",
   "options": [
    "Jesse Owens",
@@ -4563,9 +4563,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-7",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-7",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Quién ganó la primera medalla olímpica de Colombia, en Múnich 1972?",
   "options": [
    "Helmut Bellingrodt",
@@ -4576,9 +4576,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-8",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-8",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Cuál es la prueba más larga de natación olímpica en piscina?",
   "options": [
    "1500 metros",
@@ -4589,9 +4589,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-9",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-9",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Qué gimnasta obtuvo el primer 10 perfecto de la historia olímpica, en 1976?",
   "options": [
    "Nadia Comăneci",
@@ -4602,9 +4602,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-10",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-10",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Qué futbolista colombiano jugó en el Real Madrid y en el Bayern Múnich?",
   "options": [
    "James Rodríguez",
@@ -4615,9 +4615,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-11",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-11",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Cuántos Tours de Francia ganó Miguel Induráin?",
   "options": [
    "5",
@@ -4628,9 +4628,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-12",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-12",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Quién es el máximo goleador histórico de la selección Colombia?",
   "options": [
    "Radamel Falcao",
@@ -4641,9 +4641,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-13",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-13",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Cuántos jugadores de un equipo de waterpolo hay en el agua?",
   "options": [
    "7",
@@ -4654,9 +4654,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-14",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-14",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Qué piloto igualó los siete títulos de Fórmula 1 de Michael Schumacher?",
   "options": [
    "Lewis Hamilton",
@@ -4667,9 +4667,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-15",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-15",
+  "category": "sports",
+  "level": "hard",
   "question": "¿En qué deporte ganó Óscar Figueroa el oro olímpico en Río 2016?",
   "options": [
    "Halterofilia",
@@ -4680,9 +4680,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-16",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-16",
+  "category": "sports",
+  "level": "hard",
   "question": "¿A qué altura está el aro de baloncesto?",
   "options": [
    "3,05 metros",
@@ -4693,9 +4693,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-17",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-17",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Qué tenista tiene más títulos de Grand Slam en la rama masculina?",
   "options": [
    "Novak Djokovic",
@@ -4706,9 +4706,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-18",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-18",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Qué carrera ganó Nairo Quintana en 2014?",
   "options": [
    "El Giro de Italia",
@@ -4719,9 +4719,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-19",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-19",
+  "category": "sports",
+  "level": "hard",
   "question": "¿En qué prueba ganó Caterine Ibargüen el oro olímpico en Río 2016?",
   "options": [
    "Salto triple",
@@ -4732,9 +4732,9 @@
   "answer": 0
  },
  {
-  "id": "deportes-dificil-20",
-  "category": "deportes",
-  "level": "dificil",
+  "id": "sports-hard-20",
+  "category": "sports",
+  "level": "hard",
   "question": "¿Qué arquero colombiano hizo famosa la atajada del «escorpión» en 1995?",
   "options": [
    "René Higuita",

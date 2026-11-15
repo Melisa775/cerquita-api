@@ -2,68 +2,68 @@ import random
 
 from app.games.common import parse_rounds
 
-# (id, nombre, rasgos). Rasgos: genero, pelo (corto, largo, rizado, recogido,
-# calvo), color (negro, castano, rubio, pelirrojo, canoso), ojos (cafes,
-# azules, verdes), gafas, sombrero (None, gorra, sombrero), barba, bigote,
-# aretes, pecas. "piel" y "fondo" son solo visuales: no hay preguntas sobre la piel.
+# (id, name, traits). Traits: gender, hair (short, long, curly, updo, bald),
+# hair color (black, brown, blond, red, gray), eyes (brown, blue, green),
+# glasses, hat (None, cap, hat), beard, mustache, earrings, freckles. "skin" and
+# "background" are only visual: there are no questions about skin.
 _RAW = [
-    ("camila", "Camila", "mujer", "largo", "castano", "cafes", 0, None, 0, 0, 1, 0, 1, "#F6C9D0"),
-    ("valentina", "Valentina", "mujer", "largo", "rubio", "azules", 0, None, 0, 0, 1, 1, 0, "#CDE3F7"),
-    ("sofia", "Sofía", "mujer", "rizado", "negro", "cafes", 1, None, 0, 0, 0, 0, 3, "#FBE3B5"),
-    ("mariana", "Mariana", "mujer", "corto", "pelirrojo", "verdes", 0, "gorra", 0, 0, 0, 1, 0, "#D5EBD9"),
-    ("lucia", "Lucía", "mujer", "recogido", "canoso", "azules", 1, None, 0, 0, 1, 0, 1, "#E6DDF5"),
-    ("daniela", "Daniela", "mujer", "largo", "negro", "verdes", 0, "sombrero", 0, 0, 0, 0, 2, "#F9D9C3"),
-    ("isabela", "Isabela", "mujer", "recogido", "castano", "cafes", 0, None, 0, 0, 1, 0, 3, "#D9EEF0"),
-    ("gabriela", "Gabriela", "mujer", "rizado", "rubio", "verdes", 0, None, 0, 0, 0, 0, 1, "#F6C9D0"),
-    ("paula", "Paula", "mujer", "corto", "negro", "cafes", 1, None, 0, 0, 1, 0, 2, "#FBE3B5"),
-    ("sara", "Sara", "mujer", "largo", "pelirrojo", "azules", 0, "sombrero", 0, 0, 0, 1, 0, "#D5EBD9"),
-    ("juliana", "Juliana", "mujer", "rizado", "castano", "azules", 0, "gorra", 0, 0, 1, 0, 2, "#E6DDF5"),
-    ("laura", "Laura", "mujer", "corto", "rubio", "cafes", 1, None, 0, 0, 0, 0, 0, "#F9D9C3"),
-    ("santiago", "Santiago", "hombre", "corto", "negro", "cafes", 0, None, 1, 0, 0, 0, 2, "#CDE3F7"),
-    ("mateo", "Mateo", "hombre", "rizado", "castano", "verdes", 1, None, 0, 0, 0, 0, 1, "#FBE3B5"),
-    ("sebastian", "Sebastián", "hombre", "calvo", "canoso", "azules", 1, None, 0, 1, 0, 0, 0, "#D9EEF0"),
-    ("andres", "Andrés", "hombre", "corto", "rubio", "azules", 0, "gorra", 0, 0, 0, 0, 1, "#F6C9D0"),
-    ("felipe", "Felipe", "hombre", "corto", "pelirrojo", "verdes", 0, None, 1, 0, 0, 1, 0, "#E6DDF5"),
-    ("tomas", "Tomás", "hombre", "largo", "negro", "cafes", 0, "sombrero", 0, 0, 0, 0, 3, "#D5EBD9"),
-    ("julian", "Julián", "hombre", "corto", "castano", "cafes", 0, None, 0, 1, 0, 0, 2, "#F9D9C3"),
-    ("martin", "Martín", "hombre", "calvo", "negro", "cafes", 1, None, 1, 0, 0, 0, 3, "#CDE3F7"),
-    ("david", "David", "hombre", "rizado", "negro", "cafes", 0, "gorra", 0, 0, 1, 0, 2, "#FBE3B5"),
-    ("nicolas", "Nicolás", "hombre", "corto", "canoso", "azules", 1, None, 1, 1, 0, 0, 1, "#D9EEF0"),
-    ("samuel", "Samuel", "hombre", "recogido", "castano", "verdes", 0, None, 1, 0, 0, 0, 2, "#F6C9D0"),
-    ("alejandro", "Alejandro", "hombre", "rizado", "rubio", "azules", 0, "sombrero", 0, 0, 0, 1, 0, "#E6DDF5"),
+    ("camila", "Camila", "woman", "long", "brown", "brown", 0, None, 0, 0, 1, 0, 1, "#F6C9D0"),
+    ("valentina", "Valentina", "woman", "long", "blond", "blue", 0, None, 0, 0, 1, 1, 0, "#CDE3F7"),
+    ("sofia", "Sofía", "woman", "curly", "black", "brown", 1, None, 0, 0, 0, 0, 3, "#FBE3B5"),
+    ("mariana", "Mariana", "woman", "short", "red", "green", 0, "cap", 0, 0, 0, 1, 0, "#D5EBD9"),
+    ("lucia", "Lucía", "woman", "updo", "gray", "blue", 1, None, 0, 0, 1, 0, 1, "#E6DDF5"),
+    ("daniela", "Daniela", "woman", "long", "black", "green", 0, "hat", 0, 0, 0, 0, 2, "#F9D9C3"),
+    ("isabela", "Isabela", "woman", "updo", "brown", "brown", 0, None, 0, 0, 1, 0, 3, "#D9EEF0"),
+    ("gabriela", "Gabriela", "woman", "curly", "blond", "green", 0, None, 0, 0, 0, 0, 1, "#F6C9D0"),
+    ("paula", "Paula", "woman", "short", "black", "brown", 1, None, 0, 0, 1, 0, 2, "#FBE3B5"),
+    ("sara", "Sara", "woman", "long", "red", "blue", 0, "hat", 0, 0, 0, 1, 0, "#D5EBD9"),
+    ("juliana", "Juliana", "woman", "curly", "brown", "blue", 0, "cap", 0, 0, 1, 0, 2, "#E6DDF5"),
+    ("laura", "Laura", "woman", "short", "blond", "brown", 1, None, 0, 0, 0, 0, 0, "#F9D9C3"),
+    ("santiago", "Santiago", "man", "short", "black", "brown", 0, None, 1, 0, 0, 0, 2, "#CDE3F7"),
+    ("mateo", "Mateo", "man", "curly", "brown", "green", 1, None, 0, 0, 0, 0, 1, "#FBE3B5"),
+    ("sebastian", "Sebastián", "man", "bald", "gray", "blue", 1, None, 0, 1, 0, 0, 0, "#D9EEF0"),
+    ("andres", "Andrés", "man", "short", "blond", "blue", 0, "cap", 0, 0, 0, 0, 1, "#F6C9D0"),
+    ("felipe", "Felipe", "man", "short", "red", "green", 0, None, 1, 0, 0, 1, 0, "#E6DDF5"),
+    ("tomas", "Tomás", "man", "long", "black", "brown", 0, "hat", 0, 0, 0, 0, 3, "#D5EBD9"),
+    ("julian", "Julián", "man", "short", "brown", "brown", 0, None, 0, 1, 0, 0, 2, "#F9D9C3"),
+    ("martin", "Martín", "man", "bald", "black", "brown", 1, None, 1, 0, 0, 0, 3, "#CDE3F7"),
+    ("david", "David", "man", "curly", "black", "brown", 0, "cap", 0, 0, 1, 0, 2, "#FBE3B5"),
+    ("nicolas", "Nicolás", "man", "short", "gray", "blue", 1, None, 1, 1, 0, 0, 1, "#D9EEF0"),
+    ("samuel", "Samuel", "man", "updo", "brown", "green", 0, None, 1, 0, 0, 0, 2, "#F6C9D0"),
+    ("alejandro", "Alejandro", "man", "curly", "blond", "blue", 0, "hat", 0, 0, 0, 1, 0, "#E6DDF5"),
 ]
 CHARACTERS = {
     cid: {
-        "id": cid, "name": name, "genero": genero, "pelo": pelo, "color": color, "ojos": ojos,
-        "gafas": bool(gafas), "sombrero": sombrero, "barba": bool(barba), "bigote": bool(bigote),
-        "aretes": bool(aretes), "pecas": bool(pecas), "piel": piel, "fondo": fondo,
+        "id": cid, "name": name, "gender": gender, "hair": hair, "hairColor": hair_color, "eyes": eyes,
+        "glasses": bool(glasses), "hat": hat, "beard": bool(beard), "mustache": bool(mustache),
+        "earrings": bool(earrings), "freckles": bool(freckles), "skin": skin, "background": background,
     }
-    for cid, name, genero, pelo, color, ojos, gafas, sombrero, barba, bigote, aretes, pecas, piel, fondo in _RAW
+    for cid, name, gender, hair, hair_color, eyes, glasses, hat, beard, mustache, earrings, freckles, skin, background in _RAW
 }
 
-# Preguntas que la app responde sola: clave -> (texto, condición)
+# Questions the app answers by itself: key -> (text shown to players, condition)
 QUESTIONS = {
-    "mujer": ("¿Es mujer?", lambda c: c["genero"] == "mujer"),
-    "hombre": ("¿Es hombre?", lambda c: c["genero"] == "hombre"),
-    "gafas": ("¿Tiene gafas?", lambda c: c["gafas"]),
-    "sombrero": ("¿Tiene sombrero o gorra?", lambda c: c["sombrero"] is not None),
-    "barba": ("¿Tiene barba?", lambda c: c["barba"]),
-    "bigote": ("¿Tiene bigote?", lambda c: c["bigote"]),
-    "aretes": ("¿Tiene aretes?", lambda c: c["aretes"]),
-    "pecas": ("¿Tiene pecas?", lambda c: c["pecas"]),
-    "calvo": ("¿Es calvo?", lambda c: c["pelo"] == "calvo"),
-    "largo": ("¿Tiene el pelo largo?", lambda c: c["pelo"] == "largo"),
-    "corto": ("¿Tiene el pelo corto?", lambda c: c["pelo"] == "corto"),
-    "rizado": ("¿Tiene el pelo rizado?", lambda c: c["pelo"] == "rizado"),
-    "recogido": ("¿Tiene el pelo recogido?", lambda c: c["pelo"] == "recogido"),
-    "negro": ("¿Tiene el pelo negro?", lambda c: c["color"] == "negro"),
-    "castano": ("¿Tiene el pelo castaño?", lambda c: c["color"] == "castano"),
-    "rubio": ("¿Es rubio o rubia?", lambda c: c["color"] == "rubio"),
-    "pelirrojo": ("¿Es pelirrojo o pelirroja?", lambda c: c["color"] == "pelirrojo"),
-    "canoso": ("¿Tiene canas?", lambda c: c["color"] == "canoso"),
-    "ojos_azules": ("¿Tiene los ojos azules?", lambda c: c["ojos"] == "azules"),
-    "ojos_verdes": ("¿Tiene los ojos verdes?", lambda c: c["ojos"] == "verdes"),
-    "ojos_cafes": ("¿Tiene los ojos cafés?", lambda c: c["ojos"] == "cafes"),
+    "woman": ("¿Es mujer?", lambda c: c["gender"] == "woman"),
+    "man": ("¿Es hombre?", lambda c: c["gender"] == "man"),
+    "glasses": ("¿Tiene gafas?", lambda c: c["glasses"]),
+    "hat": ("¿Tiene sombrero o gorra?", lambda c: c["hat"] is not None),
+    "beard": ("¿Tiene barba?", lambda c: c["beard"]),
+    "mustache": ("¿Tiene bigote?", lambda c: c["mustache"]),
+    "earrings": ("¿Tiene aretes?", lambda c: c["earrings"]),
+    "freckles": ("¿Tiene pecas?", lambda c: c["freckles"]),
+    "bald": ("¿Es calvo?", lambda c: c["hair"] == "bald"),
+    "long_hair": ("¿Tiene el pelo largo?", lambda c: c["hair"] == "long"),
+    "short_hair": ("¿Tiene el pelo corto?", lambda c: c["hair"] == "short"),
+    "curly_hair": ("¿Tiene el pelo rizado?", lambda c: c["hair"] == "curly"),
+    "updo": ("¿Tiene el pelo recogido?", lambda c: c["hair"] == "updo"),
+    "black_hair": ("¿Tiene el pelo negro?", lambda c: c["hairColor"] == "black"),
+    "brown_hair": ("¿Tiene el pelo castaño?", lambda c: c["hairColor"] == "brown"),
+    "blond": ("¿Es rubio o rubia?", lambda c: c["hairColor"] == "blond"),
+    "red_hair": ("¿Es pelirrojo o pelirroja?", lambda c: c["hairColor"] == "red"),
+    "gray_hair": ("¿Tiene canas?", lambda c: c["hairColor"] == "gray"),
+    "blue_eyes": ("¿Tiene los ojos azules?", lambda c: c["eyes"] == "blue"),
+    "green_eyes": ("¿Tiene los ojos verdes?", lambda c: c["eyes"] == "green"),
+    "brown_eyes": ("¿Tiene los ojos cafés?", lambda c: c["eyes"] == "brown"),
 }
 BOARD_SIZES = (16, 24)
 MAX_QUESTION = 120
@@ -91,7 +91,7 @@ class GuessWhoGame:
         self.secrets: dict[str, str] = {}
         self.flipped: dict[str, set[str]] = {}
         self.turn_index = 0
-        self.pending: dict | None = None  # pregunta escrita esperando respuesta
+        self.pending: dict | None = None  # written question waiting for an answer
         self.log: list[dict] = []
         self.result: dict | None = None
         self.scores: dict[str, int] = {p: 0 for p in self.players}
@@ -109,7 +109,7 @@ class GuessWhoGame:
             raise ValueError("El tablero es de 16 o 24 personajes")
         return cls(players, board_size=size, rounds=parse_rounds(options, 3), rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
@@ -142,7 +142,7 @@ class GuessWhoGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- ayudas ---------------------------------------------------------
+    # --- helpers --------------------------------------------------------
     @property
     def current(self) -> str | None:
         return self.players[self.turn_index % len(self.players)] if self.players else None
@@ -163,7 +163,7 @@ class GuessWhoGame:
     def _pass_turn(self) -> None:
         self.turn_index = (self.turn_index + 1) % len(self.players)
 
-    # --- transiciones ---------------------------------------------------
+    # --- transitions ----------------------------------------------------
     def start_round(self) -> None:
         if self.phase not in ("idle", "round_over"):
             raise ValueError("No se puede iniciar ronda ahora")
@@ -182,7 +182,7 @@ class GuessWhoGame:
         self.phase = "playing"
 
     def flip(self, player: str, cid) -> None:
-        #Bajar o volver a subir un personaje en el tablero propio
+        # Flip a character down (or back up) on your own board
         if self.phase != "playing" or player not in self.players:
             return
         if cid not in self.board:
@@ -191,7 +191,7 @@ class GuessWhoGame:
         mine.symmetric_difference_update({cid})
 
     def ask(self, player: str, key) -> None:
-        #Pregunta de la lista: la responde la app con el personaje del otro.
+        # Question from the list: the app answers it with the other player's character.
         self._require_turn(player)
         if key not in QUESTIONS:
             raise ValueError("Pregunta no válida")
@@ -201,7 +201,7 @@ class GuessWhoGame:
         self._pass_turn()
 
     def ask_free(self, player: str, raw) -> None:
-        #Pregunta escrita: queda esperando a que la pareja responda.
+        # Written question: waits for the partner to answer.
         self._require_turn(player)
         text = " ".join(str(raw or "").split())[:MAX_QUESTION]
         if len(text) < 3:
@@ -222,7 +222,7 @@ class GuessWhoGame:
         self._pass_turn()
 
     def guess(self, player: str, cid) -> None:
-        #Arriesgar: si acierta gana la ronda; si falla, la gana el otro.
+        # Final guess: right wins the round; wrong gives it to the other player.
         self._require_turn(player)
         if cid not in self.board:
             raise ValueError("Ese personaje no está en el tablero")
@@ -242,7 +242,7 @@ class GuessWhoGame:
         else:
             self.start_round()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         over = self.phase in ("round_over", "finished")
         return {
@@ -253,7 +253,7 @@ class GuessWhoGame:
             "players": self.players,
             "characters": [CHARACTERS[c] for c in self.board],
             "cast": list(CHARACTERS.values()) if self.phase == "finished" else [],
-            # Cada uno conoce solo su personaje; al final se revelan los dos.
+            # Each player knows only their own character; both are revealed at the end.
             "mySecret": self.secrets.get(viewer) if viewer else None,
             "secrets": self.secrets if over else {},
             "flipped": sorted(self.flipped.get(viewer, set())) if viewer else [],

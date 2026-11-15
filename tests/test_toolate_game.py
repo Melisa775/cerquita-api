@@ -21,7 +21,7 @@ def test_options_are_validated():
     with pytest.raises(ValueError):
         TooLateGame.from_options(["Ana"], {"letters": "ABCDE"}, random.Random())
     g = TooLateGame.from_options(["Ana"], {"letters": ["e", "a", "Ñ", "a", "zz", "c", "b"]}, random.Random())
-    assert g.letters == ["A", "B", "C", "E", "Ñ"]  # orden del alfabeto, sin repetidas ni basura
+    assert g.letters == ["A", "B", "C", "E", "Ñ"]  # alphabetical order, no duplicates or junk
     assert TooLateGame.from_options(["Ana"], {}, random.Random()).letters == DEFAULT_LETTERS
 
 
@@ -36,13 +36,13 @@ def test_ready_phase_allows_new_category_then_turns_alternate():
     g.begin()
     assert g.timer_key == ("turn", 1)
     with pytest.raises(ValueError):
-        g.pick("Leo", "A")  # no es su turno
+        g.pick("Leo", "A")  # not their turn
     g.pick("Ana", "a")
-    assert g.current == "Leo" and g.timer_key == ("turn", 2)  # el reloj se reinicia
+    assert g.current == "Leo" and g.timer_key == ("turn", 2)  # the clock resets
     with pytest.raises(ValueError):
-        g.pick("Leo", "A")  # ya salió
+        g.pick("Leo", "A")  # already used
     with pytest.raises(ValueError):
-        g.pick("Leo", "Z")  # no está en el tablero
+        g.pick("Leo", "Z")  # not on the board
     with pytest.raises(ValueError):
         g.reroll()
 
@@ -51,7 +51,7 @@ def test_timeout_gives_point_to_the_other_player():
     g = make_game()
     g.begin()
     g.pick("Ana", "A")
-    g.on_timeout()  # a Leo se le acabó el tiempo
+    g.on_timeout()  # Leo ran out of time
     assert g.phase == "round_over"
     assert g.result == {"type": "timeout", "loser": "Leo"}
     assert g.scores == {"Ana": 1, "Leo": 0}
@@ -59,7 +59,7 @@ def test_timeout_gives_point_to_the_other_player():
 
     g.next_round()
     assert g.phase == "ready" and g.round == 2
-    assert g.snapshot()["turn"] == "Leo"  # empieza el otro
+    assert g.snapshot()["turn"] == "Leo"  # the other player starts
     assert g.used == []
 
 

@@ -1,28 +1,27 @@
-"""Trivia, al estilo Preguntados.
+"""Trivia, in the style of Trivia Crack (Preguntados).
 
-Una ruleta con seis categorías (y una corona) decide de qué es cada
-pregunta. Hay dos modos:
+A wheel with six categories (plus a crown) decides each question's topic.
+There are two modes:
 
-  coronas -> por turnos. Quien tiene el turno gira la ruleta y responde.
-             Si acierta, sigue jugando y llena un medidor; con tres aciertos
-             seguidos (o si la ruleta cae en la corona) elige una categoría
-             y juega por su corona. Si falla, el turno pasa a la pareja.
-             Gana quien junte primero las coronas de la meta (3 o 6).
-  duelo    -> los dos responden la misma pregunta a la vez. Acertar da
-             entre 50 y 100 puntos según la rapidez. Gana quien sume más
-             al final de las preguntas.
+  crowns -> turn-based. The player on turn spins and answers. A right
+            answer keeps the turn and fills a meter; three in a row (or
+            landing on the crown) lets them pick a category and play for its
+            crown. A wrong answer passes the turn. First to collect the goal
+            number of crowns (3 or 6) wins.
+  duel   -> both answer the same question at once. A right answer is worth
+            50 to 100 points depending on speed. Highest total wins.
 
-Fases:
-  spin        -> esperando que alguien gire (en coronas, solo quien tiene el turno)
-  spinning    -> la ruleta gira (los clientes la animan); termina sola
-  crown_pick  -> quien tiene el turno elige por qué corona jugar
-  question    -> corre el reloj de la pregunta
-  reveal      -> se muestra la respuesta correcta y lo que marcó cada uno
-Al terminar, la fase es "finished".
+Phases:
+  spin        -> waiting for someone to spin (in crowns mode, only the player on turn)
+  spinning    -> the wheel spins (clients animate it); ends on its own
+  crown_pick  -> the player on turn picks which crown to play for
+  question    -> the question clock runs
+  reveal      -> the right answer and each player's pick are shown
+When the game ends the phase is "finished".
 
-Las preguntas viven en app/data/preguntas.json, cada una con su nivel
-(facil, medio o dificil); la respuesta correcta es siempre la primera opción
-del archivo y el orden se baraja en cada pregunta. En "mezcla" entran todas.
+Questions live in app/data/questions.json, each with a level (easy, medium
+or hard); the right answer is always the first option in the file and the
+order is shuffled for every question. "mixed" uses them all.
 """
 
 import json
@@ -31,15 +30,15 @@ import time
 from functools import cache
 from pathlib import Path
 
-DATA = Path(__file__).resolve().parents[1] / "data" / "preguntas.json"
-CATEGORIES = ("geografia", "historia", "ciencia", "arte", "entretenimiento", "deportes")
-CROWN = "corona"
+DATA = Path(__file__).resolve().parents[1] / "data" / "questions.json"
+CATEGORIES = ("geography", "history", "science", "art", "entertainment", "sports")
+CROWN = "crown"
 WHEEL = CATEGORIES + (CROWN,)
-MODES = ("coronas", "duelo")
+MODES = ("crowns", "duel")
 GOALS = (3, 6)
 SECONDS_CHOICES = (15, 20, 30)
 QUESTION_CHOICES = (10, 15, 20)
-LEVELS = ("facil", "medio", "dificil", "mezcla")
+LEVELS = ("easy", "medium", "hard", "mixed")
 STREAK_FOR_CROWN = 3
 SPIN_SECONDS = 3.2
 
@@ -56,11 +55,11 @@ class TriviaGame:
     def __init__(
         self,
         players: list[str],
-        mode: str = "coronas",
+        mode: str = "crowns",
         goal: int = 6,
         seconds: int = 20,
         total_questions: int = 10,
-        level: str = "mezcla",
+        level: str = "mixed",
         rng: random.Random | None = None,
         timings: dict | None = None,
         bank: list[dict] | None = None,
@@ -77,19 +76,19 @@ class TriviaGame:
         self.rng = rng or random.Random()
         self.clock = clock
         self.level = level
-        self.bank = [q for q in (bank or questions()) if level == "mezcla" or q.get("level") == level]
+        self.bank = [q for q in (bank or questions()) if level == "mixed" or q.get("level") == level]
         self.pools: dict[str, list[dict]] = {}
         self.phase = "idle"
-        self.asked = 0  # preguntas hechas en la partida
-        self.turn_index = 0  # en coronas, a quién le toca
-        self.category: str | None = None  # resultado de la ruleta
-        self.slot: str | None = None  # casilla en la que cayó (puede ser la corona)
+        self.asked = 0  # questions asked so far
+        self.turn_index = 0  # in crowns mode, whose turn it is
+        self.category: str | None = None  # wheel result
+        self.slot: str | None = None  # slot it landed on (may be the crown)
         self.spin_id = 0
         self.for_crown = False
         self.question: dict | None = None  # {"id","category","question","options","answer"}
-        self.answers: dict[str, dict] = {}  # jugador -> {"choice", "ms"}
+        self.answers: dict[str, dict] = {}  # player -> {"choice", "ms"}
         self.started_at = 0.0
-        self.last: dict | None = None  # resultado de la última pregunta
+        self.last: dict | None = None  # result of the last question
         self.streak: dict[str, int] = {p: 0 for p in self.players}
         self.crowns: dict[str, list[str]] = {p: [] for p in self.players}
         self.scores: dict[str, int] = {p: 0 for p in self.players}
@@ -101,7 +100,7 @@ class TriviaGame:
     def from_options(cls, players: list[str], options: dict, rng: random.Random, timings: dict | None = None):
         if len(players) < 2:
             raise ValueError("La trivia se juega entre los dos. Esperen a que entre tu pareja.")
-        mode = options.get("mode", "coronas")
+        mode = options.get("mode", "crowns")
         if mode not in MODES:
             raise ValueError("Modo no válido")
         try:
@@ -116,20 +115,20 @@ class TriviaGame:
             raise ValueError("Elige 15, 20 o 30 segundos por pregunta")
         if total not in QUESTION_CHOICES:
             raise ValueError("Elige 10, 15 o 20 preguntas")
-        level = options.get("level", "mezcla")
+        level = options.get("level", "mixed")
         if level not in LEVELS:
             raise ValueError("Dificultad no válida")
         return cls(players, mode=mode, goal=goal, seconds=seconds, total_questions=total, level=level, rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
 
     @property
     def current(self) -> str | None:
-        """En coronas, quien tiene el turno. En duelo no hay turnos."""
-        if self.mode != "coronas" or not self.players:
+        """In crowns mode, the player on turn. Duel mode has no turns."""
+        if self.mode != "crowns" or not self.players:
             return None
         return self.players[self.turn_index % len(self.players)]
 
@@ -160,9 +159,9 @@ class TriviaGame:
 
     def handle(self, player: str, msg: dict) -> None:
         kind = msg.get("type")
-        # Si los dos tocan "Girar" o "Seguir" casi al tiempo, el segundo toque
-        # llega cuando ya se avanzó: se ignora en vez de mostrar un error.
-        # El cliente manda en "at" el giro o la pregunta que estaba viendo.
+        # If both tap "Spin" or "Next" at almost the same time, the second tap
+        # arrives after the game moved on: it is ignored instead of erroring.
+        # The client sends in "at" the spin or question it was looking at.
         at = msg.get("at")
         if kind == "tv_spin" and at is not None and at != self.spin_id:
             return
@@ -181,17 +180,17 @@ class TriviaGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- ruleta ----------------------------------------------------------
+    # --- wheel -----------------------------------------------------------
     def missing(self, player: str) -> list[str]:
         return [c for c in CATEGORIES if c not in self.crowns.get(player, [])]
 
     def _crown_ready(self, player: str) -> bool:
-        return self.mode == "coronas" and self.streak.get(player, 0) >= STREAK_FOR_CROWN
+        return self.mode == "crowns" and self.streak.get(player, 0) >= STREAK_FOR_CROWN
 
     def spin(self, player: str) -> None:
         if self.phase != "spin":
             raise ValueError("Ahora no se puede girar")
-        if self.mode == "coronas":
+        if self.mode == "crowns":
             if player != self.current:
                 raise ValueError(f"Le toca girar a {self.current}")
             if self._crown_ready(player):
@@ -218,7 +217,7 @@ class TriviaGame:
             raise ValueError("Esa corona no está disponible")
         self._ask(category, for_crown=True)
 
-    # --- preguntas -------------------------------------------------------
+    # --- questions -------------------------------------------------------
     def _draw(self, category: str) -> dict:
         pool = self.pools.get(category)
         if not pool:
@@ -249,7 +248,7 @@ class TriviaGame:
     def answer(self, player: str, choice) -> None:
         if self.phase != "question":
             raise ValueError("No hay ninguna pregunta en juego")
-        if self.mode == "coronas" and player != self.current:
+        if self.mode == "crowns" and player != self.current:
             raise ValueError(f"Responde {self.current}")
         if player in self.answers:
             raise ValueError("Ya respondiste")
@@ -257,12 +256,12 @@ class TriviaGame:
             raise ValueError("Respuesta no válida")
         ms = int((self.clock() - self.started_at) * 1000)
         self.answers[player] = {"choice": choice, "ms": ms}
-        expected = 1 if self.mode == "coronas" else len(self.players)
+        expected = 1 if self.mode == "crowns" else len(self.players)
         if len(self.answers) >= expected:
             self._reveal()
 
     def _points(self, ms: int) -> int:
-        """En duelo: 100 si responde al instante, 50 si responde al final."""
+        """Duel mode: 100 for an instant answer, 50 for one at the very end."""
         total = self.question_seconds * 1000
         frac = min(max(ms / total, 0), 1) if total else 1
         return round(100 - 50 * frac)
@@ -276,7 +275,7 @@ class TriviaGame:
             results[p] = {"choice": a["choice"] if a else None, "ms": a["ms"] if a else None, "ok": ok, "points": 0}
         self.last = {"by": self.current, "forCrown": self.for_crown, "results": results, "crownWon": None}
 
-        if self.mode == "duelo":
+        if self.mode == "duel":
             for p, r in results.items():
                 if r["ok"]:
                     r["points"] = self._points(r["ms"])
@@ -303,7 +302,7 @@ class TriviaGame:
     def next_round(self) -> None:
         if self.phase != "reveal":
             raise ValueError("Todavía no hay siguiente pregunta")
-        if self.mode == "duelo":
+        if self.mode == "duel":
             if self.asked >= self.total_questions:
                 self._finish()
             else:
@@ -319,14 +318,14 @@ class TriviaGame:
         self.phase = "crown_pick" if self._crown_ready(self.current) else "spin"
 
     def _finish(self) -> None:
-        if self.mode == "duelo":
+        if self.mode == "duel":
             best = max(self.scores.values(), default=0)
             leaders = [p for p, s in self.scores.items() if s == best]
             self.winner = leaders[0] if len(leaders) == 1 else None
         self.question = None
         self.phase = "finished"
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         q = self.question
         public_q = None
@@ -347,7 +346,7 @@ class TriviaGame:
             "category": self.category,
             "forCrown": self.for_crown,
             "question": public_q,
-            # Durante la pregunta solo se sabe quién respondió, no qué
+            # During the question only who answered is known, not what
             "answered": answered,
             "myChoice": mine,
             "last": self.last if self.phase in ("reveal", "finished") else None,

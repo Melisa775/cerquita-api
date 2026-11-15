@@ -30,7 +30,7 @@ def test_soft_shot_stops_short_and_too_hard_bounces_off_the_wall():
     c = COURSES[0]
     soft = simulate(c, c["tee"], -math.pi / 2, 0.15)
     assert soft["result"] == "stopped" and soft["end"][1] > 60
-    # tirando de lado contra la pared rebota y queda dentro del green
+    # shooting sideways into the wall bounces and stays on the green
     side = simulate(c, c["tee"], 0, 1.0)
     assert 22 + BALL_R - 0.01 <= side["end"][0] <= 78 - BALL_R + 0.01
     assert any(e["kind"] == "wall" for e in side["events"])
@@ -50,10 +50,10 @@ def test_ball_never_leaves_the_green(index):
 
 def test_water_returns_ball_with_penalty():
     g = make()
-    g.hole = 3  # El río
+    g.hole = 3  # The river
     g._start_hole()
     tee = g.course["tee"]
-    g.shoot("Ana", -math.pi / 2, 0.7)  # derecho hacia el agua
+    g.shoot("Ana", -math.pi / 2, 0.7)  # straight into the water
     assert g.last_shot["result"] == "water" and g.last_shot["penalty"]
     assert g.strokes["Ana"] == 2 and g.balls["Ana"] == [float(tee[0]), float(tee[1])]
 

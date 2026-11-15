@@ -49,17 +49,17 @@ def rgb_to_lab(rgb: tuple[float, float, float]) -> tuple[float, float, float]:
 
 
 def delta_e(a: HSB, b: HSB) -> float:
-    """Distancia perceptual CIE76 entre dos colores."""
+    """CIE76 perceptual distance between two colors."""
     la, lb = rgb_to_lab(hsb_to_rgb(a)), rgb_to_lab(hsb_to_rgb(b))
     return math.dist(la, lb)
 
 
 def score(target: HSB, guess: HSB, tolerance: float = 45) -> float:
-    """Puntaje de 0 a 10. Idéntico = 10; muy lejos = 0.
+    """Score from 0 to 10. Identical = 10; far away = 0.
 
-    La curva castiga suave los errores pequeños y fuerte los grandes,
-    para que acercarse "bastante" se sienta recompensado. Con menos
-    tolerancia, el mismo error vale menos puntos (niveles difíciles).
+    The curve is gentle on small errors and harsh on big ones, so getting
+    "pretty close" still feels rewarding. With a lower tolerance the same
+    error is worth fewer points (harder levels).
     """
     d = delta_e(target, guess)
     return round(10 * math.exp(-((d / tolerance) ** 1.6)), 2)
@@ -70,6 +70,6 @@ def random_color(
     saturation: tuple[float, float] = (35, 100),
     brightness: tuple[float, float] = (40, 100),
 ) -> HSB:
-    # Por defecto evita grises y casi negros: son casi imposibles de recordar.
-    # Los niveles difíciles abren el rango a colores apagados y oscuros.
+    # By default avoid greys and near-blacks: they are almost impossible to
+    # remember. Harder levels open the range to muted and dark colors.
     return HSB(rng.uniform(0, 360), rng.uniform(*saturation), rng.uniform(*brightness))

@@ -18,14 +18,14 @@ def test_phonetic_key_matches_sound_alike_spellings():
     [
         ("color", "Verde limón", True),
         ("color", "asul", False),
-        ("fruta", "uchuva", True),  # de la lista extra
+        ("fruit", "uchuva", True),  # from the extra list
         ("animal", "oso de anteojos", True),
-        ("ciudad", "Bogotá", True),
-        ("ciudad", "Zipaquirá", True),
-        ("ciudad", "Nueva York", True),
-        ("ciudad", "Medelin", False),
-        ("nombre", "Xyzw", True),  # no se revisa
-        ("apellido", "Qwerty", True),
+        ("city", "Bogotá", True),
+        ("city", "Zipaquirá", True),
+        ("city", "Nueva York", True),
+        ("city", "Medelin", False),
+        ("name", "Xyzw", True),  # not checked
+        ("surname", "Qwerty", True),
     ],
 )
 def test_spelled_ok(category, answer, ok):
@@ -39,10 +39,10 @@ def test_spelled_ok(category, answer, ok):
         ("color", "asul", "azul"),
         ("animal", "girafa", "jirafa"),
         ("animal", "perrro", "perro"),
-        ("fruta", "guayava", "guayaba"),
-        ("ciudad", "Barranqilla", "barranquilla"),
-        ("ciudad", "Medelin", "medellin"),
-        ("cosa", "sapato", "zapato"),
+        ("fruit", "guayava", "guayaba"),
+        ("city", "Barranqilla", "barranquilla"),
+        ("city", "Medelin", "medellin"),
+        ("thing", "sapato", "zapato"),
         ("color", "qwerty", None),
     ],
 )

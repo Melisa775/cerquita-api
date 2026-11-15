@@ -1,16 +1,16 @@
-"""Caras y gestos.
+"""Charades ("Caras y gestos").
 
-Por turnos, uno actúa y el otro adivina en voz alta por la videollamada.
-Quien actúa ve una carta (una palabra o frase y su categoría) y, contra el
-reloj, la representa sin hablar. Cuando la pareja la adivina, toca
-"¡Adivinó!"; si está muy difícil, "Pasar". Cada carta adivinada suma un
-punto para quien actuó.
+Players take turns: one acts and the other guesses out loud over the video
+call. The actor sees a card (a word or phrase and its category) and acts it
+out against the clock without speaking. When the partner gets it, the actor
+taps "¡Adivinó!"; if it is too hard, "Pasar". Each guessed card is a point
+for the actor.
 
-Flujo de cada turno:
-  ready     -> quien actúa se prepara y le da a empezar
-  acting    -> corre el reloj
-  turn_over -> resumen de cartas adivinadas y pasadas
-Tras el último turno la fase es "finished".
+Turn flow:
+  ready     -> the actor gets ready and taps start
+  acting    -> the clock runs
+  turn_over -> summary of guessed and passed cards
+After the last turn the phase is "finished".
 """
 
 import random
@@ -20,15 +20,15 @@ from pathlib import Path
 
 from app.games.common import parse_rounds
 
-DATA = Path(__file__).resolve().parents[1] / "data" / "caras_gestos.txt"
+DATA = Path(__file__).resolve().parents[1] / "data" / "charades.txt"
 SECONDS_CHOICES = (60, 90, 120)
-LEVELS = ("facil", "dificil", "mezcla")
-HEADER = re.compile(r"^##\s*(.+?)\s*\((fácil|difícil)\)\s*$", re.IGNORECASE)
+LEVELS = ("easy", "hard", "mixed")
+HEADER = re.compile(r"^##\s*(.+?)\s*\((easy|hard)\)\s*$", re.IGNORECASE)
 
 
 @cache
 def deck() -> list[dict]:
-    """Todas las cartas: [{"text", "category", "level"}]."""
+    """Every card: [{"text", "category", "level"}]."""
     cards = []
     category = level = None
     for line in DATA.read_text(encoding="utf-8").splitlines():
@@ -38,7 +38,7 @@ def deck() -> list[dict]:
         header = HEADER.match(line)
         if header:
             category = header.group(1)
-            level = "facil" if header.group(2).lower().startswith("f") else "dificil"
+            level = header.group(2).lower()
         elif category:
             cards.append({"text": line, "category": category, "level": level})
     return cards
@@ -52,7 +52,7 @@ class CharadesGame:
         self,
         players: list[str],
         seconds: int = 90,
-        level: str = "mezcla",
+        level: str = "mixed",
         show_category: bool = True,
         rounds: int = 2,
         rng: random.Random | None = None,
@@ -68,12 +68,12 @@ class CharadesGame:
         self.total_rounds = rounds
         self.rng = rng or random.Random()
         all_cards = cards or deck()
-        self.pool = [c for c in all_cards if level == "mezcla" or c["level"] == level]
+        self.pool = [c for c in all_cards if level == "mixed" or c["level"] == level]
         self.rng.shuffle(self.pool)
         self.phase = "idle"
         self.turn = 0
         self.card: dict | None = None
-        self.played: list[dict] = []  # cartas del turno: {..., "result": "hit"|"pass"}
+        self.played: list[dict] = []  # cards of this turn: {..., "result": "hit"|"pass"}
         self.scores: dict[str, int] = {p: 0 for p in self.players}
         self.history: list[dict] = []
 
@@ -87,7 +87,7 @@ class CharadesGame:
             raise ValueError("Tiempo no válido") from exc
         if seconds not in SECONDS_CHOICES:
             raise ValueError("Elige 60, 90 o 120 segundos")
-        level = options.get("level", "mezcla")
+        level = options.get("level", "mixed")
         if level not in LEVELS:
             raise ValueError("Dificultad no válida")
         return cls(
@@ -100,7 +100,7 @@ class CharadesGame:
             timings=timings,
         )
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
@@ -143,11 +143,11 @@ class CharadesGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- turnos ---------------------------------------------------------
+    # --- turns ----------------------------------------------------------
     def _draw(self) -> dict:
-        if not self.pool:  # se acabó el mazo: se baraja de nuevo
+        if not self.pool:  # deck ran out: reshuffle
             all_cards = deck()
-            self.pool = [c for c in all_cards if self.level == "mezcla" or c["level"] == self.level]
+            self.pool = [c for c in all_cards if self.level == "mixed" or c["level"] == self.level]
             self.rng.shuffle(self.pool)
         return self.pool.pop()
 
@@ -189,7 +189,7 @@ class CharadesGame:
         else:
             self._start_turn()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         is_actor = viewer is not None and viewer == self.actor
         over = self.phase in ("turn_over", "finished")
@@ -206,9 +206,9 @@ class CharadesGame:
             "totalTurns": self.total_turns,
             "players": self.players,
             "actor": self.actor,
-            # Quien adivina ve la categoría (si está activado), nunca la carta.
+            # The guesser sees the category (if enabled), never the card.
             "card": card,
-            # Las adivinadas se ven en vivo; las pasadas, solo al terminar el turno.
+            # Guessed cards are shown live; passed ones only when the turn ends.
             "played": [c for c in self.played if over or is_actor or c["result"] == "hit"],
             "hits": sum(1 for c in self.played if c["result"] == "hit"),
             "seconds": self.act_seconds,

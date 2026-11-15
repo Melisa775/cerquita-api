@@ -1,5 +1,5 @@
 
-#Utilidades compartidas por los juegos.
+# Helpers shared by the games.
 
 import re
 import unicodedata

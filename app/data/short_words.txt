@@ -1,5 +1,5 @@
-# Palabras de dos letras para las palabras cruzadas (el diccionario general
-# empieza en tres letras). Una por línea, sin tildes.
+# Two-letter words for Crosswords (the main dictionary starts at three
+# letters). One per line, without accents.
 ah
 al
 ay

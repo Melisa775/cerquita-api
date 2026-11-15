@@ -5,7 +5,7 @@ import pytest
 from app.games.charades import CharadesGame, deck
 
 
-def make(rounds=1, level="mezcla", show_category=True):
+def make(rounds=1, level="mixed", show_category=True):
     g = CharadesGame(["Ana", "Leo"], seconds=60, level=level, show_category=show_category, rounds=rounds, rng=random.Random(1))
     g.start()
     return g
@@ -14,9 +14,9 @@ def make(rounds=1, level="mezcla", show_category=True):
 def test_deck_has_categories_and_both_levels():
     cards = deck()
     assert len(cards) > 150
-    assert {c["level"] for c in cards} == {"facil", "dificil"}
+    assert {c["level"] for c in cards} == {"easy", "hard"}
     assert len({c["category"] for c in cards}) >= 7
-    assert {"text": "pisar un lego", "category": "Acciones", "level": "dificil"} in cards
+    assert {"text": "pisar un lego", "category": "Acciones", "level": "hard"} in cards
 
 
 def test_actor_must_start_and_only_they_see_the_card():
@@ -68,11 +68,11 @@ def test_turns_alternate_and_game_finishes():
 
 
 def test_levels_filter_the_deck_and_cards_do_not_repeat():
-    g = make(level="facil")
+    g = make(level="easy")
     g.begin("Ana")
     seen = set()
     for _ in range(30):
-        assert g.card["level"] == "facil"
+        assert g.card["level"] == "easy"
         seen.add(g.card["text"])
         g.resolve("Ana", "pass")
     assert len(seen) == 30

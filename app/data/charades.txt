@@ -1,7 +1,8 @@
-# Mazo de Caras y gestos. Cada sección es "## Categoría (fácil)" o "## Categoría (difícil)"
-# y debajo va una carta por línea. Agrega o cambia las que quieras.
+# Charades deck. Each section is "## Category (easy)" or "## Category (hard)"
+# followed by one card per line. Category names and cards are shown to players
+# as they are (in Spanish). Add or change whatever you like.
 
-## Animales (fácil)
+## Animales (easy)
 gato
 perro
 mono
@@ -18,7 +19,7 @@ pulpo
 rana
 caballo
 
-## Animales (difícil)
+## Animales (hard)
 camaleón
 pavo real
 perezoso
@@ -32,7 +33,7 @@ cocodrilo
 jirafa bebé
 oso hormiguero
 
-## Acciones (fácil)
+## Acciones (easy)
 bailar
 nadar
 dormir
@@ -49,7 +50,7 @@ montar en bicicleta
 tomar una foto
 pescar
 
-## Acciones (difícil)
+## Acciones (hard)
 hacer malabares
 pisar un lego
 buscar las llaves
@@ -63,7 +64,7 @@ empacar una maleta
 cambiar un pañal
 caminar en la luna
 
-## Profesiones (fácil)
+## Profesiones (easy)
 doctora
 bombero
 policía
@@ -77,7 +78,7 @@ peluquero
 mesero
 fotógrafa
 
-## Profesiones (difícil)
+## Profesiones (hard)
 astronauta
 mimo
 domador de leones
@@ -91,7 +92,7 @@ jardinero
 youtuber
 detective
 
-## Películas (fácil)
+## Películas (easy)
 Titanic
 Shrek
 El Rey León
@@ -105,7 +106,7 @@ Encanto
 Coco
 Superman
 
-## Películas (difícil)
+## Películas (hard)
 Jurassic Park
 Mi pobre angelito
 Volver al futuro
@@ -119,7 +120,7 @@ Piratas del Caribe
 King Kong
 El Exorcista
 
-## Deportes (fácil)
+## Deportes (easy)
 fútbol
 tenis
 natación
@@ -131,7 +132,7 @@ golf
 béisbol
 voleibol
 
-## Deportes (difícil)
+## Deportes (hard)
 patinaje artístico
 esgrima
 surf
@@ -143,7 +144,7 @@ bolos
 remo
 gimnasia
 
-## Cosas de Colombia (fácil)
+## Cosas de Colombia (easy)
 arepa
 café
 cumbia
@@ -155,7 +156,7 @@ aguacate
 bandeja paisa
 fútbol
 
-## Cosas de Colombia (difícil)
+## Cosas de Colombia (hard)
 tejo
 silleteros
 Carnaval de Barranquilla
@@ -167,7 +168,7 @@ pedir la ñapa
 el Pibe Valderrama
 la Selección Colombia
 
-## Para ustedes (fácil)
+## Para ustedes (easy)
 beso
 abrazo
 videollamada
@@ -179,7 +180,7 @@ tomarse una foto
 dar un regalo
 extrañar
 
-## Para ustedes (difícil)
+## Para ustedes (hard)
 pedir matrimonio
 primera cita
 reencuentro en el aeropuerto

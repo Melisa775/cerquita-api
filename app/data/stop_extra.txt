@@ -1,7 +1,7 @@
-# Palabras que el diccionario general no trae pero son respuestas válidas en el Stop.
-# Una por línea; se comparan sin tildes ni mayúsculas. Agrega aquí las que falten.
+# Words missing from the main dictionary that are valid Stop answers.
+# One per line; compared without accents or case. Add any that are missing.
 
-# Frutas
+# Fruits
 uchuva
 feijoa
 borojó
@@ -15,7 +15,7 @@ pitaya
 blueberry
 cranberry
 
-# Colores
+# Colors
 vinotinto
 beige
 turquí
@@ -25,7 +25,7 @@ cyan
 lavanda
 nude
 
-# Animales
+# Animals
 chigüiro
 koala
 yak
@@ -39,7 +39,7 @@ husky
 beagle
 chihuahua
 
-# Cosas
+# Things
 aguapanela
 bikini
 bluyín

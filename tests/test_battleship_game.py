@@ -4,13 +4,13 @@ import pytest
 
 from app.games.battleship import BattleshipGame, FLEETS, random_fleet, validate_fleet
 
-# Flota fija de 10x10 en filas separadas (no se tocan)
+# Fixed 10x10 fleet on separate rows (ships don't touch)
 FLEET = [
-    {"id": "portaaviones", "row": 0, "col": 0, "dir": "h"},
-    {"id": "acorazado", "row": 2, "col": 0, "dir": "h"},
-    {"id": "crucero", "row": 4, "col": 0, "dir": "h"},
-    {"id": "submarino", "row": 6, "col": 0, "dir": "h"},
-    {"id": "destructor", "row": 8, "col": 0, "dir": "h"},
+    {"id": "carrier", "row": 0, "col": 0, "dir": "h"},
+    {"id": "battleship", "row": 2, "col": 0, "dir": "h"},
+    {"id": "cruiser", "row": 4, "col": 0, "dir": "h"},
+    {"id": "submarine", "row": 6, "col": 0, "dir": "h"},
+    {"id": "destroyer", "row": 8, "col": 0, "dir": "h"},
 ]
 
 
@@ -40,12 +40,12 @@ def test_validation_rules():
     with pytest.raises(ValueError, match="encima"):
         validate_fleet(over, 10, True)
     touching = [dict(s) for s in FLEET]
-    touching[1]["row"] = 1  # justo debajo del portaaviones
+    touching[1]["row"] = 1  # right below the carrier
     with pytest.raises(ValueError, match="tocar"):
         validate_fleet(touching, 10, True)
     assert validate_fleet(touching, 10, False)
     dup = [dict(s) for s in FLEET]
-    dup[4]["id"] = "submarino"
+    dup[4]["id"] = "submarine"
     with pytest.raises(ValueError):
         validate_fleet(dup, 10, True)
 
@@ -96,9 +96,9 @@ def test_sinking_reveals_ship_and_marks_water_around():
     g = make()
     g.fire("Ana", 8, 0)
     g.fire("Ana", 8, 1)
-    assert g.last_shot == {"by": "Ana", "row": 8, "col": 1, "result": "sunk", "ship": "destructor"}
+    assert g.last_shot == {"by": "Ana", "row": 8, "col": 1, "result": "sunk", "ship": "destroyer"}
     view = g.snapshot("Ana")["boards"]["Leo"]
-    assert [s["id"] for s in view["ships"]] == ["destructor"] and view["afloat"] == 4
+    assert [s["id"] for s in view["ships"]] == ["destroyer"] and view["afloat"] == 4
     assert [7, 0] in view["autoWater"] and [9, 2] in view["autoWater"]
     with pytest.raises(ValueError, match="Ya disparaste"):
         g.fire("Ana", 9, 0)

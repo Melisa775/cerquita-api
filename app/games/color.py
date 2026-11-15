@@ -8,11 +8,11 @@ LEVELS = {
         "label": "Normal", "memorize": 5, "guess": 30, "distract": 0,
         "saturation": (35, 100), "brightness": (40, 100), "tolerance": 45, "hints": True,
     },
-    "dificil": {
+    "hard": {
         "label": "Difícil", "memorize": 3, "guess": 20, "distract": 0,
         "saturation": (20, 100), "brightness": (30, 95), "tolerance": 35, "hints": True,
     },
-    "experto": {
+    "expert": {
         "label": "Experto", "memorize": 2, "guess": 15, "distract": 1.5,
         "saturation": (10, 90), "brightness": (25, 90), "tolerance": 28, "hints": False,
     },
@@ -59,7 +59,7 @@ class ColorGame:
             raise ValueError("Nivel no válido")
         return cls(players, rounds=parse_rounds(options), rng=rng, timings=timings, level=level)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
@@ -97,7 +97,7 @@ class ColorGame:
                 raise ValueError("Todavía no hay siguiente ronda")
             self.start_round()
 
-    # --- transiciones -------------------------------------------------
+    # --- transitions --------------------------------------------------
     def start_round(self) -> None:
         if self.phase not in ("idle", "reveal"):
             raise ValueError("No se puede iniciar ronda ahora")
@@ -157,7 +157,7 @@ class ColorGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         show_target = self.phase in ("memorize", "reveal", "finished")
         show_guesses = self.phase in ("reveal", "finished")
@@ -168,7 +168,7 @@ class ColorGame:
             "totalRounds": self.total_rounds,
             "target": self.target.to_dict() if (show_target and self.target) else None,
             "distractor": self.distractor.to_dict() if (self.phase == "distract" and self.distractor) else None,
-            # Durante "guess" solo se revela QUIÉN ya respondió, no su color.
+            # During "guess" only WHO has answered is revealed, not their color.
             "submitted": sorted(self.guesses),
             "guesses": {p: g.to_dict() for p, g in self.guesses.items()} if show_guesses else {},
             "roundScores": self.round_scores if show_guesses else {},

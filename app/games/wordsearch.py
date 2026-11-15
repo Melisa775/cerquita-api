@@ -6,12 +6,12 @@ from app.games.common import parse_rounds
 from app.games.hangman import WORDS as HANGMAN_WORDS
 
 LEVELS = {
-    "facil": {"label": "Fácil", "size": 10, "words": 8, "dirs": [(0, 1), (1, 0), (1, 1)]},
+    "easy": {"label": "Fácil", "size": 10, "words": 8, "dirs": [(0, 1), (1, 0), (1, 1)]},
     "normal": {
         "label": "Normal", "size": 12, "words": 10,
         "dirs": [(0, 1), (1, 0), (1, 1), (-1, 1), (0, -1), (-1, 0)],
     },
-    "dificil": {
+    "hard": {
         "label": "Difícil", "size": 14, "words": 12,
         "dirs": [(0, 1), (1, 0), (1, 1), (-1, 1), (0, -1), (-1, 0), (-1, -1), (1, -1)],
     },
@@ -26,12 +26,12 @@ EXTRA_THEMES = {
                      "confianza", "paciencia", "gratitud", "emoción", "felicidad", "esperanza"],
 }
 
-# Letras de relleno con la frecuencia del español, para que la sopa se vea natural
+# Filler letters weighted by Spanish letter frequency, so the grid looks natural
 FILLER = "AAAAAAAAAAAAEEEEEEEEEEEEEOOOOOOOOIIIIIIUUUUSSSSSSSRRRRRRNNNNNNLLLLLDDDDDCCCCTTTTMMMPPBBGVYQHFZJÑ"
 
 
 def to_letters(word: str) -> str:
-    """'Alegría' -> 'ALEGRIA'; la Ñ se conserva."""
+    """'Alegría' -> 'ALEGRIA'; Ñ is kept."""
     out = []
     for ch in word.upper():
         if ch == "Ñ":
@@ -42,7 +42,7 @@ def to_letters(word: str) -> str:
 
 
 def themes(size: int) -> dict[str, list[str]]:
-    """Categorías con palabras de una sola pieza que quepan en la sopa."""
+    """Categories with single-word entries that fit in the grid."""
     out = {}
     for name, words in {**HANGMAN_WORDS, **EXTRA_THEMES}.items():
         fit = [w for w in words if " " not in w and "-" not in w and 3 <= len(to_letters(w)) <= size]
@@ -52,11 +52,11 @@ def themes(size: int) -> dict[str, list[str]]:
 
 
 def build(size: int, words: list[str], dirs: list[tuple[int, int]], rng: random.Random):
-    """Coloca las palabras (las largas primero) y rellena el resto.
+    """Place the words (longest first) and fill in the rest.
 
-    Cada palabra recibe una dirección de una lista barajada que recorre
-    todas las permitidas, y se prueban solo los puntos de partida donde cabe
-    en esa dirección. Si no hay espacio, se intenta con las demás.
+    Each word gets a direction from a shuffled list that cycles through all
+    the allowed ones, and only the starting points where it fits in that
+    direction are tried. If there is no room, the other directions are tried.
     """
     grid = [[""] * size for _ in range(size)]
     placed = []
@@ -97,7 +97,7 @@ def build(size: int, words: list[str], dirs: list[tuple[int, int]], rng: random.
 
 
 def line_cells(start, end) -> list[tuple[int, int]] | None:
-    """Casillas en línea recta (horizontal, vertical o diagonal) entre dos puntas."""
+    """Cells in a straight line (horizontal, vertical or diagonal) between two ends."""
     (r1, c1), (r2, c2) = start, end
     dr, dc = r2 - r1, c2 - c1
     steps = max(abs(dr), abs(dc))
@@ -145,8 +145,8 @@ class WordSearchGame:
         self.theme = ""
         self.grid: list[str] = []
         self.placed: list[dict] = []
-        self.found: dict[str, dict] = {}  # palabra -> {player, cells}
-        self.selecting: dict[str, dict] = {}  # selección en curso de cada uno
+        self.found: dict[str, dict] = {}  # word -> {player, cells}
+        self.selecting: dict[str, dict] = {}  # current selection of each player
         self.started_at = 0.0
         self.elapsed: float | None = None
         self.gave_up = False
@@ -163,7 +163,7 @@ class WordSearchGame:
             raise ValueError("Nivel no válido")
         return cls(players, mode=mode, level=level, rounds=parse_rounds(options, 1), rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
@@ -192,7 +192,7 @@ class WordSearchGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- transiciones ---------------------------------------------------
+    # --- transitions ----------------------------------------------------
     def start_round(self) -> None:
         if self.phase not in ("idle", "round_over"):
             raise ValueError("No se puede iniciar ronda ahora")
@@ -213,7 +213,7 @@ class WordSearchGame:
         self.phase = "playing"
 
     def select(self, player: str, start, end) -> None:
-        """Selección en curso, solo para que el otro la vea. None la borra."""
+        """Current selection, only so the other player can see it. None clears it."""
         if self.phase != "playing" or player not in self.players:
             return
         if start is None:
@@ -276,7 +276,7 @@ class WordSearchGame:
         else:
             self.start_round()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         over = self.phase in ("round_over", "finished")
         elapsed = self.elapsed if self.elapsed is not None else (self.clock() - self.started_at if self.round else 0)
@@ -294,7 +294,7 @@ class WordSearchGame:
             "grid": self.grid,
             "words": [i["word"] for i in sorted(self.placed, key=lambda i: to_letters(i["word"]))],
             "found": {w: {"player": f["player"], "cells": f["cells"]} for w, f in self.found.items()},
-            # Las que nadie encontró solo se revelan al terminar la ronda.
+            # Words nobody found are revealed only when the round ends.
             "missing": [{"word": i["word"], "cells": i["cells"]} for i in self.placed if i["word"] not in self.found]
             if over else [],
             "selecting": {p: s for p, s in self.selecting.items() if p != viewer},

@@ -1,17 +1,17 @@
-"""Genera app/data/ciudades.txt.gz a partir de los datos de GeoNames.
+"""Build app/data/cities.txt.gz from GeoNames data.
 
-Uso (no hace falta en producción; el archivo ya está generado):
+Usage (not needed in production; the file is already generated):
     pip install geonamescache
-    python scripts/build_ciudades.py
+    python scripts/build_cities.py
 
-Incluye:
-  - Colombia: todos los lugares con más de 500 habitantes (casi todos los municipios).
-  - Resto del mundo: ciudades de más de 15.000 habitantes.
-  - Nombres en otros idiomas en alfabeto latino ("Londres", "Nueva York") para
-    ciudades de más de 100.000 habitantes. Se descartan las variantes casi
-    iguales al nombre oficial ("Medelin" para Medellín) porque suelen ser
-    errores de ortografía, que es justo lo que el Stop quiere detectar.
-Los nombres se guardan normalizados igual que las respuestas del Stop.
+Includes:
+  - Colombia: every place with more than 500 inhabitants (almost every town).
+  - Rest of the world: cities with more than 15,000 inhabitants.
+  - Names in other Latin-alphabet languages ("Londres", "Nueva York") for
+    cities with more than 100,000 inhabitants. Variants almost identical to
+    the official name ("Medelin" for Medellín) are dropped because they are
+    usually misspellings, which is exactly what Stop wants to catch.
+Names are stored normalized the same way as Stop answers.
 """
 
 import gzip
@@ -49,6 +49,6 @@ for city in load("cities15000.json"):
                 names.add(alt)
 names.discard("")
 
-out = ROOT / "app" / "data" / "ciudades.txt.gz"
+out = ROOT / "app" / "data" / "cities.txt.gz"
 out.write_bytes(gzip.compress(("\n".join(sorted(names)) + "\n").encode("utf-8"), 9))
-print(f"{len(names)} nombres -> {out} ({out.stat().st_size // 1024} KB)")
+print(f"{len(names)} names -> {out} ({out.stat().st_size // 1024} KB)")

@@ -11,20 +11,20 @@ def test_generated_cases_have_one_solution_and_one_murderer(level):
         case, sol, clues, murderer = generate(level, random.Random(seed))
         n = LEVELS[level]["size"]
         assert len(case.people) == n
-        assert sorted(r for r, _ in sol.values()) == list(range(n))  # una persona por fila
-        assert sorted(c for _, c in sol.values()) == list(range(n))  # y por columna
+        assert sorted(r for r, _ in sol.values()) == list(range(n))  # one person per row
+        assert sorted(c for _, c in sol.values()) == list(range(n))  # and per column
         assert all(case.objects.get(cell) not in BLOCKING for cell in sol.values())
         assert case.count_solutions(clues, limit=3) == 1
         victim_room = case.rooms[sol[n - 1][0]][sol[n - 1][1]]
         with_victim = [p for p in range(n - 1) if case.rooms[sol[p][0]][sol[p][1]] == victim_room]
         assert with_victim == [murderer]
-        assert all(any(c[1] == p for c in clues) for p in range(n))  # todos tienen pista
-        # Ninguna pista dice directamente quién estaba con la víctima
+        assert all(any(c[1] == p for c in clues) for p in range(n))  # everyone has a clue
+        # No clue says directly who was with the victim
         assert not any(c[0] == "same_room" and n - 1 in c[1:] for c in clues)
 
 
 def make(mode="team"):
-    g = MurdokuGame(["Ana", "Leo"], mode=mode, level="facil", rng=random.Random(4))
+    g = MurdokuGame(["Ana", "Leo"], mode=mode, level="easy", rng=random.Random(4))
     g.start()
     return g
 
@@ -49,7 +49,7 @@ def test_cannot_stand_on_blocking_furniture_and_cells_hold_one_person():
         g.place("Ana", 0, list(blocked))
     free = next((r, c) for r in range(5) for c in range(5) if g.case.free((r, c)))
     g.place("Ana", 0, list(free))
-    g.place("Ana", 1, list(free))  # el segundo reemplaza al primero
+    g.place("Ana", 1, list(free))  # the second replaces the first
     assert list(g._board("Ana")["placed"]) == [1]
     g.place("Ana", 1, None)
     assert g._board("Ana")["placed"] == {}
@@ -61,7 +61,7 @@ def test_notes_and_violations():
     assert g.snapshot("Leo")["notes"] == [[0, 0]]
     g.note("Ana", [0, 0])
     assert g.snapshot("Leo")["notes"] == []
-    # Plano lleno pero equivocado: se muestran las pistas que no cuadran
+    # Board full but wrong: the clues that don't fit are shown
     wrong = dict(g.solution)
     a, b = 0, 1
     wrong[a], wrong[b] = (g.solution[a][0], g.solution[b][1]), (g.solution[b][0], g.solution[a][1])

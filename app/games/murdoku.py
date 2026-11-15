@@ -1,22 +1,20 @@
-"""Murdoku: sudoku con asesinato.
+"""Murdoku: sudoku with a murder.
 
-Hay un plano de N×N casillas dividido en habitaciones, con muebles. Hay que
-ubicar a N personas (los sospechosos y la víctima) de modo que en cada fila y
-en cada columna haya exactamente una. Mesas, plantas y estantes no se pueden
-ocupar; sillas y alfombras sí. Cada persona trae una pista. Cuando todos
-están en su lugar, el asesino es el único sospechoso que quedó en la misma
-habitación que la víctima.
+There is an N×N floor plan split into rooms, with furniture. N people (the
+suspects and the victim) must be placed so that every row and every column
+holds exactly one. Tables, plants and shelves cannot be occupied; chairs and
+rugs can. Each person brings a clue. Once everyone is in place, the murderer
+is the only suspect left in the same room as the victim.
 
-Cada caso se genera al momento: habitaciones, muebles, una solución al azar
-en la que exactamente un sospechoso comparte habitación con la víctima, y
-luego se agregan pistas verdaderas hasta que la solución es la única posible
-(un buscador con vuelta atrás cuenta las soluciones). Después se quitan las
-pistas que sobran.
+Each case is generated on the fly: rooms, furniture, a random solution in
+which exactly one suspect shares a room with the victim, and then true clues
+are added until that solution is the only possible one (a backtracking
+search counts the solutions). Clues that turn out to be redundant are then
+removed.
 
-Modos:
-  - "team" (juntos): un solo plano que los dos van llenando.
-  - "race" (carrera): el mismo caso, cada uno en su plano; gana quien lo
-    resuelva primero.
+Modes:
+  - "team": one shared floor plan that both players fill in.
+  - "race": the same case, each on their own plan; first to solve it wins.
 """
 
 import random
@@ -26,33 +24,33 @@ from app.games.common import parse_rounds
 from app.games.guesswho import CHARACTERS
 
 LEVELS = {
-    "facil": {"label": "Fácil", "size": 5, "rooms": 4},
+    "easy": {"label": "Fácil", "size": 5, "rooms": 4},
     "normal": {"label": "Normal", "size": 6, "rooms": 5},
 }
 ROOM_NAMES = ["Cocina", "Sala", "Comedor", "Biblioteca", "Jardín", "Estudio", "Dormitorio", "Baño", "Terraza", "Garaje"]
-BLOCKING = ("mesa", "planta", "estante")  # no se pueden ocupar
-SEATS = ("silla", "alfombra")  # sí se pueden ocupar
-OBJECT_NAMES = {"mesa": "una mesa", "planta": "una planta", "estante": "un estante", "silla": "una silla", "alfombra": "una alfombra"}
+BLOCKING = ("table", "plant", "shelf")  # cannot be occupied
+SEATS = ("chair", "rug")  # can be occupied
+OBJECT_NAMES = {"table": "una mesa", "plant": "una planta", "shelf": "un estante", "chair": "una silla", "rug": "una alfombra"}
 BINARY = ("same_room", "diff_room", "above", "left")
 ORDINALS = ["primera", "segunda", "tercera", "cuarta", "quinta", "sexta"]
 VICTIM = {
-    "id": "victima", "name": "Don Ernesto", "genero": "hombre", "pelo": "calvo", "color": "canoso", "ojos": "azules",
-    "gafas": True, "sombrero": None, "barba": False, "bigote": True, "aretes": False, "pecas": False,
-    "piel": 0, "fondo": "#DADCE0",
+    "id": "victim", "name": "Don Ernesto", "gender": "man", "hair": "bald", "hairColor": "gray", "eyes": "blue",
+    "glasses": True, "hat": None, "beard": False, "mustache": True, "earrings": False, "freckles": False,
+    "skin": 0, "background": "#DADCE0",
 }
 
 
-# --- pistas ------------------------------------------------------------------
-# Una pista es una tupla; la primera posición dice de qué tipo es.
-#   ("room", p, k)        p está en la habitación k
-#   ("not_room", p, k)    p no está en la habitación k
+# --- clues -------------------------------------------------------------------
+# A clue is a tuple; the first item says which kind it is.
+#   ("room", p, k)        p is in room k
+#   ("not_room", p, k)    p is not in room k
 #   ("row", p, r) / ("col", p, c)
-#   ("beside", p, obj)    p está junto (arriba, abajo o a un lado, en la misma habitación) a ese objeto
-#   ("on", p, obj)        p está sobre una silla o una alfombra
+#   ("beside", p, obj)    p is next to that object (above, below or to a side, in the same room)
+#   ("on", p, obj)        p is on a chair or a rug
 #   ("corner", p)
 #   ("same_room", p, q) / ("diff_room", p, q)
-#   ("above", p, q)       p está en una fila más arriba que q
-#   ("left", p, q)        p está en una columna más a la izquierda que q
+#   ("above", p, q)       p is in a row above q
+#   ("left", p, q)        p is in a column left of q
 
 
 class Case:
@@ -60,8 +58,8 @@ class Case:
         self.size = size
         self.rooms = rooms
         self.room_names = room_names
-        self.objects = objects  # (r, c) -> tipo
-        self.people = people  # la víctima es la última
+        self.objects = objects  # (r, c) -> kind
+        self.people = people  # the victim is the last one
 
     def free(self, cell) -> bool:
         return self.objects.get(cell) not in BLOCKING
@@ -105,7 +103,7 @@ class Case:
         return True
 
     def count_solutions(self, clues: list[tuple], limit: int = 2) -> int:
-        """Cuántas ubicaciones cumplen todo (se detiene al llegar a `limit`)."""
+        """How many placements satisfy every clue (stops once it reaches `limit`)."""
         n = len(self.people)
         binary = [cl for cl in clues if cl[0] in BINARY]
         unary = [[cl for cl in clues if cl[0] not in BINARY and cl[1] == p] for p in range(n)]
@@ -152,7 +150,7 @@ class Case:
 
 
 def _rooms(size: int, count: int, rng: random.Random) -> list[list[int]]:
-    """Divide el plano en habitaciones creciendo desde semillas al azar."""
+    """Split the plan into rooms by growing them from random seeds."""
     while True:
         grid = [[-1] * size for _ in range(size)]
         seeds = rng.sample([(r, c) for r in range(size) for c in range(size)], count)
@@ -187,8 +185,8 @@ def _describe(case: Case, clue: tuple) -> str:
     if kind == "beside":
         return f"Estaba junto a {OBJECT_NAMES[clue[2]]}."
     if kind == "on":
-        o = "a" if case.people[clue[1]].get("genero") == "mujer" else "o"
-        return f"Estaba sentad{o} en una silla." if clue[2] == "silla" else f"Estaba parad{o} sobre una alfombra."
+        o = "a" if case.people[clue[1]].get("gender") == "woman" else "o"
+        return f"Estaba sentad{o} en una silla." if clue[2] == "chair" else f"Estaba parad{o} sobre una alfombra."
     if kind == "corner":
         return "Estaba en una esquina."
     if kind == "same_room":
@@ -208,13 +206,13 @@ def _article(room: str) -> str:
 
 
 def generate(level: str, rng: random.Random):
-    """Devuelve (caso, solución, pistas, índice del asesino)."""
+    """Return (case, solution, clues, murderer index)."""
     cfg = LEVELS[level]
     n = cfg["size"]
     while True:
         rooms = _rooms(n, cfg["rooms"], rng)
         names = rng.sample(ROOM_NAMES, cfg["rooms"])
-        # Solución: una persona por fila y columna
+        # Solution: one person per row and column
         perm = list(range(n))
         rng.shuffle(perm)
         cells = [(r, perm[r]) for r in range(n)]
@@ -224,7 +222,7 @@ def generate(level: str, rng: random.Random):
         if len(same) != 1:
             continue
         murderer = cells.index(same[0])
-        # Muebles: los que estorban, fuera de la solución; sillas y alfombras, donde sea
+        # Furniture: blocking pieces outside the solution; chairs and rugs anywhere
         empty = [(r, c) for r in range(n) for c in range(n) if (r, c) not in cells]
         objects = {}
         for cell in rng.sample(empty, n - 1):
@@ -267,7 +265,7 @@ def _candidates(case: Case, sol: dict, murderer: int) -> dict[int, list[tuple]]:
             if q == p:
                 continue
             same = case.rooms[r2][c2] == k
-            # Decir quién estaba con la víctima arruinaría el misterio
+            # Saying who was with the victim would spoil the mystery
             if same and victim not in (p, q):
                 out[p].append(("same_room", p, q))
             if not same:
@@ -285,7 +283,7 @@ def _clues_for(case: Case, sol: dict, murderer: int, rng: random.Random) -> list
         rng.shuffle(lst)
     n = len(case.people)
     clues: list[tuple] = []
-    # Una pista por persona para empezar, y luego las que hagan falta, por turnos
+    # One clue per person to start, then more as needed, taking turns
     turn = 0
     while case.count_solutions(clues) > 1:
         p = turn % n
@@ -297,7 +295,7 @@ def _clues_for(case: Case, sol: dict, murderer: int, rng: random.Random) -> list
         clues.append(cands[p].pop())
         if turn > 200:
             return None
-    # Quitar las que sobran, sin dejar a nadie sin pista
+    # Remove redundant clues without leaving anyone clueless
     for clue in list(reversed(clues)):
         owner = clue[1]
         if sum(1 for c in clues if c[1] == owner) <= 1:
@@ -316,7 +314,7 @@ class MurdokuGame:
         self,
         players: list[str],
         mode: str = "team",
-        level: str = "facil",
+        level: str = "easy",
         rounds: int = 1,
         rng: random.Random | None = None,
         timings: dict | None = None,
@@ -334,7 +332,7 @@ class MurdokuGame:
         self.solution: dict[int, tuple] = {}
         self.clues: list[tuple] = []
         self.murderer = -1
-        self.boards: dict[str, dict] = {}  # tablero -> {"placed": {pid: (r,c,quien)}, "notes": set}
+        self.boards: dict[str, dict] = {}  # board -> {"placed": {pid: (r, c, who)}, "notes": set}
         self.started_at = 0.0
         self.result: dict | None = None
         self.scores: dict[str, int] = {p: 0 for p in self.players}
@@ -345,12 +343,12 @@ class MurdokuGame:
         mode = options.get("mode", "team")
         if mode not in ("team", "race"):
             raise ValueError("Modo no válido")
-        level = options.get("level", "facil")
+        level = options.get("level", "easy")
         if level not in LEVELS:
             raise ValueError("Nivel no válido")
         return cls(players, mode=mode, level=level, rounds=parse_rounds(options, 1), rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
@@ -379,7 +377,7 @@ class MurdokuGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- tableros -------------------------------------------------------
+    # --- boards ---------------------------------------------------------
     def _board_key(self, player: str) -> str:
         return "team" if self.mode == "team" else player
 
@@ -403,7 +401,7 @@ class MurdokuGame:
         if self.mode == "race" and player in (self.result or {}).get("solvers", []):
             raise ValueError("Ya resolviste este caso")
 
-    # --- transiciones ---------------------------------------------------
+    # --- transitions ----------------------------------------------------
     def start_round(self) -> None:
         if self.phase not in ("idle", "round_over"):
             raise ValueError("No se puede iniciar ronda ahora")
@@ -417,7 +415,7 @@ class MurdokuGame:
         self.phase = "playing"
 
     def place(self, player: str, person, cell) -> None:
-        """Ubica (o quita, si cell es None) a una persona en el plano."""
+        """Place a person on the plan (or remove them if cell is None)."""
         self._require_playing(player)
         try:
             pid = int(person)
@@ -432,7 +430,7 @@ class MurdokuGame:
         r, c = self._cell(cell)
         if not self.case.free((r, c)):
             raise ValueError(f"Ahí hay {OBJECT_NAMES[self.case.objects[(r, c)]]}: no se puede ocupar")
-        # Quien estuviera en esa casilla sale
+        # Whoever was on that cell is moved out
         for other, (rr, cc, _) in list(board["placed"].items()):
             if (rr, cc) == (r, c):
                 del board["placed"][other]
@@ -441,7 +439,7 @@ class MurdokuGame:
         self._check(player)
 
     def note(self, player: str, cell) -> None:
-        """Marca o desmarca una casilla con una X (descartada)."""
+        """Toggle an X (ruled out) on a cell."""
         self._require_playing(player)
         r, c = self._cell(cell)
         board = self._board(player)
@@ -468,7 +466,7 @@ class MurdokuGame:
         self.phase = "round_over"
 
     def violations(self, player: str) -> list[int]:
-        """Si el plano está lleno pero no es la solución, qué pistas no se cumplen."""
+        """If the plan is full but wrong, which clues are broken."""
         board = self._board(player)
         placed = {p: (r, c) for p, (r, c, _) in board["placed"].items()}
         if len(placed) < len(self.case.people):
@@ -490,7 +488,7 @@ class MurdokuGame:
         else:
             self.start_round()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         over = self.phase in ("round_over", "finished")
         case = self.case

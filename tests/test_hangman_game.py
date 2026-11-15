@@ -35,7 +35,7 @@ def test_setter_writes_word_and_only_they_can_see_it():
     assert letters(leo) == "_______ __ _____"
     assert leo["hint"] == "Algo dulce"
     assert "Corazón" not in str(leo)
-    assert letters(g.snapshot("Ana")) == "Corazón de melón"  # quien eligió la ve
+    assert letters(g.snapshot("Ana")) == "Corazón de melón"  # whoever chose it can see it
 
 
 def test_guessing_reveals_accented_letters_and_counts_misses():
@@ -68,13 +68,13 @@ def test_guesser_wins_point_when_solving_and_roles_swap():
 def test_setter_wins_when_lives_run_out_and_wrong_solve_costs_a_life():
     g = turns_game(rounds=1, lives=6)
     g.set_word("Ana", "sol", "")
-    g.solve("Leo", "mar")  # no era
+    g.solve("Leo", "mar")  # wrong guess
     assert g.misses == 1 and g.wrong_solves == ["mar"]
     for c in "xyzwq":
         g.guess("Leo", c)
     assert g.phase == "round_over" and not g.result["won"]
     assert g.scores == {"Ana": 1, "Leo": 0}
-    assert g.snapshot("Leo")["slots"][0]["char"] == "s"  # al final se revela
+    assert g.snapshot("Leo")["slots"][0]["char"] == "s"  # it's revealed at the end
     g.next_round()
     assert g.phase == "finished" and g.snapshot()["history"][0]["word"] == "sol"
 
@@ -96,7 +96,7 @@ def test_random_mode_is_cooperative_and_words_do_not_repeat():
     assert g.saved == 1 and g.result["winner"] is None
     g.next_round()
     assert g.word != first
-    g.guess("Leo", next(iter(g._letters_in_word())))  # los dos pueden jugar
+    g.guess("Leo", next(iter(g._letters_in_word())))  # both can play
 
 
 def test_options_are_validated():

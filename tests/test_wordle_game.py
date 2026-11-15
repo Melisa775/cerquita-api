@@ -23,8 +23,8 @@ def team(answer="gatos", rounds=2):
         ("gatos", "gatos", "CCCCC"),
         ("sagot", "gatos", "PCPCP"),
         ("perro", "gatos", "AAAAP"),
-        ("llama", "plato", "ACCAA"),  # la segunda L y la segunda A ya no cuentan
-        ("aabbb", "ababa", "CPPCA"),  # solo quedan dos B: la tercera es gris
+        ("llama", "plato", "ACCAA"),  # the second L and the second A no longer count
+        ("aabbb", "ababa", "CPPCA"),  # only two B's left: the third is gray
         ("mamma", "madre", "CCAAA"),
     ],
 )
@@ -56,7 +56,7 @@ def test_guess_validation():
         g.guess("Ana", "gato")
     with pytest.raises(ValueError, match="diccionario"):
         g.guess("Ana", "qxzpt")
-    g.guess("Ana", "Pérro")  # las tildes no cuentan
+    g.guess("Ana", "Pérro")  # accents don't count
     with pytest.raises(ValueError, match="Ya probaste"):
         g.guess("Ana", "perro")
 
@@ -65,12 +65,12 @@ def test_duel_winner_is_fewer_tries_then_first_to_solve():
     g = duel()
     g.guess("Leo", "perro")
     g.guess("Ana", "perro")
-    g.guess("Ana", "gatos")  # Ana: 2 intentos
-    assert g.phase == "playing"  # Leo sigue
-    g.guess("Leo", "gatos")  # Leo: 2 intentos, pero después
+    g.guess("Ana", "gatos")  # Ana: 2 attempts
+    assert g.phase == "playing"  # Leo keeps going
+    g.guess("Leo", "gatos")  # Leo: 2 attempts, but later
     assert g.phase == "round_over"
     assert g.result["winner"] == "Ana" and g.scores == {"Ana": 1, "Leo": 0}
-    assert g.snapshot("Leo")["boards"]["Ana"][1]["word"] == "gatos"  # al final se ve todo
+    assert g.snapshot("Leo")["boards"]["Ana"][1]["word"] == "gatos"  # everything is visible at the end
     assert g.snapshot("Leo")["answer"] == "gatos"
 
 
@@ -91,7 +91,7 @@ def test_team_takes_turns_and_shares_a_board():
     assert g.current == "Ana"
     g.set_draft("Ana", "per")
     assert g.snapshot("Leo")["draft"] == "per"
-    g.set_draft("Leo", "xx")  # no es su turno: se ignora
+    g.set_draft("Leo", "xx")  # not their turn: ignored
     assert g.draft == "per"
     with pytest.raises(ValueError, match="turno de Ana"):
         g.guess("Leo", "perro")
@@ -102,7 +102,7 @@ def test_team_takes_turns_and_shares_a_board():
     g.guess("Leo", "gatos")
     assert g.result == {"solved": True, "tries": 2, "by": "Leo"} and g.saved == 1
     g.next_round()
-    assert g.current == "Leo"  # empieza el otro
+    assert g.current == "Leo"  # the other player starts
 
 
 def test_team_runs_out_of_tries():

@@ -42,7 +42,7 @@ async def test_round_runs_on_timers_and_reveals_when_both_answer(room):
     assert ana.last["game"]["phase"] == "memorize"
     assert leo.last["game"]["target"] is not None
 
-    await asyncio.sleep(0.1)  # termina el tiempo de memorizar
+    await asyncio.sleep(0.1)  # memorizing time ends
     assert ana.last["game"]["phase"] == "guess"
     assert ana.last["phaseEndsInMs"] is not None
 
@@ -84,7 +84,7 @@ async def test_player_keeps_seat_during_game(room):
     assert room.players == ["Ana", "Leo"]
     snap = room.snapshot()
     assert {"name": "Leo", "online": False} in snap["players"]
-    await room.join("Leo", FakeConn())  # se reconecta
+    await room.join("Leo", FakeConn())  # reconnects
     room.close()
 
 
@@ -107,18 +107,18 @@ async def test_stop_round_flow_over_the_room():
 
     letter = game["letter"]
     answers = {c["key"]: f"{letter}x{c['key']}" for c in game["categories"]}
-    await room.handle("Leo", {"type": "stop_answers", "answers": {"nombre": f"{letter}ia"}})
+    await room.handle("Leo", {"type": "stop_answers", "answers": {"name": f"{letter}ia"}})
     assert ana.last["game"]["filled"]["Leo"] == 1
     await room.handle("Ana", {"type": "stop_call", "answers": answers})
     assert leo.last["game"]["phase"] == "stopping"
     assert leo.last["game"]["stoppedBy"] == "Ana"
 
-    await asyncio.sleep(0.15)  # margen para recibir lo último
+    await asyncio.sleep(0.15)  # margin to receive the last messages
     state = leo.last["game"]
     assert state["phase"] == "review"
     assert state["roundTotals"] == {"Ana": 700, "Leo": 100}
 
-    await room.handle("Leo", {"type": "stop_toggle", "player": "Ana", "category": "cosa"})
+    await room.handle("Leo", {"type": "stop_toggle", "player": "Ana", "category": "thing"})
     assert leo.last["game"]["roundTotals"]["Ana"] == 600
     await room.handle("Ana", {"type": "next_round"})
     assert ana.last["game"]["phase"] == "finished"
@@ -136,12 +136,12 @@ async def test_toolate_turn_timer_restarts_and_expires():
 
     await room.handle("Leo", {"type": "tl_begin"})
     await asyncio.sleep(0.1)
-    await room.handle("Ana", {"type": "tl_pick", "letter": "B"})  # turno de Ana, reinicia el reloj
+    await room.handle("Ana", {"type": "tl_pick", "letter": "B"})  # Ana's turn, the clock resets
     await asyncio.sleep(0.1)
-    assert ana.last["game"]["phase"] == "playing"  # 0.2 s en total, pero el reloj se reinició
+    assert ana.last["game"]["phase"] == "playing"  # 0.2 s total, but the clock was reset
 
     with pytest.raises(RoomError):
-        await room.handle("Ana", {"type": "tl_pick", "letter": "C"})  # turno de Leo
+        await room.handle("Ana", {"type": "tl_pick", "letter": "C"})  # Leo's turn
     await asyncio.sleep(0.15)
     state = ana.last["game"]
     assert state["phase"] == "round_over"
@@ -158,7 +158,7 @@ async def test_game_actions_are_checked_against_the_current_game(room):
         await room.handle("Ana", {"type": "stop_call", "answers": {}})
     with pytest.raises(RoomError):
         await room.handle("Ana", {"type": "start_game", "game": "toolate", "letters": ["A"]})
-    assert room.game.name == "color"  # una opción inválida no cambia el juego
+    assert room.game.name == "color"  # an invalid option doesn't change the game
     room.close()
 
 
@@ -169,7 +169,7 @@ async def test_restarting_a_game_restarts_its_timer(room):
     await asyncio.sleep(0.03)
     await room.handle("Ana", {"type": "start_game", "game": "color", "rounds": 1})
     await asyncio.sleep(0.03)
-    assert ana.last["game"]["phase"] == "memorize"  # el reloj viejo no avanzó el juego nuevo
+    assert ana.last["game"]["phase"] == "memorize"  # the old clock didn't advance the new game
     await asyncio.sleep(0.05)
     assert ana.last["game"]["phase"] == "guess"
     room.close()
@@ -224,7 +224,7 @@ async def test_wordsearch_marks_words_for_both_players():
     ana, leo = FakeConn(), FakeConn()
     await room.join("Ana", ana)
     await room.join("Leo", leo)
-    await room.handle("Ana", {"type": "start_game", "game": "wordsearch", "mode": "race", "level": "facil"})
+    await room.handle("Ana", {"type": "start_game", "game": "wordsearch", "mode": "race", "level": "easy"})
     item = room.game.placed[0]
     await room.handle("Leo", {"type": "ws_select", "start": list(item["cells"][0]), "end": list(item["cells"][1])})
     assert "Leo" in ana.last["game"]["selecting"]
@@ -243,7 +243,7 @@ async def test_pinturillo_relays_strokes_without_full_snapshots():
     sent_to_ana = len(ana.messages)
     await room.handle("Ana", {"type": "pz_stroke", "id": "a", "color": "#22252E", "size": 6, "points": [[1, 2]]})
     assert leo.last == {"type": "game_event", "event": {"kind": "stroke", "stroke": room.game.strokes[0]}}
-    assert len(ana.messages) == sent_to_ana  # a quien dibuja no se le reenvía nada
+    assert len(ana.messages) == sent_to_ana  # nothing is echoed back to the drawer
     word = room.game.word
     await room.handle("Leo", {"type": "pz_guess", "text": word[:-1] + ("x" if word[-1] != "x" else "y")})
     if len(word.replace(" ", "")) >= 4:
@@ -258,7 +258,7 @@ async def test_trivia_spin_and_question_run_on_timers():
     ana, leo = FakeConn(), FakeConn()
     await room.join("Ana", ana)
     await room.join("Leo", leo)
-    await room.handle("Ana", {"type": "start_game", "game": "trivia", "mode": "duelo"})
+    await room.handle("Ana", {"type": "start_game", "game": "trivia", "mode": "duel"})
     await room.handle("Leo", {"type": "tv_spin"})
     assert leo.last["game"]["phase"] == "spinning"
     await asyncio.sleep(0.1)
@@ -281,5 +281,5 @@ async def test_chess_clock_flags_over_the_room():
     assert leo.last["game"]["legal"] == {}
     await asyncio.sleep(0.45)
     result = leo.last["game"]["result"]
-    assert result["winner"] == "Leo" and result["reason"] == "tiempo"
+    assert result["winner"] == "Leo" and result["reason"] == "timeout"
     room.close()

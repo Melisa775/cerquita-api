@@ -1,23 +1,22 @@
-"""Dominó para dos, con fichas doble seis (28 fichas).
+"""Dominoes for two, with a double-six set (28 tiles).
 
-Cada uno recibe 7 fichas y las otras 14 quedan en el pozo. Por turnos se
-pone una ficha que coincida con uno de los dos extremos de la línea.
+Each player gets 7 tiles and the other 14 stay in the boneyard. Players take
+turns placing a tile that matches one of the two open ends of the line.
 
-  con pozo  -> si no tienes jugada, robas del pozo hasta poder jugar;
-               si el pozo está vacío, pasas.
-  sin pozo  -> si no tienes jugada, pasas.
+  with boneyard     -> with no playable tile you draw until you can play;
+                       if the boneyard is empty, you pass.
+  without boneyard  -> with no playable tile you pass.
 
-Los pases son automáticos: si a alguien no le queda jugada ni pozo, el
-turno vuelve solo al otro.
+Passing is automatic: if a player has no move and nothing to draw, the turn
+goes straight back to the other player.
 
-La mano termina cuando alguien se queda sin fichas ("dominó") o cuando
-nadie puede jugar ("tranque"; gana quien tenga menos puntos en la mano).
-Quien gana la mano se anota los puntos que le quedaron al otro. La partida
-termina cuando alguien llega a la meta.
+A hand ends when someone runs out of tiles ("domino") or nobody can play
+("blocked"; the lower hand total wins). The hand winner scores the pips left
+in the other player's hand. The game ends when someone reaches the goal.
 
-En la primera mano sale quien tenga el doble más alto, y lo pone; si nadie
-tiene dobles, la ficha más alta. En las siguientes sale quien ganó la mano
-anterior, con la ficha que quiera.
+In the first hand, the player with the highest double leads with it; if
+nobody has a double, the highest tile leads. In later hands the previous
+hand's winner leads with any tile.
 """
 
 import random
@@ -56,12 +55,12 @@ class DominoGame:
         self.hand_no = 0
         self.hands: dict[str, list[tuple[int, int]]] = {}
         self.pool: list[tuple[int, int]] = []
-        self.line: list[tuple[int, int]] = []  # fichas orientadas: (izquierda, derecha)
+        self.line: list[tuple[int, int]] = []  # oriented tiles: (left, right)
         self.turn: str | None = None
-        self.forced: tuple[int, int] | None = None  # ficha obligada de salida
+        self.forced: tuple[int, int] | None = None  # tile that must lead
         self.next_starter: str | None = None
         self.passes = 0
-        self.log: list[dict] = []  # últimas acciones de la mano
+        self.log: list[dict] = []  # latest actions of the hand
         self.result: dict | None = None
         self.history: list[dict] = []
         self.winner: str | None = None
@@ -78,7 +77,7 @@ class DominoGame:
             raise ValueError("La meta es 50, 100 o 150 puntos")
         return cls(players, goal=goal, boneyard=bool(options.get("boneyard", True)), rng=rng)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase in ("playing", "hand_over")
@@ -109,7 +108,7 @@ class DominoGame:
     def remove_player(self, player: str) -> None:
         pass
 
-    # --- reparto ----------------------------------------------------------
+    # --- dealing ----------------------------------------------------------
     def other(self, player: str) -> str:
         return next(p for p in self.players if p != player)
 
@@ -139,13 +138,13 @@ class DominoGame:
                     best = (rank, p, t)
         return best[1], best[2]
 
-    # --- jugadas ----------------------------------------------------------
+    # --- moves ------------------------------------------------------------
     @property
     def ends(self) -> tuple[int, int] | None:
         return (self.line[0][0], self.line[-1][1]) if self.line else None
 
     def moves_for(self, player: str) -> list[dict]:
-        """Jugadas posibles: [{"tile": [a, b], "sides": ["left", "right"]}]."""
+        """Possible moves: [{"tile": [a, b], "sides": ["left", "right"]}]."""
         out = []
         for t in self.hands.get(player, []):
             if self.forced and t != self.forced:
@@ -218,10 +217,10 @@ class DominoGame:
         self._auto_pass()
 
     def _auto_pass(self) -> None:
-        """Si quien tiene el turno no puede jugar ni robar, pasa solo."""
+        """If the player on turn can neither play nor draw, they pass automatically."""
         while self.phase == "playing" and not self.moves_for(self.turn):
             if self.use_boneyard and self.pool:
-                return  # tiene que robar
+                return  # they have to draw
             self.passes += 1
             self.log.append({"player": self.turn, "action": "pass"})
             if self.passes >= 2:
@@ -233,9 +232,9 @@ class DominoGame:
         counts = {p: pips(self.hands[p]) for p in self.players}
         a, b = self.players
         if counts[a] == counts[b]:
-            self._end_hand(None, "tranque")
+            self._end_hand(None, "blocked")
         else:
-            self._end_hand(a if counts[a] < counts[b] else b, "tranque")
+            self._end_hand(a if counts[a] < counts[b] else b, "blocked")
 
     def _end_hand(self, winner: str | None, reason: str) -> None:
         counts = {p: pips(self.hands[p]) for p in self.players}
@@ -258,7 +257,7 @@ class DominoGame:
             raise ValueError("La mano todavía no termina")
         self._deal()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         over = self.phase in ("hand_over", "finished")
         hands = {}
