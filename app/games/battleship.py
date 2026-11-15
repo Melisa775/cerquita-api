@@ -1,32 +1,32 @@
-"""Batalla naval.
+"""Battleship ("Batalla naval").
 
-Cada uno ubica su flota en secreto en una cuadrícula y después se turnan
-para disparar a la del otro: agua, tocado o hundido. Gana quien hunda
-primero todos los barcos de su pareja.
+Each player places their fleet in secret on a grid, then they take turns
+shooting at the other one: miss, hit or sunk. First to sink every ship of
+the partner wins.
 
-Fases:
-  placing -> cada uno ubica sus barcos y marca "listo"
-  battle  -> disparos por turnos
-Al terminar, la fase es "finished" y se ven las dos flotas.
+Phases:
+  placing -> each player places their ships and marks "ready"
+  battle  -> turn-based shooting
+When it ends the phase is "finished" and both fleets are revealed.
 
-Opciones:
-  size      -> 8 o 10 casillas por lado (la flota cambia con el tamaño)
-  noTouch   -> los barcos no se pueden tocar, ni en diagonal (la regla
-               clásica de "hundir la flota"). Con esta regla, al hundir un
-               barco se marcan como agua las casillas que lo rodean.
-  bonus     -> si aciertas, vuelves a disparar
+Options:
+  size      -> 8 or 10 cells per side (the fleet depends on the size)
+  noTouch   -> ships may not touch, not even diagonally (the classic
+               Spanish "hundir la flota" rule). With it, sinking a ship
+               marks the surrounding cells as water.
+  bonus     -> a hit lets you shoot again
 
-El servidor guarda dónde está cada barco y a cada jugador le manda solo lo
-suyo: del tablero del otro sabe únicamente lo que ya disparó.
+The server keeps every ship's position and sends each player only their own
+data: of the other board they only know the shots they have already fired.
 """
 
 import random
 
 FLEETS = {
-    10: [("portaaviones", "Portaaviones", 5), ("acorazado", "Acorazado", 4), ("crucero", "Crucero", 3),
-         ("submarino", "Submarino", 3), ("destructor", "Destructor", 2)],
-    8: [("acorazado", "Acorazado", 4), ("crucero", "Crucero", 3), ("submarino", "Submarino", 3),
-        ("destructor", "Destructor", 2), ("lancha", "Lancha", 2)],
+    10: [("carrier", "Portaaviones", 5), ("battleship", "Acorazado", 4), ("cruiser", "Crucero", 3),
+         ("submarine", "Submarino", 3), ("destroyer", "Destructor", 2)],
+    8: [("battleship", "Acorazado", 4), ("cruiser", "Crucero", 3), ("submarine", "Submarino", 3),
+        ("destroyer", "Destructor", 2), ("patrol_boat", "Lancha", 2)],
 }
 DIRS = {"h": (0, 1), "v": (1, 0)}
 
@@ -37,7 +37,7 @@ def ship_cells(row: int, col: int, length: int, direction: str) -> list[tuple[in
 
 
 def neighbors(cells, size: int) -> set[tuple[int, int]]:
-    """Casillas alrededor de un barco (incluidas diagonales), sin el barco."""
+    """Cells around a ship (including diagonals), excluding the ship itself."""
     around = set()
     for r, c in cells:
         for dr in (-1, 0, 1):
@@ -49,7 +49,7 @@ def neighbors(cells, size: int) -> set[tuple[int, int]]:
 
 
 def validate_fleet(ships: list[dict], size: int, no_touch: bool) -> list[dict]:
-    """Revisa una flota enviada por un cliente y la devuelve normalizada."""
+    """Validate a fleet sent by a client and return it normalized."""
     fleet = {sid: length for sid, _, length in FLEETS[size]}
     if not isinstance(ships, list) or len(ships) != len(fleet):
         raise ValueError("Ubica todos los barcos")
@@ -83,7 +83,7 @@ def validate_fleet(ships: list[dict], size: int, no_touch: bool) -> list[dict]:
 
 
 def random_fleet(size: int, no_touch: bool, rng: random.Random) -> list[dict]:
-    """Una flota válida al azar (para pruebas y para el botón "Al azar" del servidor)."""
+    """A random valid fleet (used by tests)."""
     while True:
         placed, blocked = [], set()
         ok = True
@@ -126,11 +126,11 @@ class BattleshipGame:
         self.bonus = bonus
         self.rng = rng or random.Random()
         self.phase = "idle"
-        self.fleets: dict[str, list[dict]] = {}  # jugador -> barcos con sus casillas
+        self.fleets: dict[str, list[dict]] = {}  # player -> ships with their cells
         self.ready: dict[str, bool] = {p: False for p in self.players}
-        # disparos que RECIBIÓ cada jugador: (fila, col) -> "water" | "hit"
+        # shots each player RECEIVED: (row, col) -> "water" | "hit"
         self.shots: dict[str, dict[tuple[int, int], str]] = {p: {} for p in self.players}
-        # casillas marcadas como agua automáticamente alrededor de un hundido
+        # cells automatically marked as water around a sunk ship
         self.auto_water: dict[str, set] = {p: set() for p in self.players}
         self.turn: str | None = None
         self.last_shot: dict | None = None
@@ -149,7 +149,7 @@ class BattleshipGame:
             raise ValueError("El tablero es de 8 o de 10")
         return cls(players, size=size, no_touch=bool(options.get("noTouch", True)), bonus=bool(options.get("bonus", True)), rng=rng)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase in ("placing", "battle")
@@ -178,9 +178,9 @@ class BattleshipGame:
             self.fire(player, msg.get("row"), msg.get("col"))
 
     def remove_player(self, player: str) -> None:
-        pass  # el puesto se conserva para que pueda volver
+        pass  # the seat is kept so they can come back
 
-    # --- ubicación ------------------------------------------------------
+    # --- placement ------------------------------------------------------
     def opponent(self, player: str) -> str:
         return next(p for p in self.players if p != player)
 
@@ -198,7 +198,7 @@ class BattleshipGame:
             raise ValueError("La batalla ya empezó")
         self.ready[player] = False
 
-    # --- disparos -------------------------------------------------------
+    # --- shots ----------------------------------------------------------
     def _ship_at(self, player: str, cell):
         return next((s for s in self.fleets[player] if cell in s["cells"]), None)
 
@@ -241,12 +241,12 @@ class BattleshipGame:
         if result == "water" or not self.bonus:
             self.turn = target
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def _public_ship(self, ship: dict, owner: str) -> dict:
         return {"id": ship["id"], "row": ship["row"], "col": ship["col"], "dir": ship["dir"], "length": ship["length"], "sunk": self._sunk(owner, ship)}
 
     def _board_view(self, owner: str, reveal: bool) -> dict:
-        """Lo que se ve del tablero de `owner`: disparos recibidos y barcos (todos o solo los hundidos)."""
+        """What is visible of `owner`'s board: shots received and ships (all of them, or only sunk ones)."""
         ships = self.fleets.get(owner, [])
         shown = [self._public_ship(s, owner) for s in ships if reveal or self._sunk(owner, s)]
         return {

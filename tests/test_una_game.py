@@ -95,13 +95,13 @@ def test_draw_then_play_or_pass():
     g = make()
     good, bad = card("r", "9"), card("y", "3")
     rig(g, [card("g", "1")], [card("y", "2")], card("r", "5"), pile=[bad, good])
-    g.draw("Ana")  # roba el 9 rojo, que sirve
+    g.draw("Ana")  # draws the red 9, which is playable
     assert g.drawn["id"] == good["id"] and g.turn == "Ana"
     with pytest.raises(ValueError):
-        g.play("Ana", g.hands["Ana"][0]["id"])  # solo la robada
+        g.play("Ana", g.hands["Ana"][0]["id"])  # only the drawn card
     g.pass_turn("Ana")
     assert g.turn == "Leo"
-    g.draw("Leo")  # roba el 3 amarillo: no sirve sobre rojo 5 → pasa solo
+    g.draw("Leo")  # draws the yellow 3: not playable on red 5 → passes automatically
     assert g.turn == "Ana" and g.drawn is None
 
 
@@ -109,11 +109,11 @@ def test_una_and_catch():
     g = make()
     a, b = card("r", "1"), card("r", "2")
     rig(g, [a, b], [card("y", "2"), card("g", "3")], card("r", "5"))
-    g.play("Ana", a["id"])  # queda con una sin decirlo
+    g.play("Ana", a["id"])  # left with one card without calling it
     assert g.catchable == "Ana"
     g.handle("Leo", {"type": "un_catch"})
     assert len(g.hands["Ana"]) == 3 and g.catchable is None
-    # diciéndolo a tiempo no la pillan
+    # calling it in time, they don't get caught
     rig(g, [a, b], [card("y", "2")], card("r", "5"))
     g.say_una("Ana")
     g.play("Ana", a["id"])
@@ -127,7 +127,7 @@ def test_catch_window_closes_when_rival_plays():
     a, b, y5 = card("r", "1"), card("r", "2"), card("y", "5")
     rig(g, [a, b], [card("r", "8"), y5, card("g", "6")], card("r", "5"))
     g.play("Ana", a["id"])
-    g.play("Leo", g.hands["Leo"][0]["id"])  # Leo juega sin pillarla
+    g.play("Leo", g.hands["Leo"][0]["id"])  # Leo plays without catching her
     assert g.catchable is None
 
 

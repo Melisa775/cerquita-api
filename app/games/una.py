@@ -1,21 +1,21 @@
-"""Una: juego de cartas para dos al estilo UNO.
+"""Una: a two-player card game in the style of UNO.
 
-Mazo de 108 cartas: cuatro colores (rojo, amarillo, verde, azul), cada uno
-con un 0, dos de cada número del 1 al 9, dos "Salta", dos "Reversa" y dos
-"+2"; además 4 comodines y 4 comodines "+4".
+108-card deck: four colors (red, yellow, green, blue), each with one 0, two
+of each number from 1 to 9, two Skip, two Reverse and two +2; plus 4 wild
+cards and 4 wild +4 cards.
 
-  - Se reparten 7 cartas. Por turnos se juega una carta del mismo color o
-    del mismo número/símbolo que la de arriba, o un comodín (y se elige color).
-  - Si no puedes (o no quieres) jugar, robas una. Si la que robaste sirve,
-    puedes jugarla; si no, pasa el turno.
-  - Entre dos, "Salta" y "Reversa" hacen lo mismo: vuelves a jugar. El
-    "+2" y el "+4" hacen robar al otro y también vuelves a jugar.
-  - Con la opción de acumular, a un +2 se le puede responder con otro +2 (o
-    un +4) y el que no pueda responder roba todo lo acumulado.
-  - Al quedarte con una carta hay que decir "¡Una!". Si no lo dices y tu
-    pareja te pilla antes de hacer su jugada, robas 2.
-  - Gana la mano quien se quede sin cartas y suma los puntos de las cartas
-    del otro (números: su valor; especiales: 20; comodines: 50).
+  - Each player gets 7 cards. On your turn you play a card matching the top
+    card's color or number/symbol, or a wild card (and pick a color).
+  - If you can't (or don't want to) play, you draw one. If it is playable
+    you may play it; otherwise the turn passes.
+  - With two players, Skip and Reverse do the same thing: you play again.
+    +2 and +4 make the other player draw and you also play again.
+  - With stacking enabled, a +2 can be answered with another +2 (or a +4)
+    and whoever cannot answer draws the whole stack.
+  - When you are down to one card you must call "¡Una!". If you don't and
+    your partner catches you before their next play, you draw 2.
+  - The hand goes to whoever runs out of cards; they score the other
+    player's cards (numbers: face value; action cards: 20; wilds: 50).
 """
 
 import random
@@ -23,7 +23,7 @@ import random
 COLORS = ("r", "y", "g", "b")
 ACTIONS = ("skip", "reverse", "draw2")
 HAND = 7
-GOALS = (0, 200, 500)  # 0 = una sola mano
+GOALS = (0, 200, 500)  # 0 = a single hand
 
 
 def build_deck() -> list[dict]:
@@ -58,12 +58,12 @@ class UnaGame:
         self.hands: dict[str, list[dict]] = {}
         self.pile: list[dict] = []
         self.discard: list[dict] = []
-        self.color: str | None = None  # color vigente (importa tras un comodín)
+        self.color: str | None = None  # current color (matters after a wild card)
         self.turn: str | None = None
-        self.drawn: dict | None = None  # carta recién robada que se puede jugar
-        self.pending = 0  # cartas acumuladas por +2/+4 (con la opción de acumular)
+        self.drawn: dict | None = None  # just-drawn card that can be played
+        self.pending = 0  # cards stacked by +2/+4 (with stacking enabled)
         self.said_una: dict[str, bool] = {}
-        self.catchable: str | None = None  # quien se quedó con una carta sin decirlo
+        self.catchable: str | None = None  # who went down to one card without calling it
         self.log: list[dict] = []
         self.result: dict | None = None
         self.winner: str | None = None
@@ -81,7 +81,7 @@ class UnaGame:
             raise ValueError("Meta no válida")
         return cls(players, goal=goal, stacking=bool(options.get("stacking", False)), rng=rng)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase in ("playing", "round_over")
@@ -123,7 +123,7 @@ class UnaGame:
     def remove_player(self, player: str) -> None:
         pass
 
-    # --- reparto ----------------------------------------------------------
+    # --- dealing ----------------------------------------------------------
     def other(self, player: str) -> str:
         return next(p for p in self.players if p != player)
 
@@ -131,7 +131,7 @@ class UnaGame:
         deck = build_deck()
         self.rng.shuffle(deck)
         self.hands = {p: [deck.pop() for _ in range(HAND)] for p in self.players}
-        # la primera carta del descarte es un número
+        # the first discard is always a number card
         first = next(i for i in range(len(deck) - 1, -1, -1) if deck[i]["value"].isdigit())
         top = deck.pop(first)
         self.discard = [top]
@@ -152,7 +152,7 @@ class UnaGame:
         for _ in range(n):
             if not self.pile:
                 if len(self.discard) <= 1:
-                    break  # no quedan cartas en ningún lado
+                    break  # no cards left anywhere
                 top = self.discard.pop()
                 self.pile = self.discard
                 self.rng.shuffle(self.pile)
@@ -166,14 +166,14 @@ class UnaGame:
                 self.catchable = None
         return got
 
-    # --- jugadas ----------------------------------------------------------
+    # --- moves ------------------------------------------------------------
     @property
     def top(self) -> dict:
         return self.discard[-1]
 
     def playable(self, card: dict) -> bool:
         if self.pending:
-            # bajo ataque acumulado solo se responde con +2 sobre +2, o con +4
+            # under a stacked attack you can only answer +2 with +2, or with +4
             return card["value"] == "wild4" or (card["value"] == "draw2" and self.top["value"] == "draw2")
         if card["color"] is None:
             return True
@@ -187,7 +187,7 @@ class UnaGame:
         return [c["id"] for c in self.hands[player] if self.playable(c)]
 
     def _close_catch_window(self, actor: str) -> None:
-        # Cuando el otro hace su jugada, ya no se puede pillar a quien no dijo "¡Una!"
+        # Once the other player acts, whoever didn't call "¡Una!" can no longer be caught
         if self.catchable and self.catchable != actor:
             self.catchable = None
 
@@ -224,9 +224,9 @@ class UnaGame:
                 return
             got = self._take(rival, amount)
             self.log.append({"player": rival, "action": "drew", "count": len(got), "forced": True})
-            return  # el otro pierde el turno: sigues tú
+            return  # the other player loses the turn: you keep playing
         if value in ("skip", "reverse"):
-            return  # entre dos, vuelves a jugar
+            return  # with two players, you play again
         self.turn = rival
 
     def draw(self, player: str) -> None:
@@ -253,7 +253,7 @@ class UnaGame:
         self.log.append({"player": player, "action": "pass"})
         self.turn = self.other(player)
 
-    # --- ¡Una! ------------------------------------------------------------
+    # --- "¡Una!" call -----------------------------------------------------
     def say_una(self, player: str) -> None:
         n = len(self.hands[player])
         if n == 2 and player == self.turn and self.playable_ids(player):
@@ -273,10 +273,10 @@ class UnaGame:
         self.catchable = None
         self.log.append({"player": player, "action": "catch", "target": target, "count": len(got)})
 
-    # --- fin de la mano ---------------------------------------------------
+    # --- end of hand ------------------------------------------------------
     def _end_round(self, winner: str, last_card: dict) -> None:
         loser = self.other(winner)
-        # si la última carta era +2/+4, el otro igual roba antes de contar
+        # if the last card was +2/+4, the other player still draws before counting
         if last_card["value"] in ("draw2", "wild4"):
             self._take(loser, (2 if last_card["value"] == "draw2" else 4) + self.pending)
             self.pending = 0
@@ -295,7 +295,7 @@ class UnaGame:
             raise ValueError("La mano todavía no termina")
         self._deal()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         over = self.phase in ("round_over", "finished")
         return {

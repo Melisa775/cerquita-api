@@ -1,15 +1,15 @@
-"""Ajedrez entre los dos.
+"""Chess for the two of you.
 
-Las reglas están en chess_rules.py; aquí va la partida: quién lleva cada
-color, el reloj, el historial con notación en español, las ofertas de
-tablas y de deshacer, y cómo termina:
+The rules live in chess_rules.py; this module runs the game: who plays each
+color, the clock, the move list in Spanish notation, draw and undo offers,
+and how it ends:
 
-  mate, abandono, tiempo, ahogado, tablas acordadas, triple repetición,
-  regla de los 50 movimientos o material insuficiente.
+  checkmate, resignation, timeout, stalemate, agreed draw, threefold
+  repetition, the fifty-move rule or insufficient material.
 
-Con reloj, el tiempo empieza a correr cuando cada uno ya hizo su primera
-jugada (como en las plataformas en línea). Si a alguien se le acaba el
-tiempo pero su rival solo tiene el rey, es tablas.
+With a clock, time starts running once each player has made their first move
+(like online chess sites). If someone runs out of time but the opponent only
+has a king, it is a draw.
 """
 
 import random
@@ -17,18 +17,18 @@ import time
 
 from app.games.chess_rules import Move, Position, color_of, name, other, sq
 
-# minutos + segundos de incremento por jugada
-TIME_CONTROLS = {"libre": None, "3+2": (3, 2), "5+3": (5, 3), "10+0": (10, 0), "15+10": (15, 10)}
+# minutes + increment seconds per move
+TIME_CONTROLS = {"none": None, "3+2": (3, 2), "5+3": (5, 3), "10+0": (10, 0), "15+10": (15, 10)}
 REASONS = {
-    "mate": "jaque mate",
-    "abandono": "abandono",
-    "tiempo": "tiempo",
-    "ahogado": "rey ahogado",
-    "acuerdo": "tablas de mutuo acuerdo",
-    "repeticion": "triple repetición",
-    "cincuenta": "regla de los 50 movimientos",
-    "material": "material insuficiente",
-    "tiempo_material": "tiempo, pero sin material para dar mate",
+    "checkmate": "jaque mate",
+    "resignation": "abandono",
+    "timeout": "tiempo",
+    "stalemate": "rey ahogado",
+    "agreement": "tablas de mutuo acuerdo",
+    "repetition": "triple repetición",
+    "fifty_moves": "regla de los 50 movimientos",
+    "insufficient_material": "material insuficiente",
+    "timeout_no_material": "tiempo, pero sin material para dar mate",
 }
 
 
@@ -40,7 +40,7 @@ class ChessGame:
         self,
         players: list[str],
         white: str | None = None,
-        time_control: str = "libre",
+        time_control: str = "none",
         hints: bool = True,
         rng: random.Random | None = None,
         timings: dict | None = None,
@@ -73,13 +73,13 @@ class ChessGame:
         self.result: dict | None = None
         self.draw_offer: str | None = None
         self.undo_request: str | None = None
-        self.version = 0  # cambia con cada jugada o deshacer (reinicia el reloj)
+        self.version = 0  # changes with every move or undo (restarts the clock)
 
     @classmethod
     def from_options(cls, players: list[str], options: dict, rng: random.Random, timings: dict | None = None):
         if len(players) < 2:
             raise ValueError("El ajedrez se juega entre los dos. Esperen a que entre tu pareja.")
-        control = options.get("timeControl", "libre")
+        control = options.get("timeControl", "none")
         if control not in TIME_CONTROLS:
             raise ValueError("Ritmo de juego no válido")
         white = options.get("white")
@@ -87,7 +87,7 @@ class ChessGame:
             white = None
         return cls(players, white=white, time_control=control, hints=bool(options.get("hints", True)), rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def pos(self) -> Position:
         return self.positions[-1]
@@ -129,9 +129,9 @@ class ChessGame:
         self.remaining[loser] = 0.0
         winner_color = other(loser)
         if self.pos.can_mate(winner_color):
-            self._finish(self._player(winner_color), "tiempo")
+            self._finish(self._player(winner_color), "timeout")
         else:
-            self._finish(None, "tiempo_material")
+            self._finish(None, "timeout_no_material")
 
     def handle(self, player: str, msg: dict) -> None:
         kind = msg.get("type")
@@ -140,7 +140,7 @@ class ChessGame:
         if kind == "ch_move":
             self.move(player, msg.get("from"), msg.get("to"), msg.get("promotion"))
         elif kind == "ch_resign":
-            self._finish(self._player(other(self.colors[player])), "abandono")
+            self._finish(self._player(other(self.colors[player])), "resignation")
         elif kind == "ch_draw":
             self.offer_draw(player)
         elif kind == "ch_draw_decline":
@@ -153,9 +153,9 @@ class ChessGame:
                 self.undo_request = None
 
     def remove_player(self, player: str) -> None:
-        pass  # el puesto se conserva: si alguien se va, la sala lo espera
+        pass  # the seat is kept: if someone leaves, the room waits for them
 
-    # --- jugadas ----------------------------------------------------------
+    # --- moves ------------------------------------------------------------
     def _player(self, color: str) -> str:
         return next(p for p, c in self.colors.items() if c == color)
 
@@ -203,15 +203,15 @@ class ChessGame:
         pos = self.pos
         if not pos.legal_moves():
             if pos.in_check():
-                self._finish(self._player(other(pos.turn)), "mate")
+                self._finish(self._player(other(pos.turn)), "checkmate")
             else:
-                self._finish(None, "ahogado")
+                self._finish(None, "stalemate")
         elif pos.insufficient_material():
-            self._finish(None, "material")
+            self._finish(None, "insufficient_material")
         elif self.keys.count(self.keys[-1]) >= 3:
-            self._finish(None, "repeticion")
+            self._finish(None, "repetition")
         elif pos.halfmove >= 100:
-            self._finish(None, "cincuenta")
+            self._finish(None, "fifty_moves")
 
     def _finish(self, winner: str | None, reason: str) -> None:
         if self.remaining is not None and self.phase == "playing":
@@ -223,10 +223,10 @@ class ChessGame:
         self.version += 1
         self.phase = "finished"
 
-    # --- ofertas ----------------------------------------------------------
+    # --- offers -----------------------------------------------------------
     def offer_draw(self, player: str) -> None:
         if self.draw_offer and self.draw_offer != player:
-            self._finish(None, "acuerdo")
+            self._finish(None, "agreement")
         else:
             self.draw_offer = player
 
@@ -242,7 +242,7 @@ class ChessGame:
         self.undo_request = player
 
     def _undo(self, requester: str) -> None:
-        """Deshace la última jugada de quien pidió (y la respuesta del otro, si ya la hizo)."""
+        """Undo the requester's last move (and the reply to it, if already made)."""
         mine = self.colors[requester]
         plies = 1 if self.moves[-1]["color"] == mine else 2
         for _ in range(min(plies, len(self.moves))):
@@ -254,7 +254,7 @@ class ChessGame:
         self.version += 1
         self.turn_started = self.clock()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         pos = self.pos
         playing = self.phase == "playing"
@@ -266,7 +266,7 @@ class ChessGame:
                     targets.append(name(m.to))
         check = name(pos.king_square(pos.turn)) if pos.in_check() else None
         last = self.moves[-1] if self.moves else None
-        captured = {"w": [], "b": []}  # piezas que capturó cada color
+        captured = {"w": [], "b": []}  # pieces captured by each color
         for m in self.moves:
             if m["captured"]:
                 captured[m["color"]].append(m["captured"])

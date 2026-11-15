@@ -52,7 +52,7 @@ def test_strokes_are_relayed_and_validated():
     choose(g, "gato")
     out = g.add_stroke("Ana", {"id": "s1", "color": "#22252E", "size": 8, "points": [[10, 10], [2000, -5]]})
     assert out["relay"]["kind"] == "stroke"
-    assert g.strokes[0]["points"] == [[10, 10], [1000, 0]]  # se recortan al lienzo
+    assert g.strokes[0]["points"] == [[10, 10], [1000, 0]]  # clamped to the canvas
     g.add_points("Ana", {"id": "s1", "points": [[20, 20]]})
     assert len(g.strokes[0]["points"]) == 3
     with pytest.raises(ValueError):
@@ -68,8 +68,8 @@ def test_guessing_scores_by_speed_and_ends_the_turn():
     assert g.guess("Leo", "perro") is None
     assert g.guess("Leo", "perro calientr") == {"notice": "¡Casi! «perro calientr» está muy cerca"}
     with pytest.raises(ValueError):
-        g.guess("Ana", "perro caliente")  # quien dibuja no adivina
-    clock.t = 30  # a la mitad del tiempo
+        g.guess("Ana", "perro caliente")  # the drawer doesn't guess
+    clock.t = 30  # at half time
     g.guess("Leo", "Perro  Caliente")
     assert g.phase == "turn_over"
     assert g.result["points"] == {"Leo": 75, "Ana": 50}

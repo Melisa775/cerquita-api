@@ -1,18 +1,18 @@
-"""Física del mini golf, vista desde arriba.
+"""Top-down mini golf physics.
 
-El campo mide 100 × 150 unidades. Un tiro es un ángulo y una fuerza (0 a 1);
-se simula paso a paso (240 pasos por segundo) y se devuelve el camino de la
-bola muestreado a 60 cuadros por segundo para que los dos navegadores lo
-animen igual. Como la simulación corre en el servidor, no hay diferencias
-entre lo que ve cada uno.
+The course is 100 × 150 units. A shot is an angle and a power (0 to 1); it
+is simulated step by step (240 steps per second) and the ball's path is
+returned sampled at 60 frames per second so both browsers animate it the
+same way. Since the simulation runs on the server, both players always see
+the same thing.
 
-Elementos de un hoyo:
-  walls    -> líneas quebradas; la bola rebota (pierde un poco de velocidad)
-  bumpers  -> círculos que rebotan con más fuerza
-  sand     -> rectángulos que frenan mucho
-  water    -> rectángulos: la bola vuelve a donde tiró y suma un golpe
-  slopes   -> rectángulos con inclinación: empujan la bola en una dirección
-  portals  -> entrada y salida: la bola aparece al otro lado con la misma velocidad
+Hole elements:
+  walls    -> polylines; the ball bounces off them (losing a bit of speed)
+  bumpers  -> circles that bounce harder
+  sand     -> rectangles that slow the ball down a lot
+  water    -> rectangles: the ball returns to where it was shot and a stroke is added
+  slopes   -> tilted rectangles: they push the ball in one direction
+  portals  -> entrance and exit: the ball pops out the other side at the same speed
 """
 
 import math
@@ -21,7 +21,7 @@ BALL_R = 2.2
 HOLE_R = 3.6
 MAX_SPEED = 170.0
 DT = 1 / 240
-SAMPLE_EVERY = 4  # 60 cuadros por segundo
+SAMPLE_EVERY = 4  # 60 frames per second
 MAX_TIME = 14.0
 FRICTION_CONST = 14.0
 FRICTION_LINEAR = 0.35
@@ -44,7 +44,7 @@ def _segments(course):
 
 
 def simulate(course: dict, start: tuple[float, float], angle: float, power: float) -> dict:
-    """Simula un tiro. Devuelve el camino, dónde paró y qué pasó."""
+    """Simulate a shot. Returns the path, where it stopped and what happened."""
     power = max(0.0, min(1.0, float(power)))
     x, y = float(start[0]), float(start[1])
     vx = math.cos(angle) * power * MAX_SPEED
@@ -58,12 +58,12 @@ def simulate(course: dict, start: tuple[float, float], angle: float, power: floa
     steps = int(MAX_TIME / DT)
 
     for step in range(1, steps + 1):
-        # inclinaciones
+        # slopes
         for s in course.get("slopes", []):
             if _in_rect(x, y, s):
                 vx += s[4] * DT
                 vy += s[5] * DT
-        # fricción (constante + proporcional a la velocidad), más en la arena
+        # friction (constant + proportional to speed), stronger in sand
         speed = math.hypot(vx, vy)
         factor = SAND_FACTOR if any(_in_rect(x, y, s) for s in course.get("sand", [])) else 1.0
         dec = (FRICTION_CONST + FRICTION_LINEAR * speed) * factor * DT
@@ -73,7 +73,7 @@ def simulate(course: dict, start: tuple[float, float], angle: float, power: floa
             k = (speed - dec) / speed
             vx *= k
             vy *= k
-        # el hoyo atrae un poco a la bola cuando pasa despacio cerca
+        # the hole pulls the ball in a little when it passes slowly nearby
         dhx, dhy = hx - x, hy - y
         dist_h = math.hypot(dhx, dhy)
         if 0 < dist_h < HOLE_R * 1.8 and speed < CAPTURE_SPEED * 1.3:
@@ -84,7 +84,7 @@ def simulate(course: dict, start: tuple[float, float], angle: float, power: floa
         x += vx * DT
         y += vy * DT
 
-        # paredes
+        # walls
         for (ax, ay), (bx, by) in segments:
             ex, ey = bx - ax, by - ay
             seg_len2 = ex * ex + ey * ey
@@ -116,7 +116,7 @@ def simulate(course: dict, start: tuple[float, float], angle: float, power: floa
         speed = math.hypot(vx, vy)
         if speed > MAX_SPEED:
             vx, vy = vx / speed * MAX_SPEED, vy / speed * MAX_SPEED
-        # portales
+        # portals
         if portal_cooldown:
             portal_cooldown -= 1
         else:
@@ -128,11 +128,11 @@ def simulate(course: dict, start: tuple[float, float], angle: float, power: floa
                     portal_cooldown = 60
                     events.append({"t": step // SAMPLE_EVERY, "kind": "portal"})
                     break
-        # agua
+        # water
         if any(_in_rect(x, y, w) for w in course.get("water", [])):
             result = "water"
             break
-        # hoyo
+        # hole
         if math.hypot(x - hx, y - hy) < HOLE_R - BALL_R * 0.3 and math.hypot(vx, vy) < CAPTURE_SPEED:
             x, y = float(hx), float(hy)
             result = "holed"

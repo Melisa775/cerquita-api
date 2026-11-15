@@ -9,13 +9,13 @@ from app.dictionary import spanish
 from app.games.common import normalize
 
 DATA = Path(__file__).parent / "data"
-CHECKED = {"ciudad", "fruta", "color", "animal", "cosa"}
-MIN_CHECKED_WORD = 3  # "de", "la", "el" no se revisan
+CHECKED = {"city", "fruit", "color", "animal", "thing"}
+MIN_CHECKED_WORD = 3  # "de", "la", "el" are not checked
 
 
 @cache
 def cities() -> frozenset[str]:
-    with gzip.open(DATA / "ciudades.txt.gz", "rt", encoding="utf-8") as f:
+    with gzip.open(DATA / "cities.txt.gz", "rt", encoding="utf-8") as f:
         return frozenset(line.strip() for line in f if line.strip())
 
 
@@ -26,13 +26,13 @@ def extra_words() -> frozenset[str]:
 
 
 def phonetic(word: str) -> str:
-    """Clave que iguala letras que suenan igual: b/v, s/z/c, j/g, y/ll, h muda."""
+    """Key that merges letters that sound the same in Spanish: b/v, s/z/c, j/g, y/ll, silent h."""
     w = word.replace("ch", "#").replace("h", "").replace("qu", "k")
     w = re.sub(r"c(?=[ei])", "s", w).replace("c", "k")
     w = re.sub(r"g(?=[ei])", "j", w)
     w = w.replace("v", "b").replace("z", "s").replace("w", "u").replace("ll", "y")
     w = re.sub(r"y$", "i", w)
-    w = re.sub(r"(.)\1+", r"\1", w)  # letras repetidas: "perrro" -> "pero"
+    w = re.sub(r"(.)\1+", r"\1", w)  # repeated letters: "perrro" -> "pero"
     return w.replace("#", "ch")
 
 
@@ -46,20 +46,20 @@ def _levenshtein(a: str, b: str) -> int:
     return prev[-1]
 
 
-# Letras con las que puede empezar una palabra según cómo empieza su clave
+# Letters a word may start with, given how its phonetic key starts
 _SAME_SOUND = {"b": "bv", "s": "szc", "k": "ckq", "j": "jg", "y": "yl", "i": "iy", "u": "uw"}
 
 
 @cache
 def _sorted(source: str) -> list[str]:
-    if source == "ciudad":
+    if source == "city":
         return sorted(cities())
     return sorted({*spanish().words, *extra_words()})
 
 
 @cache
 def _bucket(source: str, initial: str, length: int) -> dict[str, list[str]]:
-    """Palabras de largo parecido cuya clave fonética empieza por `initial`."""
+    """Words of similar length whose phonetic key starts with `initial`."""
     words = _sorted(source)
     out: dict[str, list[str]] = {}
     for first in set(_SAME_SOUND.get(initial, initial) + "h"):
@@ -83,8 +83,8 @@ def _closest(word: str, source: str) -> str | None:
     return min(
         candidates,
         key=lambda c: (
-            _levenshtein(key, phonetic(c)),  # primero, la que suena más parecido
-            -SequenceMatcher(None, word, c).ratio(),  # luego, la que se escribe más parecido
+            _levenshtein(key, phonetic(c)),  # first, the one that sounds closest
+            -SequenceMatcher(None, word, c).ratio(),  # then, the one spelled closest
             len(c),
         ),
     )
@@ -98,25 +98,25 @@ def spelled_ok(category: str, answer: str) -> bool:
     text = normalize(answer)
     if category not in CHECKED or not text:
         return True
-    if category == "ciudad":
+    if category == "city":
         return text in cities()
     return text in extra_words() or all(_word_ok(w) for w in text.split())
 
 
 @cache
 def suggestion(category: str, answer: str) -> str | None:
-    """La corrección más probable, o None si no hay ninguna parecida."""
+    """The most likely correction, or None if nothing is close enough."""
     text = normalize(answer)
     if not text or spelled_ok(category, answer):
         return None
-    if category == "ciudad":
-        return _closest(text, "ciudad")
+    if category == "city":
+        return _closest(text, "city")
     fixed = []
     for word in text.split():
         if _word_ok(word):
             fixed.append(word)
             continue
-        found = _closest(word, "palabras")
+        found = _closest(word, "words")
         if not found:
             return None
         fixed.append(found)

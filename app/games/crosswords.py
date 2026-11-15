@@ -1,21 +1,21 @@
-"""Palabras cruzadas para dos (al estilo Scrabble).
+"""Crosswords for two (Scrabble-style).
 
-Cada uno tiene un atril de 7 letras que solo ve él. Por turnos se ponen
-letras en una sola fila o columna del tablero de 15×15, formando palabras
-que se cruzan con las que ya están. La primera jugada pasa por el centro.
+Each player has a 7-letter rack only they can see. On their turn they place
+letters in a single row or column of the 15×15 board, forming words that
+cross the existing ones. The first word must cover the center square.
 
-Puntaje: la suma del valor de las letras de cada palabra formada (la
-principal y las cruzadas nuevas). Las casillas de premio cuentan solo
-cuando se pone una letra encima: DL y TL multiplican la letra, DP y TP la
-palabra. Usar las 7 letras en una jugada suma 50 de bono.
+Scoring: the sum of the letter values of every word formed (the main word
+and any new cross words). Premium squares only count when a letter is placed
+on them: DL and TL multiply the letter, DP and TP (Spanish "doble/triple
+palabra") the word. Using all 7 letters in one play adds a 50-point bonus.
 
-En vez de jugar se puede cambiar letras (si quedan al menos 7 en la bolsa)
-o pasar. La partida termina cuando alguien se queda sin letras y la bolsa
-está vacía (suma lo que le quedó al otro), o tras cuatro turnos seguidos
-sin puntos. Al final, a cada uno se le resta lo que tenga en el atril.
+Instead of playing, a player can exchange letters (if at least 7 remain in
+the bag) or pass. The game ends when someone empties their rack with the bag
+empty (they score what the other has left), or after four scoreless turns
+in a row. At the end each player loses the value left on their rack.
 
-El tablero, los premios y el reparto de letras son propios: 100 fichas
-según la frecuencia de las letras en español, con 2 comodines.
+The board, premium layout and letter distribution are original: 100 tiles
+based on Spanish letter frequency, including 2 blanks.
 """
 
 import random
@@ -24,14 +24,14 @@ from pathlib import Path
 
 from app.dictionary import spanish
 
-SHORT_WORDS = Path(__file__).resolve().parents[1] / "data" / "palabras_cortas.txt"
+SHORT_WORDS = Path(__file__).resolve().parents[1] / "data" / "short_words.txt"
 
 SIZE = 15
 CENTER = (7, 7)
 RACK = 7
 BINGO = 50
 
-# letra: (cantidad, valor)
+# letter: (count, value)
 TILES = {
     "A": (12, 1), "E": (12, 1), "O": (9, 1), "I": (6, 1), "S": (6, 1), "N": (5, 1), "R": (6, 1),
     "L": (5, 1), "U": (5, 1), "T": (4, 1), "D": (5, 2), "G": (2, 2), "C": (4, 3), "M": (3, 3),
@@ -39,11 +39,11 @@ TILES = {
     "J": (1, 8), "Ñ": (1, 8), "X": (1, 8), "Z": (1, 10), "?": (2, 0),
 }
 VALUES = {k: v for k, (_, v) in TILES.items()}
-LETTERS = set(TILES) - {"?"} | {"K", "W"}  # un comodín puede ser K o W
+LETTERS = set(TILES) - {"?"} | {"K", "W"}  # a blank can also be K or W
 
 
 def _premiums() -> dict[tuple[int, int], str]:
-    """Casillas de premio, simétricas: se define un octavo y se refleja."""
+    """Symmetric premium squares: one eighth is defined and then mirrored."""
     octant = {
         "TP": [(0, 4)],
         "DP": [(1, 1), (3, 3), (2, 7)],
@@ -103,7 +103,7 @@ class CrosswordsGame:
             raise ValueError("Las palabras cruzadas se juegan entre los dos. Esperen a que entre tu pareja.")
         return cls(players, check=bool(options.get("check", True)), rng=rng)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase == "playing"
@@ -122,7 +122,7 @@ class CrosswordsGame:
         self.turn = self.rng.choice(self.players)
         self.phase = "playing"
         if self.check:
-            spanish()  # carga el diccionario antes de la primera jugada
+            spanish()  # load the dictionary before the first play
 
     def on_timeout(self) -> None:
         pass
@@ -143,7 +143,7 @@ class CrosswordsGame:
     def remove_player(self, player: str) -> None:
         pass
 
-    # --- utilidades -----------------------------------------------------
+    # --- helpers --------------------------------------------------------
     def other(self, player: str) -> str:
         return next(p for p in self.players if p != player)
 
@@ -159,9 +159,9 @@ class CrosswordsGame:
             rack.remove(letter)
         return rack
 
-    # --- jugar ----------------------------------------------------------
+    # --- playing --------------------------------------------------------
     def evaluate(self, tiles) -> dict:
-        """Revisa una jugada sin aplicarla. Devuelve palabras y puntaje."""
+        """Check a play without applying it. Returns the words and the score."""
         if not isinstance(tiles, list) or not 1 <= len(tiles) <= RACK:
             raise ValueError("Pon entre 1 y 7 letras")
         placed: dict[tuple[int, int], dict] = {}
@@ -187,7 +187,7 @@ class CrosswordsGame:
         horizontal = len(rows) == 1 and (len(placed) > 1 or self._has_neighbor_h(next(iter(placed))))
         cell_at = lambda r, c: placed.get((r, c)) or self.board[r][c]  # noqa: E731
 
-        # sin huecos entre la primera y la última letra puesta
+        # no gaps between the first and last placed letters
         if horizontal:
             r = next(iter(rows))
             lo, hi = min(cols), max(cols)
@@ -335,7 +335,7 @@ class CrosswordsGame:
         self.turn = None
         self.phase = "finished"
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         finished = self.phase == "finished"
         return {

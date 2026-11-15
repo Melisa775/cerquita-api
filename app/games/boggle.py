@@ -43,7 +43,7 @@ def neighbors(size: int) -> list[list[int]]:
 
 
 def find_path(board: list[str], size: int, word: str) -> list[int] | None:
-    """Casillas que forman la palabra, o None si no se puede armar."""
+    """Cells that spell the word, or None if it cannot be formed."""
     nbrs = neighbors(size)
 
     def dfs(i: int, rest: str, used: int) -> list[int] | None:
@@ -121,7 +121,7 @@ class BoggleGame:
         self.total_rounds = rounds
         self.rng = rng or random.Random()
         self.dictionary = dictionary or spanish()
-        self._fixed_board = board  # para tests
+        self._fixed_board = board  # for tests
         self.phase = "idle"
         self.round = 0
         self.board: list[str] = []
@@ -145,7 +145,7 @@ class BoggleGame:
             raise ValueError("Elige 2, 3 o 4 minutos")
         return cls(players, size=size, minutes=minutes, rounds=parse_rounds(options, 3), rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
@@ -180,7 +180,7 @@ class BoggleGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- transiciones ---------------------------------------------------
+    # --- transitions ----------------------------------------------------
     def _new_board(self) -> tuple[list[str], set[str]]:
         if self._fixed_board:
             return self._fixed_board, solve(self._fixed_board, self.size, self.dictionary, self.min_len)
@@ -222,7 +222,7 @@ class BoggleGame:
         self.words[player].append(word)
 
     def finish(self, player: str) -> None:
-        """'Ya no encuentro más'. Si todos terminan, se revisa antes de tiempo."""
+        """'I can't find any more'. If everyone is done, review starts early."""
         if self.phase != "playing" or player not in self.players:
             return
         self.done.add(player)
@@ -261,7 +261,7 @@ class BoggleGame:
         else:
             self.start_round()
 
-    # --- puntaje --------------------------------------------------------
+    # --- scoring --------------------------------------------------------
     def _valid(self, word: str) -> bool:
         return self.overrides.get(word, word in self.dictionary)
 
@@ -298,7 +298,7 @@ class BoggleGame:
         found = {w for words in self.words.values() for w in words}
         return sorted(self.solutions - found, key=lambda w: (-len(w), w))[:MAX_MISSED_SHOWN]
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         reviewing = self.phase == "review"
         results = self.results() if reviewing else None
@@ -311,7 +311,7 @@ class BoggleGame:
             "size": self.size,
             "minLength": self.min_len,
             "board": [t.capitalize() if len(t) > 1 else t.upper() for t in self.board],
-            # Mientras juegan, cada uno recibe solo sus palabras; del otro, cuántas lleva.
+            # During play each player gets only their own words; of the other, just the count.
             "mine": mine if self.phase == "playing" else [],
             "counts": {p: len(self.words.get(p, [])) for p in self.players},
             "done": sorted(self.done),

@@ -31,13 +31,13 @@ def test_each_player_only_sees_their_own_secret():
 def test_list_questions_are_answered_by_the_app_and_turns_alternate():
     g = make()
     assert g.current == "Ana"
-    g.ask("Ana", "gafas")
+    g.ask("Ana", "glasses")
     entry = g.log[-1]
     assert entry["asker"] == "Ana" and entry["auto"]
-    assert entry["answer"] == CHARACTERS[g.secrets["Leo"]]["gafas"]
+    assert entry["answer"] == CHARACTERS[g.secrets["Leo"]]["glasses"]
     assert g.current == "Leo"
     with pytest.raises(ValueError, match="turno de Leo"):
-        g.ask("Ana", "pecas")
+        g.ask("Ana", "freckles")
 
 
 def test_free_questions_wait_for_the_partner():
@@ -45,7 +45,7 @@ def test_free_questions_wait_for_the_partner():
     g.ask_free("Ana", "se parece a mí")
     assert g.pending == {"asker": "Ana", "text": "¿se parece a mí?"}
     with pytest.raises(ValueError, match="responder"):
-        g.ask("Leo", "gafas")
+        g.ask("Leo", "glasses")
     with pytest.raises(ValueError, match="pareja"):
         g.answer("Ana", True)
     g.answer("Leo", False)
@@ -56,7 +56,7 @@ def test_free_questions_wait_for_the_partner():
 def test_flipping_is_private_and_free():
     g = make()
     cid = g.board[0]
-    g.flip("Leo", cid)  # no hace falta que sea su turno
+    g.flip("Leo", cid)  # it doesn't need to be their turn
     assert g.snapshot("Leo")["flipped"] == [cid]
     assert g.snapshot("Ana")["flipped"] == []
     assert g.snapshot("Ana")["remaining"] == {"Ana": 24, "Leo": 23}
@@ -68,7 +68,7 @@ def test_right_guess_wins_wrong_guess_loses():
     g = make()
     g.guess("Ana", g.secrets["Leo"])
     assert g.result["correct"] and g.result["winner"] == "Ana"
-    assert g.snapshot("Leo")["secrets"] == g.secrets  # al final se revelan
+    assert g.snapshot("Leo")["secrets"] == g.secrets  # they're revealed at the end
     g.next_round()
     assert g.current == "Leo"
     wrong = next(c for c in g.board if c != g.secrets["Ana"])

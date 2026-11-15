@@ -1,13 +1,13 @@
-"""Reglas del ajedrez, sin dependencias.
+"""Chess rules, with no dependencies.
 
-El tablero es una lista de 64 casillas: índice = fila * 8 + columna, con la
-fila 0 = fila 1 del tablero (el lado de las blancas) y la columna 0 = a.
-Las piezas son letras al estilo FEN: mayúsculas blancas (PNBRQK) y minúsculas
-negras. Una casilla vacía es None.
+The board is a list of 64 squares: index = rank * 8 + file, where rank 0 is
+the board's first rank (White's side) and file 0 is "a". Pieces are FEN-style
+letters: uppercase for White (PNBRQK) and lowercase for Black. An empty
+square is None.
 
-Se generan jugadas pseudolegales y se descartan las que dejan al propio rey
-en jaque. Los tests comparan con conteos "perft" conocidos, que cubren
-enroques, capturas al paso, coronaciones y jaques descubiertos.
+Pseudo-legal moves are generated and those that leave the mover's own king in
+check are discarded. Tests compare against known "perft" counts, which cover
+castling, en passant, promotions and discovered checks.
 """
 
 from dataclasses import dataclass, field
@@ -20,7 +20,7 @@ KING = [(1, 0), (1, 1), (0, 1), (-1, 1), (-1, 0), (-1, -1), (0, -1), (1, -1)]
 ROOK_DIRS = [(1, 0), (-1, 0), (0, 1), (0, -1)]
 BISHOP_DIRS = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
 
-# Notación en español: Rey, Dama, Torre, Alfil, Caballo
+# Spanish notation letters: Rey, Dama, Torre, Alfil, Caballo
 SPANISH = {"K": "R", "Q": "D", "R": "T", "B": "A", "N": "C"}
 
 
@@ -46,7 +46,7 @@ def other(color: str) -> str:
 class Move:
     frm: int
     to: int
-    promotion: str | None = None  # "Q", "R", "B" o "N" (siempre en mayúscula)
+    promotion: str | None = None  # "Q", "R", "B" or "N" (always uppercase)
 
     @property
     def uci(self) -> str:
@@ -58,7 +58,7 @@ class Position:
     board: list
     turn: str = "w"
     castling: str = "KQkq"
-    ep: int | None = None  # casilla a la que se puede capturar al paso
+    ep: int | None = None  # square that can be captured en passant
     halfmove: int = 0
     fullmove: int = 1
     _legal: list | None = field(default=None, repr=False, compare=False)
@@ -98,16 +98,16 @@ class Position:
         ep = name(self.ep) if self.ep is not None else "-"
         return f"{'/'.join(rows)} {self.turn} {self.castling or '-'} {ep} {self.halfmove} {self.fullmove}"
 
-    # --- ataques ----------------------------------------------------------
+    # --- attacks ----------------------------------------------------------
     def king_square(self, color: str) -> int:
         k = "K" if color == "w" else "k"
         return self.board.index(k)
 
     def attacked(self, target: int, by: str) -> bool:
-        """¿Alguna pieza de `by` ataca la casilla `target`?"""
+        """Does any piece of color `by` attack the square `target`?"""
         b = self.board
         r, f = divmod(target, 8)
-        # peones: un peón blanco ataca hacia arriba, así que se busca abajo
+        # pawns: a white pawn attacks upwards, so look below the target
         pr = r - 1 if by == "w" else r + 1
         pawn = "P" if by == "w" else "p"
         if 0 <= pr < 8:
@@ -143,7 +143,7 @@ class Position:
         color = color or self.turn
         return self.attacked(self.king_square(color), other(color))
 
-    # --- generación -------------------------------------------------------
+    # --- move generation --------------------------------------------------
     def pseudo_moves(self):
         b, me = self.board, self.turn
         for i, p in enumerate(b):
@@ -220,7 +220,7 @@ class Position:
                 yield Move(king_sq, base + 2)
 
     def push(self, move: Move) -> "Position":
-        """Posición después de la jugada (no valida que sea legal)."""
+        """Position after the move (does not check legality)."""
         b = self.board[:]
         p = b[move.frm]
         me = self.turn
@@ -230,12 +230,12 @@ class Position:
         b[move.frm] = None
         ep = None
         if kind == "P":
-            if move.to == self.ep:  # captura al paso: el peón capturado está detrás
+            if move.to == self.ep:  # en passant: the captured pawn is behind the target square
                 b[move.to + (-8 if me == "w" else 8)] = None
                 captured = "p" if me == "w" else "P"
             if abs(move.to - move.frm) == 16:
                 ep = (move.to + move.frm) // 2
-        if kind == "K" and abs(move.to - move.frm) == 2:  # enroque: también se mueve la torre
+        if kind == "K" and abs(move.to - move.frm) == 2:  # castling: the rook moves too
             rank = move.frm // 8 * 8
             if move.to % 8 == 6:
                 b[rank + 5], b[rank + 7] = b[rank + 7], None
@@ -257,13 +257,13 @@ class Position:
             self._legal = [m for m in self.pseudo_moves() if not self.push(m).in_check(me)]
         return self._legal
 
-    # --- estado de la partida ---------------------------------------------
+    # --- game state -------------------------------------------------------
     def is_capture(self, move: Move) -> bool:
         p = self.board[move.frm]
         return self.board[move.to] is not None or (p.upper() == "P" and move.to == self.ep)
 
     def insufficient_material(self) -> bool:
-        """Ninguno de los dos puede dar mate: R vs R, R+A vs R, R+C vs R, o alfiles del mismo color."""
+        """Neither side can mate: K vs K, K+B vs K, K+N vs K, or bishops on the same color."""
         minors = []
         for i, p in enumerate(self.board):
             if p is None or p.upper() == "K":
@@ -279,20 +279,20 @@ class Position:
         return False
 
     def can_mate(self, color: str) -> bool:
-        """Para la derrota por tiempo: un rey solo nunca puede dar mate."""
+        """For losses on time: a lone king can never mate."""
         return any(p is not None and color_of(p) == color and p.upper() != "K" for p in self.board)
 
     def repetition_key(self) -> str:
-        # La casilla al paso solo cuenta si de verdad se puede capturar al paso
+        # The en passant square only counts if an en passant capture is actually possible
         ep = self.ep
         if ep is not None and not any(m.to == ep and self.board[m.frm].upper() == "P" for m in self.legal_moves()):
             ep = None
         rows = "".join(p or "." for p in self.board)
         return f"{rows}{self.turn}{self.castling}{ep}"
 
-    # --- notación ---------------------------------------------------------
+    # --- notation ---------------------------------------------------------
     def san(self, move: Move) -> str:
-        """Notación algebraica en español (R, D, T, A, C)."""
+        """Algebraic notation with Spanish piece letters (R, D, T, A, C)."""
         p = self.board[move.frm]
         kind = p.upper()
         if kind == "K" and abs(move.to - move.frm) == 2:

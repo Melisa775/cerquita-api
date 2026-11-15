@@ -10,7 +10,7 @@ TURN_CHOICES = (5, 10, 15, 20)
 DEFAULT_TURN = 10
 
 CATEGORIES = [
-    # Las clásicas
+    # The classics
     "Acciones",
     "Lugares",
     "Objetos",
@@ -19,7 +19,7 @@ CATEGORIES = [
     "Cosas que encuentras en una habitación",
     "Cosas que encuentras en un baño",
     "Series o películas",
-    # Para la casa y el día a día
+    # Home and everyday life
     "Cosas que hay en la nevera",
     "Cosas de la cocina",
     "Cosas que hay en un supermercado",
@@ -40,14 +40,14 @@ CATEGORIES = [
     "Cosas que empacarías para un viaje",
     "Cosas que haces un domingo",
     "Excusas para no contestar el teléfono",
-    # Para parejas
+    # For couples
     "Planes para una cita",
     "Regalos para tu pareja",
     "Apodos cariñosos",
     "Cosas que dirías en una primera cita",
     "Lugares a los que quieren viajar juntos",
     "Cosas que extrañas cuando están lejos",
-    # Cultura y comida
+    # Culture and food
     "Comidas colombianas",
     "Postres",
     "Bebidas",
@@ -94,7 +94,7 @@ class TooLateGame:
         self.used_categories: list[str] = []
         self.used: list[dict] = []  # [{"letter": "M", "player": "Ana"}]
         self.turn_index = 0
-        self.turn_id = 0  # cambia en cada turno para reiniciar el reloj
+        self.turn_id = 0  # changes every turn to restart the timer
         self.result: dict | None = None
         self.scores: dict[str, int] = {p: 0 for p in self.players}
         self.history: list[dict] = []
@@ -105,7 +105,7 @@ class TooLateGame:
         if not isinstance(raw, list) or not all(isinstance(c, str) for c in raw):
             raise ValueError("Letras inválidas")
         chosen = {c.strip().upper() for c in raw}
-        letters = [c for c in ALPHABET if c in chosen]  # orden del alfabeto, sin repetidas
+        letters = [c for c in ALPHABET if c in chosen]  # alphabet order, no duplicates
         if len(letters) < MIN_LETTERS:
             raise ValueError(f"Deja al menos {MIN_LETTERS} letras activas")
         try:
@@ -116,7 +116,7 @@ class TooLateGame:
             raise ValueError("Tiempo por turno no válido")
         return cls(players, letters=letters, turn_seconds=turn, rounds=parse_rounds(options), rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
@@ -162,7 +162,7 @@ class TooLateGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- transiciones ---------------------------------------------------
+    # --- transitions ----------------------------------------------------
     def _new_category(self) -> str:
         fresh = [c for c in CATEGORIES if c not in self.used_categories and c != self.category]
         if not fresh:
@@ -181,7 +181,7 @@ class TooLateGame:
         self.category = self._new_category()
         self.used = []
         self.result = None
-        # Empieza cada ronda alguien distinto
+        # Each round a different player starts
         self.turn_index = (self.round - 1) % max(1, len(self.players))
         self.phase = "ready"
 
@@ -216,7 +216,7 @@ class TooLateGame:
         self.turn_id += 1
 
     def undo(self) -> None:
-        """¡No vale! Devuelve la última letra y el turno a quien la tocó."""
+        """"¡No vale!" (doesn't count): give the last letter and the turn back to whoever played it."""
         if self.phase != "playing":
             raise ValueError("La ronda no está en juego")
         if not self.used:
@@ -244,7 +244,7 @@ class TooLateGame:
         else:
             self.start_round()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         return {
             "name": self.name,

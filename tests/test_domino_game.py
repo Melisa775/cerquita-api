@@ -12,7 +12,7 @@ def make(goal=100, boneyard=True, seed=1):
 
 
 def rig(g, ana, leo, pool, turn="Ana", line=None):
-    """Prepara una mano a mano para probar una situación concreta."""
+    """Set up a two-player game to test a specific situation."""
     g.hands = {"Ana": sorted(ana), "Leo": sorted(leo)}
     g.pool = list(pool)
     g.line = line or []
@@ -67,7 +67,7 @@ def test_must_draw_until_playable():
     with pytest.raises(ValueError, match="turno|Le toca"):
         g.draw("Leo")
     assert g.snapshot("Ana")["mustDraw"]
-    g.draw("Ana")  # roba el 6|6, que pega
+    g.draw("Ana")  # draws the 6|6, which fits
     assert (6, 6) in g.hands["Ana"] and g.turn == "Ana"
     with pytest.raises(ValueError, match="Tienes con qué"):
         g.draw("Ana")
@@ -76,9 +76,9 @@ def test_must_draw_until_playable():
 def test_auto_pass_when_pool_is_empty():
     g = make()
     rig(g, [(1, 3), (2, 2)], [(0, 0), (0, 1)], [], line=[(3, 4)])
-    g.play("Ana", [1, 3], "left")  # extremos 1 y 4; Leo tiene 0|1 → juega
+    g.play("Ana", [1, 3], "left")  # ends 1 and 4; Leo has 0|1 → plays
     assert g.turn == "Leo"
-    g.play("Leo", [0, 1], "left")  # extremos 0 y 4; Ana (2|2) no puede → pasa sola
+    g.play("Leo", [0, 1], "left")  # ends 0 and 4; Ana (2|2) can't play → passes automatically
     assert g.turn == "Leo" and g.log[-1] == {"player": "Ana", "action": "pass"}
 
 
@@ -98,8 +98,8 @@ def test_domino_scores_opponents_pips():
 def test_blocked_game_lowest_hand_wins():
     g = make(boneyard=False)
     rig(g, [(1, 4), (0, 0)], [(2, 2), (3, 3)], [], line=[(4, 6)])
-    g.play("Ana", [1, 4], "left")  # extremos 1 y 6: nadie puede → tranque
-    assert g.result["reason"] == "tranque" and g.result["winner"] == "Ana"
+    g.play("Ana", [1, 4], "left")  # ends 1 and 6: nobody can play → blocked
+    assert g.result["reason"] == "blocked" and g.result["winner"] == "Ana"
     assert g.scores["Ana"] == 10
 
 

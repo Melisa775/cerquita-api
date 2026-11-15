@@ -40,27 +40,26 @@ class RoomError(Exception):
 
 
 class Room:
-    """Sala de dos jugadores.
+    """A two-player room.
 
-    Los juegos son clases puras: reciben acciones, cambian su estado y dicen
-    si su fase actual tiene un límite de tiempo (`timer_key` y
-    `timer_seconds`). La sala se encarga de la red, del bloqueo y de los
-    temporizadores, así que agregar un juego no exige tocar este archivo
-    más allá de registrarlo en GAMES.
+    Games are plain classes: they receive actions, update their state and
+    report whether their current phase has a time limit (`timer_key` and
+    `timer_seconds`). The room handles networking, locking and timers, so
+    adding a game only requires registering it in GAMES.
     """
 
     def __init__(self, code: str, timings: dict | None = None):
         self.code = code
-        self.timings = timings or {}  # para acelerar los tiempos en tests
+        self.timings = timings or {}  # lets tests speed up the timers
         self.connections: dict[str, Connection] = {}
-        self.order: list[str] = []  # orden de llegada; el primero es anfitrión
+        self.order: list[str] = []  # join order; the first one is the host
         self.game = None
         self._timer: asyncio.Task | None = None
-        self._timer_for: tuple | None = None  # (juego, clave de la fase)
+        self._timer_for: tuple | None = None  # (game, phase key)
         self._phase_ends_at: float | None = None
         self._lock = asyncio.Lock()
 
-    # --- jugadores ------------------------------------------------------
+    # --- players --------------------------------------------------------
     @property
     def players(self) -> list[str]:
         return list(self.order)
@@ -80,8 +79,8 @@ class Room:
 
     async def leave(self, name: str) -> None:
         self.connections.pop(name, None)
-        # Si no hay juego en curso, libera el lugar. Si lo hay, se conserva
-        # para que pueda reconectarse con el mismo nombre.
+        # With no game in progress the seat is freed. During a game it is
+        # kept so the player can reconnect with the same name.
         if self.game is None or not self.game.in_progress:
             if name in self.order:
                 self.order.remove(name)
@@ -93,7 +92,7 @@ class Room:
     def empty(self) -> bool:
         return not self.connections
 
-    # --- acciones -------------------------------------------------------
+    # --- actions --------------------------------------------------------
     async def handle(self, player: str, msg: dict) -> None:
         kind = msg.get("type")
         relay = None
@@ -119,13 +118,13 @@ class Room:
                 raise RoomError("Acción desconocida")
             self._sync_timer()
             if relay is not None:
-                # Cambios muy frecuentes (como los trazos del Pinturillo) viajan
-                # como un evento pequeño en vez de la foto completa de la sala.
+                # Very frequent changes (like Pinturillo strokes) travel as a small
+                # event instead of the full room snapshot.
                 await self.relay(player, relay)
             else:
                 await self.broadcast()
             if notice and player in self.connections:
-                # Aviso solo para quien hizo la acción (p. ej. "¡casi!" en el Pinturillo)
+                # Notice only for the player who acted (e.g. "so close!" in Pinturillo)
                 await self.connections[player].send_json({"type": "error", "message": notice})
 
     def _start_game(self, msg: dict) -> None:
@@ -139,9 +138,9 @@ class Room:
         game.start()
         self.game = game
 
-    # --- temporizadores -------------------------------------------------
+    # --- timers ---------------------------------------------------------
     def _sync_timer(self) -> None:
-        """Arranca, reinicia o cancela el reloj según la fase del juego."""
+        """Start, restart or cancel the timer according to the game phase."""
         game = self.game
         key = game.timer_key if game else None
         wanted = (game, key) if key is not None else None
@@ -175,9 +174,9 @@ class Room:
     def close(self) -> None:
         self._cancel_timer()
 
-    # --- estado ---------------------------------------------------------
+    # --- state ----------------------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
-        """Foto de la sala. Algunos juegos le muestran a cada jugador solo lo suyo."""
+        """Room snapshot. Some games show each player only their own data."""
         ends_in = None
         if self._phase_ends_at is not None:
             ends_in = max(0, int((self._phase_ends_at - time.monotonic()) * 1000))

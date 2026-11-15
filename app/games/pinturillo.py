@@ -6,14 +6,14 @@ from pathlib import Path
 
 from app.games.common import normalize, parse_rounds
 
-DATA = Path(__file__).resolve().parents[1] / "data" / "pinturillo_palabras.txt"
+DATA = Path(__file__).resolve().parents[1] / "data" / "pinturillo_words.txt"
 DRAW_CHOICES = (60, 90, 120)
 CHOOSE_SECONDS = 15
 TURN_OVER_SECONDS = 6
-HINT_AT = (0.5, 0.75)  # fracciones del tiempo en que se destapa una letra
-CANVAS = 1000  # coordenadas lógicas del lienzo: 0..1000 x 0..750
+HINT_AT = (0.5, 0.75)  # fractions of the turn at which a letter is revealed
+CANVAS = 1000  # logical canvas coordinates: 0..1000 x 0..750
 MAX_STROKES = 2000
-MAX_POINTS = 400  # por mensaje
+MAX_POINTS = 400  # per message
 COLORS = re.compile(r"^#[0-9a-fA-F]{6}$")
 
 
@@ -75,11 +75,11 @@ class PinturilloGame:
         self.words = words or word_list()
         self.used: set[str] = set()
         self.phase = "idle"
-        self.turn = 0  # número de turno, desde 1
+        self.turn = 0  # turn number, starting at 1
         self.choices: list[str] = []
         self.word = ""
-        self.revealed: set[int] = set()  # posiciones destapadas como pista
-        self.stage = 0  # 0 antes de la primera pista, 1 después, 2 después de la segunda
+        self.revealed: set[int] = set()  # positions revealed as hints
+        self.stage = 0  # 0 before the first hint, 1 after it, 2 after the second
         self.strokes: list[dict] = []
         self.guesses: list[dict] = []
         self.phase_started = 0.0
@@ -99,7 +99,7 @@ class PinturilloGame:
             raise ValueError("Elige 60, 90 o 120 segundos")
         return cls(players, draw_seconds=seconds, rounds=parse_rounds(options, 2), rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
@@ -127,7 +127,7 @@ class PinturilloGame:
         if self.phase == "turn_over":
             return self.turn_over_seconds
         if self.phase == "drawing":
-            # El turno se parte en tramos: hasta la primera pista, la segunda y el final.
+            # The turn is split into stages: until the first hint, the second, and the end.
             marks = [0, *HINT_AT, 1]
             return self.draw_seconds * (marks[self.stage + 1] - marks[self.stage])
         return None
@@ -169,7 +169,7 @@ class PinturilloGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- turnos ---------------------------------------------------------
+    # --- turns ----------------------------------------------------------
     def _start_turn(self) -> None:
         self.turn += 1
         fresh = [w for w in self.words if w not in self.used] or list(self.words)
@@ -199,14 +199,14 @@ class PinturilloGame:
 
     def _reveal_letter(self) -> None:
         hidden = [i for i, ch in enumerate(self.word) if ch != " " and i not in self.revealed]
-        if len(hidden) > 2:  # nunca se destapa casi toda la palabra
+        if len(hidden) > 2:  # never reveal almost the whole word
             self.revealed.add(self.rng.choice(hidden))
 
     def _require_drawer(self, player: str) -> None:
         if self.phase != "drawing" or player != self.drawer:
             raise ValueError("Ahora no te toca dibujar")
 
-    # --- dibujo ---------------------------------------------------------
+    # --- drawing --------------------------------------------------------
     def add_stroke(self, player: str, msg: dict) -> dict:
         self._require_drawer(player)
         if len(self.strokes) >= MAX_STROKES:
@@ -243,7 +243,7 @@ class PinturilloGame:
         self.strokes = []
         return {"relay": {"kind": "clear"}}
 
-    # --- adivinar -------------------------------------------------------
+    # --- guessing -------------------------------------------------------
     def guess(self, player: str, raw) -> dict | None:
         if self.phase != "drawing":
             raise ValueError("Ahora no se puede adivinar")
@@ -261,7 +261,7 @@ class PinturilloGame:
             return None
         self.guesses.append({"player": player, "text": text, "correct": False})
         if len(answer) >= 4 and _levenshtein(attempt, answer) == 1:
-            # El intento queda en el historial y solo quien lo escribió ve el aviso.
+            # The attempt goes to the history and only its author sees the notice.
             return {"notice": f"¡Casi! «{text}» está muy cerca"}
         return None
 
@@ -286,7 +286,7 @@ class PinturilloGame:
         else:
             self._start_turn()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         is_drawer = viewer is not None and viewer == self.drawer
         over = self.phase in ("turn_over", "finished")
@@ -306,7 +306,7 @@ class PinturilloGame:
             "totalRounds": self.total_rounds,
             "players": self.players,
             "drawer": self.drawer,
-            # Las tres opciones solo las ve quien dibuja.
+            # Only the drawer sees the three options.
             "choices": self.choices if is_drawer and self.phase == "choosing" else [],
             "mask": mask,
             "strokes": self.strokes,

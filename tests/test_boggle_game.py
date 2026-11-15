@@ -26,8 +26,8 @@ def test_paths_use_neighbours_including_diagonals_and_no_repeats():
     assert find_path(BOARD, 4, "casa") == [0, 1, 2, 3]
     assert find_path(BOARD, 4, "cosa") == [0, 4, 5, 1]  # diagonal o→s, s→a
     assert find_path(BOARD, 4, "sol") is not None
-    assert find_path(BOARD, 4, "casas") is None  # habría que repetir un dado
-    assert find_path(BOARD, 4, "queso") is None  # Qu no toca la E
+    assert find_path(BOARD, 4, "casas") is None  # it would need to reuse a die
+    assert find_path(BOARD, 4, "queso") is None  # Qu doesn't touch the E
     assert find_path(BOARD, 4, "mata") is None
 
 
@@ -57,7 +57,7 @@ def test_adding_words_validates_and_hides_them_from_the_other_player():
         g.add_word("Ana", "co")
     with pytest.raises(ValueError, match="tablero"):
         g.add_word("Ana", "perro")
-    g.add_word("Ana", "asos")  # se puede armar aunque no esté en el diccionario
+    g.add_word("Ana", "asos")  # it can be formed even if it's not in the dictionary
     leo = g.snapshot("Leo")
     assert leo["mine"] == [] and leo["counts"] == {"Ana": 2, "Leo": 0}
     assert g.snapshot("Ana")["mine"] == [{"word": "casa", "known": True}, {"word": "asos", "known": False}]
@@ -77,14 +77,14 @@ def test_review_cancels_shared_words_and_allows_overrides():
     assert r["Ana"]["asos"]["status"] == "invalid"
     assert g.round_totals(g.results()) == {"Ana": 1, "Leo": 1}
 
-    g.toggle("asos")  # la dan por buena
+    g.toggle("asos")  # they accept it
     assert g.round_totals(g.results())["Ana"] == 2
-    g.toggle("sol")  # y anulan una del diccionario
+    g.toggle("sol")  # and reject one from the dictionary
     assert g.round_totals(g.results())["Leo"] == 0
     with pytest.raises(ValueError):
-        g.toggle("casa")  # compartida
+        g.toggle("casa")  # shared
     with pytest.raises(ValueError):
-        g.toggle("mesa")  # nadie la escribió
+        g.toggle("mesa")  # nobody wrote it
 
     snap = g.snapshot("Ana")
     assert "mesa" in snap["missed"] and "casa" not in snap["missed"]

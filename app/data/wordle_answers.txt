@@ -1,5 +1,5 @@
-# Palabras que pueden salir en Wordle a dúo (4, 5 o 6 letras).
-# Una por línea, con tildes; se comparan sin ellas. Agrega o quita las que quieras.
+# Words that can come up in Wordle for two (4, 5 or 6 letters).
+# One per line, with accents; they are compared without them. Add or remove any.
 agua
 alba
 alma

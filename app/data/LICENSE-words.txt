@@ -1,5 +1,5 @@
-palabras.txt.gz es una versión filtrada (palabras de 3 a 16 letras, solo a-z y ñ)
-de la lista "an-array-of-spanish-words" v2.0.0:
+words.txt.gz is a filtered version (words of 3 to 16 letters, only a-z and ñ)
+of the list "an-array-of-spanish-words" v2.0.0:
 https://github.com/words/an-array-of-spanish-words
 
 (The MIT License)

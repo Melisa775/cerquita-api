@@ -1,50 +1,50 @@
-"""Colonos: juego de colonizar una isla para dos (al estilo Catan).
+"""Colonos: an island-settling game for two (Catan-style).
 
-El tablero es una isla de 19 hexágonos que se arma al azar: bosques
-(madera), cerros (ladrillo), pastos (lana), campos (trigo), montañas
-(piedra) y un desierto. Cada hexágono tiene un número; cuando sale en los
-dados, los pueblos y ciudades de alrededor producen.
+The board is an island of 19 hexes laid out at random: forests (wood), hills
+(brick), pastures (wool), fields (grain), mountains (ore) and one desert.
+Each hex has a number; when the dice show it, the surrounding settlements and
+cities produce.
 
-  - Se empieza poniendo dos pueblos con su camino, en serpiente: A, B, B, A.
-    El segundo pueblo da una carta de cada terreno que toca.
-  - En tu turno lanzas los dados, produces, y después construyes, comercias
-    o juegas una carta de desarrollo.
-  - Con un 7 nadie produce: quien tenga más de 7 cartas bota la mitad, y
-    quien lanzó mueve el ladrón (bloquea un hexágono) y le roba una carta al otro.
-  - Costos: camino = madera + ladrillo; pueblo = madera + ladrillo + lana +
-    trigo; ciudad = 2 trigo + 3 piedra; carta de desarrollo = lana + trigo + piedra.
-  - Comercio: con el banco 4 a 1, con puertos 3 a 1 o 2 a 1, y con la pareja
-    proponiendo un cambio que ella acepta o no.
-  - Puntos: pueblo 1, ciudad 2, camino más largo (5 o más) 2, ejército más
-    grande (3 soldados o más) 2, y las cartas de punto. Gana quien llegue a
-    la meta en su turno.
+  - Setup: two settlements with a road each, in snake order: A, B, B, A.
+    The second settlement yields one card per terrain it touches.
+  - On your turn you roll, produce, and then build, trade or play a
+    development card.
+  - On a 7 nobody produces: anyone with more than 7 cards discards half, and
+    the roller moves the robber (blocking a hex) and steals a card.
+  - Costs: road = wood + brick; settlement = wood + brick + wool + grain;
+    city = 2 grain + 3 ore; development card = wool + grain + ore.
+  - Trading: 4:1 with the bank, 3:1 or 2:1 with ports, and with the partner
+    by proposing an exchange they accept or decline.
+  - Points: settlement 1, city 2, longest road (5+) 2, largest army
+    (3+ knights) 2, plus victory point cards. You win by reaching the goal
+    on your own turn.
 
-El servidor guarda la mano de cada uno; del otro solo se sabe cuántas cartas tiene.
+The server keeps each hand private; of the other player only the card count is known.
 """
 
 import math
 import random
 
-RESOURCES = ("madera", "ladrillo", "lana", "trigo", "piedra")
-TERRAINS = {"bosque": "madera", "cerro": "ladrillo", "pasto": "lana", "campo": "trigo", "montana": "piedra", "desierto": None}
-TERRAIN_BAG = ["bosque"] * 4 + ["pasto"] * 4 + ["campo"] * 4 + ["cerro"] * 3 + ["montana"] * 3 + ["desierto"]
+RESOURCES = ("wood", "brick", "wool", "grain", "ore")
+TERRAINS = {"forest": "wood", "hills": "brick", "pasture": "wool", "fields": "grain", "mountains": "ore", "desert": None}
+TERRAIN_BAG = ["forest"] * 4 + ["pasture"] * 4 + ["fields"] * 4 + ["hills"] * 3 + ["mountains"] * 3 + ["desert"]
 NUMBERS = [2, 3, 3, 4, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 11, 12]
 PORT_KINDS = ["3:1"] * 4 + list(RESOURCES)
 COSTS = {
-    "road": {"madera": 1, "ladrillo": 1},
-    "settlement": {"madera": 1, "ladrillo": 1, "lana": 1, "trigo": 1},
-    "city": {"trigo": 2, "piedra": 3},
-    "dev": {"lana": 1, "trigo": 1, "piedra": 1},
+    "road": {"wood": 1, "brick": 1},
+    "settlement": {"wood": 1, "brick": 1, "wool": 1, "grain": 1},
+    "city": {"grain": 2, "ore": 3},
+    "dev": {"wool": 1, "grain": 1, "ore": 1},
 }
 PIECES = {"road": 15, "settlement": 5, "city": 4}
-DEV_DECK = ["soldado"] * 14 + ["punto"] * 5 + ["caminos"] * 2 + ["cosecha"] * 2 + ["monopolio"] * 2
+DEV_DECK = ["knight"] * 14 + ["victory_point"] * 5 + ["road_building"] * 2 + ["year_of_plenty"] * 2 + ["monopoly"] * 2
 BANK_EACH = 19
 GOALS = (8, 10)
 
 
-# --- geometría del tablero ---------------------------------------------------
+# --- board geometry ----------------------------------------------------------
 def build_geometry():
-    """Hexágonos (puntas arriba) de radio 2, sus vértices y sus aristas."""
+    """Pointy-top hexes of radius 2, with their vertices and edges."""
     hexes = [(q, r) for q in range(-2, 3) for r in range(-2, 3) if abs(q + r) <= 2]
     hexes.sort(key=lambda h: (h[1], h[0]))
     vkey: dict[tuple, int] = {}
@@ -84,7 +84,7 @@ def build_geometry():
         v_neighbors[a].append(b)
         v_neighbors[b].append(a)
     centers = [[round(math.sqrt(3) * (q + r / 2), 4), round(1.5 * r, 4)] for q, r in hexes]
-    # aristas de la costa, ordenadas alrededor de la isla
+    # coast edges, sorted around the island
     coast = [e for e, hs in edge_hexes.items() if len(hs) == 1]
 
     def angle(e):
@@ -113,7 +113,7 @@ def hex_neighbors(i: int) -> list[int]:
 
 
 def random_board(rng: random.Random) -> dict:
-    """Terrenos y números al azar, sin dejar dos 6/8 pegados."""
+    """Random terrains and numbers, never leaving two 6/8 next to each other."""
     while True:
         terrains = TERRAIN_BAG[:]
         rng.shuffle(terrains)
@@ -121,7 +121,7 @@ def random_board(rng: random.Random) -> dict:
         rng.shuffle(nums)
         numbers, it = [], iter(nums)
         for t in terrains:
-            numbers.append(None if t == "desierto" else next(it))
+            numbers.append(None if t == "desert" else next(it))
         hot = [i for i, n in enumerate(numbers) if n in (6, 8)]
         if all(j not in hex_neighbors(i) for i in hot for j in hot if i != j):
             break
@@ -155,9 +155,9 @@ class ColonosGame:
         self.terrains = b["terrains"]
         self.numbers = b["numbers"]
         self.ports = b["ports"]
-        self.robber = self.terrains.index("desierto")
-        self.buildings: dict[int, dict] = {}  # vértice -> {"owner", "kind"}
-        self.roads: dict[int, str] = {}  # arista -> dueño
+        self.robber = self.terrains.index("desert")
+        self.buildings: dict[int, dict] = {}  # vertex -> {"owner", "kind"}
+        self.roads: dict[int, str] = {}  # edge -> owner
         self.hands = {p: empty_hand() for p in self.players}
         self.bank = {r: BANK_EACH for r in RESOURCES}
         self.dev_deck = DEV_DECK[:]
@@ -172,7 +172,7 @@ class ColonosGame:
         self.turn_no = 0
         self.setup_order: list[str] = []
         self.setup_step = 0
-        self.setup_need = "settlement"  # o "road"
+        self.setup_need = "settlement"  # or "road"
         self.last_setup_vertex: int | None = None
         self.dice: list[int] | None = None
         self.roll_id = 0
@@ -197,7 +197,7 @@ class ColonosGame:
             raise ValueError("La meta es 8 o 10 puntos")
         return cls(players, goal=goal, friendly=bool(options.get("friendly", False)), rng=rng)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self):
         return self.phase not in ("idle", "finished")
@@ -257,7 +257,7 @@ class ColonosGame:
             self.play_dev(player, msg.get("card"), msg)
         self._check_win(player)
 
-    # --- utilidades -----------------------------------------------------
+    # --- helpers --------------------------------------------------------
     def other(self, player):
         return next(p for p in self.players if p != player)
 
@@ -285,18 +285,18 @@ class ColonosGame:
             used = sum(1 for b in self.buildings.values() if b["owner"] == player and b["kind"] == kind)
         return PIECES[kind] - used
 
-    # --- reglas de colocación -------------------------------------------
+    # --- placement rules ------------------------------------------------
     def _distance_ok(self, v):
         return v not in self.buildings and all(n not in self.buildings for n in GEO["v_neighbors"][v])
 
     def _road_touches(self, player, e):
-        """¿La arista conecta con un camino o edificio propio? (sin pasar por edificios rivales)"""
+        """Does the edge connect to one of the player's roads or buildings? (never through rival buildings)"""
         for v in GEO["edges"][e]:
             b = self.buildings.get(v)
             if b and b["owner"] == player:
                 return True
             if b and b["owner"] != player:
-                continue  # un edificio rival corta la conexión por ese vértice
+                continue  # a rival building cuts the connection at this vertex
             if any(self.roads.get(x) == player for x in GEO["v_edges"][v] if x != e):
                 return True
         return False
@@ -325,7 +325,7 @@ class ColonosGame:
     def legal_cities(self, player):
         return [v for v, b in self.buildings.items() if b["owner"] == player and b["kind"] == "settlement"]
 
-    # --- colocación inicial ---------------------------------------------
+    # --- initial placement ----------------------------------------------
     def place_setup(self, player, target):
         if self.phase != "setup":
             raise ValueError("La colocación inicial ya terminó")
@@ -338,7 +338,7 @@ class ColonosGame:
             self.last_setup_vertex = target
             self.setup_need = "road"
             self._log(player=player, action="settlement")
-            if self.setup_step >= 2:  # segundo pueblo: produce de una vez
+            if self.setup_step >= 2:  # second settlement: produces right away
                 got = []
                 for h in GEO["v_hexes"][target]:
                     res = TERRAINS[self.terrains[h]]
@@ -359,7 +359,7 @@ class ColonosGame:
         else:
             self.turn = self.setup_order[self.setup_step]
 
-    # --- dados y producción ---------------------------------------------
+    # --- dice and production --------------------------------------------
     def roll(self, forced=None):
         if self.phase != "roll":
             raise ValueError("Ya lanzaste los dados")
@@ -394,7 +394,7 @@ class ColonosGame:
             if total_need <= self.bank[res]:
                 for p in takers:
                     produced[p][res] = self._give(p, res, per[p])
-            elif len(takers) == 1:  # el banco no alcanza: si es uno solo, recibe lo que haya
+            elif len(takers) == 1:  # the bank runs short: a single taker gets whatever is left
                 produced[takers[0]][res] = self._give(takers[0], res, per[takers[0]])
         self._log(player=self.turn, action="produce", got={p: {r: n for r, n in g.items() if n} for p, g in produced.items()})
 
@@ -443,7 +443,7 @@ class ColonosGame:
         self.last_steal = {"thief": player, "victim": rival, "res": stolen}
         self.phase = self.after_robber
 
-    # --- construir ------------------------------------------------------
+    # --- building -------------------------------------------------------
     def build(self, player, what, target):
         if self.phase == "road_building":
             if what != "road":
@@ -471,7 +471,7 @@ class ColonosGame:
                 raise ValueError("El pueblo tiene que estar en tu camino y a dos caminos de cualquier otro")
             self._pay(player, COSTS["settlement"])
             self.buildings[target] = {"owner": player, "kind": "settlement"}
-            self._update_longest()  # un pueblo puede cortar el camino del otro
+            self._update_longest()  # a settlement can cut the other player's road
         else:
             if target not in self.legal_cities(player):
                 raise ValueError("Solo puedes mejorar tus pueblos a ciudad")
@@ -489,7 +489,7 @@ class ColonosGame:
         self.dev_played = False
         self.phase = "roll"
 
-    # --- comercio -------------------------------------------------------
+    # --- trading --------------------------------------------------------
     def rate(self, player, res):
         best = 4
         for port in self.ports:
@@ -559,7 +559,7 @@ class ColonosGame:
             self.hands[a][r] += n
         self._log(player=player, action="accept")
 
-    # --- cartas de desarrollo -------------------------------------------
+    # --- development cards ----------------------------------------------
     def buy_dev(self, player):
         if self.phase != "main":
             raise ValueError("Compra después de lanzar los dados")
@@ -575,37 +575,37 @@ class ColonosGame:
             raise ValueError("Ahora no puedes jugar cartas")
         if self.dev_played:
             raise ValueError("Solo una carta de desarrollo por turno")
-        if kind == "punto":
+        if kind == "victory_point":
             raise ValueError("Las cartas de punto cuentan solas")
-        if kind != "soldado" and self.phase == "roll":
+        if kind != "knight" and self.phase == "roll":
             raise ValueError("Antes de lanzar solo puedes jugar un soldado")
         card = next((c for c in self.devs[player] if c["kind"] == kind and c["turn"] < self.turn_no), None)
         if not card:
             raise ValueError("No tienes esa carta (o la compraste en este turno)")
-        if kind == "cosecha":
+        if kind == "year_of_plenty":
             picks = msg.get("resources")
             if not isinstance(picks, list) or len(picks) != 2 or any(r not in RESOURCES for r in picks):
                 raise ValueError("Elige dos recursos")
             if any(self.bank[r] < picks.count(r) for r in picks):
                 raise ValueError("El banco no tiene esos recursos")
-        if kind == "monopolio" and msg.get("resource") not in RESOURCES:
+        if kind == "monopoly" and msg.get("resource") not in RESOURCES:
             raise ValueError("Elige un recurso")
         self.devs[player].remove(card)
         self.dev_played = True
         self._log(player=player, action="dev", card=kind)
-        if kind == "soldado":
+        if kind == "knight":
             self.knights[player] += 1
             self._update_army()
             self.after_robber = self.phase
             self.phase = "robber"
-        elif kind == "caminos":
+        elif kind == "road_building":
             self.free_roads = min(2, self.pieces_left(player, "road"))
             if self.free_roads and self.legal_roads(player):
                 self.phase = "road_building"
-        elif kind == "cosecha":
+        elif kind == "year_of_plenty":
             for r in msg["resources"]:
                 self._give(player, r)
-        elif kind == "monopolio":
+        elif kind == "monopoly":
             res = msg["resource"]
             rival = self.other(player)
             n = self.hands[rival][res]
@@ -613,7 +613,7 @@ class ColonosGame:
             self.hands[player][res] += n
             self._log(player=player, action="monopoly", resource=res, count=n)
 
-    # --- premios y puntos -----------------------------------------------
+    # --- awards and points ----------------------------------------------
     def _update_army(self):
         for p in self.players:
             if self.knights[p] >= 3 and (self.army is None or self.knights[p] > self.knights[self.army]):
@@ -652,13 +652,13 @@ class ColonosGame:
             self.longest_len[p] = self.road_length(p)
         holder = self.longest
         if holder and self.longest_len[holder] < 5:
-            holder = None  # perdió el premio porque le cortaron el camino
+            holder = None  # lost the award because their road was cut
         for p in self.players:
             n = self.longest_len[p]
             if n >= 5 and (holder is None or n > self.longest_len[holder]):
                 holder = p
         if holder is None:
-            # si nadie lo tiene, lo gana quien tenga uno de 5+ sin empate
+            # if nobody holds it, it goes to the only player with 5+
             cands = [p for p in self.players if self.longest_len[p] >= 5]
             if len(cands) == 1:
                 holder = cands[0]
@@ -673,7 +673,7 @@ class ColonosGame:
         return pts
 
     def points(self, player) -> int:
-        return self.public_points(player) + sum(1 for c in self.devs[player] if c["kind"] == "punto")
+        return self.public_points(player) + sum(1 for c in self.devs[player] if c["kind"] == "victory_point")
 
     def _check_win(self, player):
         if self.phase != "finished" and player == self.turn and self.points(player) >= self.goal:
@@ -681,7 +681,7 @@ class ColonosGame:
             self.phase = "finished"
             self._log(player=player, action="win")
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer=None):
         me_turn = viewer == self.turn and self.phase != "finished"
         finished = self.phase == "finished"
@@ -742,7 +742,7 @@ class ColonosGame:
             "army": self.army,
             "goal": self.goal,
             "log": self.log[-10:],
-            # qué se robó con el ladrón: solo lo saben el ladrón y la víctima
+            # what the robber stole: only the thief and the victim know
             "stolen": self.last_steal if self.last_steal and viewer in (self.last_steal["thief"], self.last_steal["victim"]) else None,
             "winner": self.winner,
             "costs": COSTS,

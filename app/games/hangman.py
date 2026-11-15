@@ -65,7 +65,7 @@ WORDS = {
 
 
 def base_letter(ch: str) -> str:
-    """'Á' -> 'a', 'ü' -> 'u', 'Ñ' -> 'ñ'. Lo que no sea letra queda igual."""
+    """'Á' -> 'a', 'ü' -> 'u', 'Ñ' -> 'ñ'. Anything that isn't a letter stays the same."""
     low = ch.lower()
     if low == "ñ":
         return "ñ"
@@ -104,11 +104,11 @@ class HangmanGame:
         self.word = ""
         self.hint = ""
         self.category: str | None = None
-        self.guessed: list[str] = []  # letras probadas, en orden
-        self.wrong_solves: list[str] = []  # palabras arriesgadas que no eran
+        self.guessed: list[str] = []  # letters tried, in order
+        self.wrong_solves: list[str] = []  # full-word guesses that were wrong
         self.result: dict | None = None
         self.scores: dict[str, int] = {p: 0 for p in self.players}
-        self.saved = 0  # modo "random": palabras que salvaron juntos
+        self.saved = 0  # "random" mode: words they saved together
         self.history: list[dict] = []
 
     @classmethod
@@ -127,12 +127,12 @@ class HangmanGame:
         rounds = parse_rounds(options, 4)
         return cls(players, mode=mode, lives=lives, rounds=rounds, rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
 
-    timer_key = None  # el ahorcado no tiene reloj: se juega con calma
+    timer_key = None  # hangman has no timer: it is played calmly
     timer_seconds = None
 
     def start(self) -> None:
@@ -156,7 +156,7 @@ class HangmanGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- quién hace qué ---------------------------------------------------
+    # --- who does what ----------------------------------------------------
     @property
     def guessers(self) -> list[str]:
         return [p for p in self.players if p != self.setter]
@@ -172,7 +172,7 @@ class HangmanGame:
     def _solved(self) -> bool:
         return self._letters_in_word() <= set(self.guessed)
 
-    # --- transiciones ---------------------------------------------------
+    # --- transitions ----------------------------------------------------
     def start_round(self) -> None:
         if self.phase not in ("idle", "round_over"):
             raise ValueError("No se puede iniciar ronda ahora")
@@ -232,7 +232,7 @@ class HangmanGame:
         self._check_end(player)
 
     def solve(self, player: str, raw) -> None:
-        """Arriesgar la palabra completa. Si no es, cuesta una vida."""
+        """Guess the whole word. A wrong guess costs a life."""
         if self.phase != "guessing":
             raise ValueError("No es momento de adivinar")
         if player not in self.guessers:
@@ -282,7 +282,7 @@ class HangmanGame:
         else:
             self.start_round()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         reveal_all = self.phase in ("round_over", "finished") or (viewer is not None and viewer == self.setter)
         guessed = set(self.guessed)
@@ -305,7 +305,7 @@ class HangmanGame:
             "totalRounds": self.total_rounds,
             "setter": self.setter,
             "guessers": self.guessers,
-            # Mientras adivinan, solo quien eligió la palabra la ve completa.
+            # While guessing, only the player who chose the word sees it in full.
             "slots": slots if self.phase != "choosing" else [],
             "hint": self.hint,
             "category": self.category,

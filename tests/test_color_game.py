@@ -19,11 +19,11 @@ def test_full_round_flow():
     g.begin_guess()
     snap = g.snapshot()
     assert snap["phase"] == "guess"
-    assert snap["target"] is None  # el color se oculta mientras adivinan
+    assert snap["target"] is None  # the color is hidden while they guess
 
     assert g.submit("Ana", g.target) is False
     assert g.snapshot()["submitted"] == ["Ana"]
-    assert g.snapshot()["guesses"] == {}  # no se filtra el intento del otro
+    assert g.snapshot()["guesses"] == {}  # the other player's guess doesn't leak
     assert g.submit("Leo", HSB(0, 0, 0)) is True
 
     g.reveal()
@@ -37,7 +37,7 @@ def test_game_finishes_after_last_round():
     g.start_round()
     g.begin_guess()
     g.submit("Ana", HSB(0, 50, 50))
-    g.reveal()  # Leo no respondió a tiempo
+    g.reveal()  # Leo didn't answer in time
     assert g.phase == "finished"
     assert g.round_scores["Leo"] == 0
     assert len(g.snapshot()["history"]) == 1
@@ -51,7 +51,7 @@ def test_cannot_guess_twice_or_out_of_phase():
         g.submit("Ana", HSB(0, 0, 0))
     g.start_round()
     with pytest.raises(ValueError):
-        g.submit("Ana", HSB(0, 0, 0))  # aún memorizando
+        g.submit("Ana", HSB(0, 0, 0))  # still memorizing
     g.begin_guess()
     g.submit("Ana", HSB(0, 0, 0))
     with pytest.raises(ValueError):
@@ -74,15 +74,15 @@ def test_totals_accumulate_across_rounds():
 
 def test_levels_change_time_colors_and_scoring():
     normal = ColorGame.from_options(["Ana"], {"level": "normal"}, random.Random(1))
-    hard = ColorGame.from_options(["Ana"], {"level": "dificil"}, random.Random(1))
-    expert = ColorGame.from_options(["Ana"], {"level": "experto"}, random.Random(1))
+    hard = ColorGame.from_options(["Ana"], {"level": "hard"}, random.Random(1))
+    expert = ColorGame.from_options(["Ana"], {"level": "expert"}, random.Random(1))
     assert normal.memorize_seconds > hard.memorize_seconds > expert.memorize_seconds
     assert normal.guess_seconds > hard.guess_seconds > expert.guess_seconds
     assert expert.snapshot()["hints"] is False and normal.snapshot()["hints"] is True
     with pytest.raises(ValueError):
         ColorGame.from_options(["Ana"], {"level": "imposible"}, random.Random(1))
 
-    # El mismo error vale menos en los niveles difíciles
+    # The same error is worth less on the harder levels
     results = []
     for g in (normal, hard, expert):
         g.start()
@@ -97,7 +97,7 @@ def test_levels_change_time_colors_and_scoring():
 
 
 def test_expert_shows_a_distractor_before_guessing():
-    g = ColorGame(["Ana", "Leo"], rounds=1, rng=random.Random(3), level="experto")
+    g = ColorGame(["Ana", "Leo"], rounds=1, rng=random.Random(3), level="expert")
     g.start()
     assert g.timer_key == ("memorize", 1)
     g.on_timeout()
@@ -105,7 +105,7 @@ def test_expert_shows_a_distractor_before_guessing():
     assert snap["phase"] == "distract"
     assert snap["target"] is None and snap["distractor"] is not None
     hue_gap = abs(g.distractor.h - g.target.h) % 360
-    assert 90 <= min(hue_gap, 360 - hue_gap)  # tono bien distinto
+    assert 90 <= min(hue_gap, 360 - hue_gap)  # very different hue
     assert g.timer_seconds == 1.5
     g.on_timeout()
     assert g.phase == "guess" and g.snapshot()["distractor"] is None

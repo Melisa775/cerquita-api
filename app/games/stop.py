@@ -5,19 +5,19 @@ from app.spelling import CHECKED as SPELL_CHECKED
 from app.spelling import spelled_ok, suggestion
 
 CATEGORIES = [
-    ("nombre", "Nombre"),
-    ("apellido", "Apellido"),
-    ("ciudad", "Ciudad"),
-    ("fruta", "Fruta"),
+    ("name", "Nombre"),
+    ("surname", "Apellido"),
+    ("city", "Ciudad"),
+    ("fruit", "Fruta"),
     ("color", "Color"),
     ("animal", "Animal"),
-    ("cosa", "Cosa"),
+    ("thing", "Cosa"),
 ]
 CATEGORY_KEYS = [key for key, _ in CATEGORIES]
-# Sin K, Ñ, Q, W, X, Y, Z: casi no hay frutas, colores ni ciudades con ellas.
+# No K, Ñ, Q, W, X, Y, Z: almost no fruits, colors or cities start with them.
 LETTERS = "ABCDEFGHIJLMNOPRSTUV"
 WRITE_SECONDS = 120
-GRACE_SECONDS = 2  # margen para que llegue lo último que escribió cada uno
+GRACE_SECONDS = 2  # lets the last keystrokes of each player arrive
 MAX_ANSWER = 40
 UNIQUE_POINTS = 100
 SHARED_POINTS = 50
@@ -62,7 +62,7 @@ class StopGame:
             spelling=bool(options.get("spelling", True)),
         )
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface ---------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
@@ -80,7 +80,7 @@ class StopGame:
 
     def on_timeout(self) -> None:
         if self.phase == "writing":
-            self.phase = "stopping"  # se acabó el tiempo; nadie cantó Stop
+            self.phase = "stopping"  # time ran out; nobody called Stop
         elif self.phase == "stopping":
             self.phase = "review"
 
@@ -99,7 +99,7 @@ class StopGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- transiciones ---------------------------------------------------
+    # --- transitions ----------------------------------------------------
     def start_round(self) -> None:
         if self.phase not in ("idle", "review"):
             raise ValueError("No se puede iniciar ronda ahora")
@@ -115,11 +115,11 @@ class StopGame:
         self.phase = "writing"
 
     def save(self, player: str, answers) -> None:
-        """Guarda el borrador de un jugador. Se ignora si la ronda ya cerró."""
+        """Save a player's draft. Ignored if the round is already closed."""
         if player not in self.players:
             raise ValueError("Jugador desconocido")
         if self.phase not in ("writing", "stopping"):
-            return  # llegó tarde: la ronda ya se está revisando
+            return  # arrived late: the round is already being reviewed
         if not isinstance(answers, dict):
             raise ValueError("Respuestas inválidas")
         self.answers[player] = {
@@ -138,7 +138,7 @@ class StopGame:
         self.phase = "stopping"
 
     def toggle(self, target, category) -> None:
-        """Anula una respuesta válida o valida una que el sistema rechazó."""
+        """Reject a valid answer, or accept one the system rejected."""
         if self.phase != "review":
             raise ValueError("Solo se puede corregir durante la revisión")
         if target not in self.players or category not in CATEGORY_KEYS:
@@ -166,9 +166,9 @@ class StopGame:
         else:
             self.start_round()
 
-    # --- puntaje --------------------------------------------------------
+    # --- scoring --------------------------------------------------------
     def _issue(self, player: str, category: str) -> str | None:
-        """Por qué el sistema no acepta la respuesta: empty, letter o spelling."""
+        """Why the system rejects the answer: empty, letter or spelling."""
         raw = self.answers.get(player, {}).get(category, "")
         answer = normalize(raw)
         if not answer:
@@ -217,7 +217,7 @@ class StopGame:
     def round_totals(results: dict[str, dict[str, dict]]) -> dict[str, int]:
         return {p: sum(cell["points"] for cell in cells.values()) for p, cells in results.items()}
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         reviewing = self.phase == "review"
         results = self.results() if reviewing else None
@@ -228,7 +228,7 @@ class StopGame:
             "totalRounds": self.total_rounds,
             "letter": self.letter,
             "categories": [{"key": k, "label": label} for k, label in CATEGORIES],
-            # Mientras escriben solo se informa cuántas casillas lleva cada uno.
+            # While writing, only how many boxes each player has filled is shared.
             "filled": {p: len(self.answers.get(p, {})) for p in self.players},
             "stoppedBy": self.stopped_by,
             "results": results,

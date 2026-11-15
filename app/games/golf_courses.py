@@ -1,8 +1,8 @@
-"""Los nueve hoyos del mini golf (diseño propio). Campo de 100 × 150.
+"""The nine mini golf holes (original design). Course of 100 × 150.
 
-Coordenadas: x hacia la derecha, y hacia abajo. El primer muro de cada hoyo
-es el borde del green (cerrado). Los rectángulos son [x, y, ancho, alto] y
-las inclinaciones llevan además la aceleración [ax, ay].
+Coordinates: x grows to the right, y grows downwards. Each hole's first wall
+is the (closed) edge of the green. Rectangles are [x, y, width, height] and
+slopes also carry their acceleration [ax, ay].
 """
 
 

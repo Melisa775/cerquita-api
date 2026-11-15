@@ -9,19 +9,19 @@ from app.dictionary import spanish
 from app.rooms import RoomError, RoomManager
 from app.spelling import cities
 
-EMPTY_ROOM_TTL_SECONDS = 120  # margen para recargar la página sin perder la sala
+EMPTY_ROOM_TTL_SECONDS = 120  # grace period so a page reload doesn't lose the room
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
-    # Carga el diccionario y las ciudades en segundo plano para que la
-    # primera partida no tenga que esperarlos.
+    # Load the dictionary and the city list in the background so the first
+    # game doesn't have to wait for them.
     asyncio.get_running_loop().run_in_executor(None, lambda: (spanish(), cities()))
     yield
 
 
 app = FastAPI(
     title="Cerquita API",
-    description="Backend de Cerquita, juegos en español para parejas a distancia. Desarrollado por Melisa Gomez Gomez.",
+    description="Backend for Cerquita, Spanish-language games for long-distance couples. Built by Melisa Gomez Gomez.",
     contact={"name": "Melisa Gomez Gomez", "url": "https://github.com/Melisa775"},
     lifespan=lifespan,
 )
@@ -43,7 +43,7 @@ def health():
 @app.post("/api/rooms")
 async def create_room():
     room = manager.create()
-    _schedule_cleanup(room.code)  # por si nadie llega a entrar
+    _schedule_cleanup(room.code)  # in case nobody ever joins
     return {"code": room.code}
 
 
@@ -96,4 +96,4 @@ def _schedule_cleanup(code: str) -> None:
     try:
         asyncio.get_running_loop().create_task(later())
     except RuntimeError:
-        pass  # sin bucle de eventos (p. ej. en algunos tests)
+        pass  # no event loop (e.g. in some tests)

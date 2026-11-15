@@ -1,5 +1,5 @@
-# Palabras para dibujar en el Pinturillo. Una por línea; puedes agregar las tuyas.
-# Animales
+# Words to draw in Pinturillo. One per line; add your own.
+# Animals
 gato
 perro
 pez
@@ -33,7 +33,7 @@ camello
 murciélago
 dinosaurio
 unicornio
-# Comida
+# Food
 arepa
 empanada
 pizza
@@ -58,7 +58,7 @@ chocolate
 limón
 aguacate
 mazorca
-# Cosas
+# Things
 casa
 silla
 mesa
@@ -112,7 +112,7 @@ semáforo
 escalera
 puerta
 ventana
-# Naturaleza y lugares
+# Nature and places
 sol
 luna
 estrella
@@ -139,7 +139,7 @@ castillo
 iglesia
 faro
 carpa
-# Para ustedes
+# Just for the two of you
 corazón
 beso
 abrazo
@@ -155,7 +155,7 @@ atardecer
 osito de peluche
 rosa
 carta de amor
-# Personajes y cosas divertidas
+# Characters and fun stuff
 fantasma
 robot
 pirata

@@ -4,7 +4,7 @@ from functools import cache
 from pathlib import Path
 from typing import Iterable
 
-DATA = Path(__file__).parent / "data" / "palabras.txt.gz"
+DATA = Path(__file__).parent / "data" / "words.txt.gz"
 
 
 class Dictionary:
@@ -19,7 +19,7 @@ class Dictionary:
         return len(self.words)
 
     def has_prefix(self, prefix: str) -> bool:
-        """¿Alguna palabra empieza así? Búsqueda binaria sobre la lista ordenada."""
+        """Does any word start with this prefix? Binary search over the sorted list."""
         i = bisect_left(self.words, prefix)
         return i < len(self.words) and self.words[i].startswith(prefix)
 

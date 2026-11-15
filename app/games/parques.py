@@ -1,36 +1,35 @@
-"""Parqués (a la colombiana) para dos.
+"""Parqués (the Colombian race game) for two.
 
-El tablero es una cruz con un circuito de 68 casillas (17 por brazo). Cada
-jugador tiene su cárcel en una esquina y su llegada por el centro de su
-brazo: 7 casillas y luego el cielo. Los dos colores van en esquinas opuestas.
+The board is a cross with a 68-square loop (17 per arm). Each player has a
+jail in a corner and a home stretch down the middle of their arm: 7 squares
+and then heaven ("cielo"). The two colors sit in opposite corners.
 
-Reglas:
-  - Se lanzan dos dados. Cada dado mueve una ficha por separado (pueden ser
-    la misma o dos distintas). Un dado que no se puede usar se pierde.
-  - Para salir de la cárcel hay que sacar pares: salen todas las fichas
-    encarceladas a la salida. Si no tienes fichas afuera, tienes tres
-    intentos para sacar pares.
-  - Pares da otro turno. El tercer par seguido es premio: mandas una ficha
-    directo al cielo, y se acaba el turno.
-  - Caer donde hay una ficha rival la manda a la cárcel, salvo en los
-    seguros. Al salir de la cárcel sí se come a quien esté en tu salida.
-  - Para entrar al cielo hay que llegar con el número exacto.
-  - Gana quien meta todas sus fichas al cielo.
+Rules:
+  - Two dice are rolled. Each die moves a piece separately (the same piece
+    or two different ones). A die that cannot be used is lost.
+  - Leaving jail requires doubles: every jailed piece moves to the exit. With
+    no pieces out, you get three tries to roll doubles.
+  - Doubles give another roll. The third doubles in a row is a bonus: one
+    piece goes straight to heaven and the turn ends.
+  - Landing on a rival piece sends it to jail, except on safe squares.
+    Leaving jail does capture whoever sits on your exit square.
+  - Entering heaven requires the exact number.
+  - First to get every piece to heaven wins.
 
-Cada ficha se guarda como su avance desde la salida:
-  -1 cárcel · 0..63 circuito · 64..70 llegada · 71 cielo
+Each piece is stored as its progress from the exit:
+  -1 jail · 0..63 loop · 64..70 home stretch · 71 heaven
 """
 
 import random
 
 LOOP = 68
 ARM = 17
-TO_ENTRY = 63  # pasos desde la salida hasta la casilla donde se entra a la llegada
-HOME = 71  # cielo
-EXIT_OFFSET = 13  # la salida de cada brazo (al lado de su cárcel)
-SAFE_OFFSETS = (4, 13)  # seguros de cada brazo
+TO_ENTRY = 63  # steps from the exit to the square where the home stretch begins
+HOME = 71  # heaven
+EXIT_OFFSET = 13  # exit square of each arm (next to its jail)
+SAFE_OFFSETS = (4, 13)  # safe squares of each arm
 SAFE = {ARM * k + o for k in range(4) for o in SAFE_OFFSETS}
-SEATS = (0, 2)  # brazos de los dos jugadores: esquinas opuestas
+SEATS = (0, 2)  # arms of the two players: opposite corners
 
 
 class ParquesGame:
@@ -46,9 +45,9 @@ class ParquesGame:
         self.phase = "idle"
         self.turn: str | None = None
         self.dice: list[int] | None = None
-        self.unused: list[int] = []  # índices de dados sin usar
+        self.unused: list[int] = []  # indexes of unused dice
         self.pairs_in_row = 0
-        self.attempts = 0  # intentos para sacar pares cuando todo está en la cárcel
+        self.attempts = 0  # tries to roll doubles while everything is in jail
         self.log: list[dict] = []
         self.winner: str | None = None
         self.roll_id = 0
@@ -65,7 +64,7 @@ class ParquesGame:
             raise ValueError("Se juega con 2 o 4 fichas")
         return cls(players, pieces=pieces, rng=rng)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase in ("roll", "move", "bonus")
@@ -101,7 +100,7 @@ class ParquesGame:
     def remove_player(self, player: str) -> None:
         pass
 
-    # --- geometría ------------------------------------------------------
+    # --- geometry -------------------------------------------------------
     def other(self, player: str) -> str:
         return next(p for p in self.players if p != player)
 
@@ -109,12 +108,12 @@ class ParquesGame:
         return ARM * self.arm[player] + EXIT_OFFSET
 
     def square(self, player: str, progress: int) -> int | None:
-        """Casilla del circuito (0..67) de una ficha, o None si no está en el circuito."""
+        """Loop square (0..67) of a piece, or None if it is not on the loop."""
         if 0 <= progress <= TO_ENTRY:
             return (self.exit_square(player) + progress) % LOOP
         return None
 
-    # --- dados ----------------------------------------------------------
+    # --- dice -----------------------------------------------------------
     def roll(self, forced: tuple[int, int] | None = None) -> None:
         if self.phase != "roll":
             raise ValueError("Primero mueve tus fichas")
@@ -131,12 +130,12 @@ class ParquesGame:
                 self.phase = "bonus"
                 return
         if not free:
-            # todo en la cárcel (o en el cielo): solo sirven los pares
+            # everything in jail (or heaven): only doubles help
             if pair:
                 self._release_all()
                 self.unused = []
                 self.attempts = 0
-                self.phase = "roll"  # pares: vuelve a tirar
+                self.phase = "roll"  # doubles: roll again
                 return
             self.attempts += 1
             if self.attempts >= 3:
@@ -159,7 +158,7 @@ class ParquesGame:
         self._capture(self.exit_square(me), on_exit=True)
 
     def release(self) -> None:
-        """Con pares y fichas afuera: usar los dos dados para sacar las de la cárcel."""
+        """With doubles and pieces out: spend both dice to release the jailed pieces."""
         if self.phase != "move" or not self.can_release:
             raise ValueError("Para salir de la cárcel necesitas pares sin usar")
         self._release_all()
@@ -176,7 +175,7 @@ class ParquesGame:
             and -1 in self.pieces[self.turn]
         )
 
-    # --- movimientos ----------------------------------------------------
+    # --- moves ----------------------------------------------------------
     def legal_moves(self) -> list[dict]:
         if self.phase != "move":
             return []
@@ -220,7 +219,7 @@ class ParquesGame:
             self.log.append({"player": me, "action": "capture", "count": len(caught)})
 
     def _drop_dead_dice(self) -> None:
-        """Descarta los dados que ya no se pueden usar y cierra la jugada si no queda nada."""
+        """Drop dice that can no longer be used and close the move if nothing is left."""
         if self.phase != "move":
             return
         usable = {m["die"] for m in self.legal_moves()}
@@ -235,7 +234,7 @@ class ParquesGame:
 
     def _after_dice(self) -> None:
         if self.dice and self.dice[0] == self.dice[1] and self.phase != "finished":
-            self.phase = "roll"  # pares: otro turno
+            self.phase = "roll"  # doubles: another turn
         else:
             self._next_turn()
 
@@ -260,7 +259,7 @@ class ParquesGame:
         self.attempts = 0
         self.phase = "roll"
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         me_turn = viewer == self.turn
         return {

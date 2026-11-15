@@ -18,7 +18,7 @@ def test_geometry():
     assert g.square("Ana", 0) == 13 and g.square("Ana", 60) == (13 + 60) % LOOP
     assert g.square("Ana", 64) is None and g.square("Ana", -1) is None
     assert 13 in SAFE and 47 in SAFE and len(SAFE) == 8
-    # la entrada a la llegada de Ana es la casilla 8 de su brazo (justo antes de su salida)
+    # the entry to Ana's home stretch is square 8 of her arm (just before her start)
     assert g.square("Ana", TO_ENTRY) == 8
 
 
@@ -52,15 +52,15 @@ def test_dice_move_separately_and_turn_passes():
 def test_capture_sends_rival_to_jail_but_not_on_safe_squares():
     g = make()
     g.pieces["Ana"] = [0, -1, -1, -1]
-    # Leo en la casilla 16 (13 + 3), que no es seguro
+    # Leo on square 16 (13 + 3), which is not safe
     leo_prog = (16 - g.exit_square("Leo")) % LOOP
     g.pieces["Leo"] = [leo_prog, -1, -1, -1]
     g.roll((3, 1))
     g.move(0, 0)
     assert g.pieces["Leo"][0] == -1
-    # en un seguro (casilla 21 = 17 + 4) conviven
+    # on a safe square (square 21 = 17 + 4) they share
     g.turn, g.phase = "Ana", "roll"
-    g.pieces["Ana"] = [4, -1, -1, -1]  # casilla 17
+    g.pieces["Ana"] = [4, -1, -1, -1]  # square 17
     g.pieces["Leo"] = [(21 - g.exit_square("Leo")) % LOOP, -1, -1, -1]
     g.roll((4, 1))
     g.move(0, 0)
@@ -86,7 +86,7 @@ def test_pairs_with_pieces_out_can_release_or_move():
 def test_exact_count_to_reach_heaven_and_lost_dice():
     g = make(pieces=2)
     g.pieces["Ana"] = [69, HOME]
-    g.roll((5, 2))  # el 5 no sirve; el 2 entra justo
+    g.roll((5, 2))  # the 5 doesn't work; the 2 gets in exactly
     assert g.unused == [1]
     g.move(0, 1)
     assert g.phase == "finished" and g.winner == "Ana"

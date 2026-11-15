@@ -7,14 +7,14 @@ from pathlib import Path
 from app.dictionary import spanish
 from app.games.common import normalize, parse_rounds
 
-DATA = Path(__file__).resolve().parents[1] / "data" / "wordle_respuestas.txt"
+DATA = Path(__file__).resolve().parents[1] / "data" / "wordle_answers.txt"
 LENGTHS = (4, 5, 6)
 MAX_TRIES = 6
 
 
 @cache
 def answers() -> dict[int, list[str]]:
-    """Palabras secretas posibles, agrupadas por largo (sin tildes)."""
+    """Possible secret words, grouped by length (without accents)."""
     out: dict[int, list[str]] = {n: [] for n in LENGTHS}
     for line in DATA.read_text(encoding="utf-8").splitlines():
         if line.strip() and not line.startswith("#"):
@@ -26,7 +26,7 @@ def answers() -> dict[int, list[str]]:
 
 @cache
 def originals() -> dict[str, str]:
-    """Cómo se escribe cada palabra con tildes, para mostrarla al final."""
+    """How each word is spelled with accents, to show it at the end."""
     lines = DATA.read_text(encoding="utf-8").splitlines()
     return {clean(line): line.strip().lower() for line in lines if line.strip() and not line.startswith("#")}
 
@@ -40,7 +40,7 @@ def is_valid(word: str) -> bool:
 
 
 def score_guess(guess: str, answer: str) -> list[str]:
-    """Marca cada letra. Con letras repetidas, solo se marcan tantas como haya."""
+    """Mark each letter. With repeated letters, only as many are marked as the answer has."""
     marks = ["absent"] * len(guess)
     left = Counter()
     for i, (g, a) in enumerate(zip(guess, answer)):
@@ -79,9 +79,9 @@ class WordleGame:
         self.phase = "idle"
         self.round = 0
         self.answer = ""
-        self.rows: dict[str, list[dict]] = {}  # duelo: tablero de cada uno
-        self.team_rows: list[dict] = []  # juntos: un solo tablero
-        self.solved_order: list[str] = []  # quién la sacó primero
+        self.rows: dict[str, list[dict]] = {}  # duel: one board per player
+        self.team_rows: list[dict] = []  # team: a single shared board
+        self.solved_order: list[str] = []  # who solved it first
         self.turn_index = 0
         self.draft = ""
         self.result: dict | None = None
@@ -102,12 +102,12 @@ class WordleGame:
             raise ValueError("Elige palabras de 4, 5 o 6 letras")
         return cls(players, mode=mode, length=length, rounds=parse_rounds(options, 3), rng=rng, timings=timings)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase not in ("idle", "finished")
 
-    timer_key = None  # sin reloj
+    timer_key = None  # no timer
     timer_seconds = None
 
     def start(self) -> None:
@@ -129,7 +129,7 @@ class WordleGame:
         if player in self.players:
             self.players.remove(player)
 
-    # --- estado de la ronda --------------------------------------------
+    # --- round state ---------------------------------------------------
     @property
     def current(self) -> str | None:
         return self.players[self.turn_index % len(self.players)] if self.players else None
@@ -138,7 +138,7 @@ class WordleGame:
         rows = self.rows.get(player, [])
         return player in self.solved_order or len(rows) >= MAX_TRIES
 
-    # --- transiciones ---------------------------------------------------
+    # --- transitions ----------------------------------------------------
     def start_round(self) -> None:
         if self.phase not in ("idle", "round_over"):
             raise ValueError("No se puede iniciar ronda ahora")
@@ -157,7 +157,7 @@ class WordleGame:
         self.phase = "playing"
 
     def set_draft(self, player: str, text) -> None:
-        """Juntos: lo que está escribiendo quien tiene el turno, para que el otro lo vea."""
+        """Team mode: what the player on turn is typing, so the other can see it."""
         if self.mode != "team" or self.phase != "playing" or player != self.current:
             return
         self.draft = clean(text)[: self.length]
@@ -203,7 +203,7 @@ class WordleGame:
         winner = None
         if solved:
             best = min(len(self.rows[p]) for p in solved)
-            winner = next(p for p in solved if len(self.rows[p]) == best)  # empate: el primero
+            winner = next(p for p in solved if len(self.rows[p]) == best)  # tie: the first one
             self.scores[winner] = self.scores.get(winner, 0) + 1
         self.result = {
             "winner": winner,
@@ -230,7 +230,7 @@ class WordleGame:
         else:
             self.start_round()
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         over = self.phase in ("round_over", "finished")
         boards = {}
@@ -239,7 +239,7 @@ class WordleGame:
                 if over or p == viewer:
                     boards[p] = rows
                 else:
-                    # Del otro solo se ven los colores, no las letras.
+                    # Of the other board only the colors are visible, not the letters.
                     boards[p] = [{"word": None, "marks": r["marks"], "player": p} for r in rows]
         return {
             "name": self.name,

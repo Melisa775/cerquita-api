@@ -43,8 +43,8 @@ def test_first_word_must_cross_center_and_scores_double_word():
     give(g, "Ana", "CASAXYZ")
     with pytest.raises(ValueError, match="centro"):
         g.play("Ana", tiles("CASA", 0, 0))
-    g.play("Ana", tiles("CASA", 7, 4))  # C(7,4) A(7,5) S(7,6) A(7,7)=centro DP
-    # C3 + A1 + S1 + A1 = 6, doble palabra = 12; (7,4) y (7,6) no tienen premio
+    g.play("Ana", tiles("CASA", 7, 4))  # C(7,4) A(7,5) S(7,6) A(7,7)=center DW
+    # C3 + A1 + S1 + A1 = 6, double word = 12; (7,4) and (7,6) have no premium
     assert g.scores["Ana"] == 12 and g.turn == "Leo" and len(g.racks["Ana"]) == 7
     assert g.board[7][4]["letter"] == "C"
 
@@ -79,10 +79,10 @@ def test_cross_words_and_extending():
     give(g, "Ana", "CASAEEE")
     g.play("Ana", tiles("CASA", 7, 4))
     give(g, "Leo", "SOLXXXX")
-    # "COLA"? Leo pone O y L debajo de la C: C-O-L vertical → "COL"
+    # "COLA"? Leo puts O and L below the C: vertical C-O-L → "COL"
     result = g.evaluate([{"r": 8, "c": 4, "letter": "O"}, {"r": 9, "c": 4, "letter": "L"}])
     assert [w["word"] for w in result["words"]] == ["COL"]
-    # una S al final de CASA forma CASAS
+    # an S at the end of CASA makes CASAS
     result = g.evaluate([{"r": 7, "c": 8, "letter": "S"}])
     assert result["words"][0]["word"] == "CASAS"
 
@@ -90,7 +90,7 @@ def test_cross_words_and_extending():
 def test_blank_scores_zero_and_bingo_bonus():
     g = make(check=False)
     give(g, "Ana", list("CAMION") + ["?"])
-    play = tiles("CAMIONS", 7, 1, blanks=(6,))  # 7 letras, la S es comodín
+    play = tiles("CAMIONS", 7, 1, blanks=(6,))  # 7 letters, the S is a blank
     result = g.evaluate(play)
     assert result["bingo"]
     g.play("Ana", play)

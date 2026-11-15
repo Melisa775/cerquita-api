@@ -14,7 +14,7 @@ class Clock:
         return self.t
 
 
-def make(fen=None, control="libre", clock=None, timings=None):
+def make(fen=None, control="none", clock=None, timings=None):
     g = ChessGame(["Ana", "Leo"], white="Ana", time_control=control, rng=random.Random(1), clock=clock or Clock(), fen=fen, timings=timings)
     g.start()
     return g
@@ -25,7 +25,7 @@ def play(g, *moves):
         g.move(g.player_to_move, m[:2], m[2:4], m[4:] or None)
 
 
-# --- reglas ---------------------------------------------------------------
+# --- rules ----------------------------------------------------------------
 @pytest.mark.parametrize(
     "fen,expected",
     [
@@ -50,10 +50,10 @@ def test_spanish_notation():
     pos = Position.from_fen()
     assert pos.san(Move(sq("g1"), sq("f3"))) == "Cf3"
     assert pos.san(Move(sq("e2"), sq("e4"))) == "e4"
-    # dos caballos pueden ir a d2: se desambigua por columna
+    # two knights can go to d2: disambiguated by file
     pos = Position.from_fen("4k3/8/8/8/8/5N2/8/1N2K3 w - - 0 1")
     assert pos.san(Move(sq("b1"), sq("d2"))) == "Cbd2"
-    # enroques y coronación con jaque
+    # castling and promotion with check
     pos = Position.from_fen("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1")
     assert pos.san(Move(sq("e1"), sq("g1"))) == "O-O"
     assert pos.san(Move(sq("e1"), sq("c1"))) == "O-O-O"
@@ -61,12 +61,12 @@ def test_spanish_notation():
     assert pos.san(Move(sq("b7"), sq("b8"), "Q")) == "b8=D+"
 
 
-# --- partida --------------------------------------------------------------
+# --- game -----------------------------------------------------------------
 def test_fools_mate():
     g = make()
     play(g, "f2f3", "e7e5", "g2g4", "d8h4")
     assert g.phase == "finished"
-    assert g.result["winner"] == "Leo" and g.result["reason"] == "mate"
+    assert g.result["winner"] == "Leo" and g.result["reason"] == "checkmate"
     assert g.snapshot()["moves"] == ["f3", "e5", "g4", "Dh4#"]
 
 
@@ -106,19 +106,19 @@ def test_promotion_choice_defaults_to_queen():
 def test_stalemate():
     g = make("7k/8/6Q1/8/8/8/8/K7 w - - 0 1")
     g.move("Ana", "g6", "f7")
-    assert g.result["reason"] == "ahogado" and g.result["winner"] is None
+    assert g.result["reason"] == "stalemate" and g.result["winner"] is None
 
 
 def test_threefold_repetition():
     g = make()
     play(g, "g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6", "f3g1", "f6g8")
-    assert g.result["reason"] == "repeticion"
+    assert g.result["reason"] == "repetition"
 
 
 def test_insufficient_material():
     g = make("4k3/8/8/8/8/8/3q4/4K3 w - - 0 1")
     g.move("Ana", "e1", "d2")
-    assert g.result["reason"] == "material"
+    assert g.result["reason"] == "insufficient_material"
 
 
 def test_draw_offer_and_resign():
@@ -129,10 +129,10 @@ def test_draw_offer_and_resign():
     assert g.draw_offer is None
     g.handle("Ana", {"type": "ch_draw"})
     g.handle("Leo", {"type": "ch_draw"})
-    assert g.result["reason"] == "acuerdo"
+    assert g.result["reason"] == "agreement"
     g = make()
     g.handle("Leo", {"type": "ch_resign"})
-    assert g.result == {"winner": "Ana", "reason": "abandono", "text": "abandono"}
+    assert g.result == {"winner": "Ana", "reason": "resignation", "text": "abandono"}
 
 
 def test_a_move_cancels_pending_offers():
@@ -145,10 +145,10 @@ def test_a_move_cancels_pending_offers():
 def test_undo_takes_back_the_requesters_last_move():
     g = make()
     play(g, "e2e4", "e7e5")
-    g.handle("Leo", {"type": "ch_undo"})  # Leo deshace su e5
-    g.handle("Ana", {"type": "ch_undo"})  # Ana acepta
+    g.handle("Leo", {"type": "ch_undo"})  # Leo undoes his e5
+    g.handle("Ana", {"type": "ch_undo"})  # Ana accepts
     assert g.snapshot()["moves"] == ["e4"] and g.pos.turn == "b"
-    g.handle("Ana", {"type": "ch_undo"})  # la última jugada es de Ana: se deshace solo su e4
+    g.handle("Ana", {"type": "ch_undo"})  # the last move is Ana's: only her e4 is undone
     g.handle("Leo", {"type": "ch_undo"})
     assert g.moves == [] and g.pos.turn == "w"
     with pytest.raises(ValueError):
@@ -188,12 +188,12 @@ def test_timeout_loses_but_lone_king_cannot_win_on_time():
     g = make(control="3+2", clock=clock)
     play(g, "e2e4", "e7e5")
     g.on_timeout()
-    assert g.result["winner"] == "Leo" and g.result["reason"] == "tiempo"
+    assert g.result["winner"] == "Leo" and g.result["reason"] == "timeout"
 
     g = make("4k3/8/8/8/8/8/4P3/4K3 w - - 0 1", control="3+2", clock=Clock())
     play(g, "e2e3", "e8d7")
     g.on_timeout()
-    assert g.result["winner"] is None and g.result["reason"] == "tiempo_material"
+    assert g.result["winner"] is None and g.result["reason"] == "timeout_no_material"
 
 
 def test_white_option_and_validation():

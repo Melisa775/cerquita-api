@@ -1,13 +1,14 @@
-"""Mini golf para dos (al estilo del de Plato).
+"""Mini golf for two (in the style of the Plato app).
 
-Por turnos, cada uno tira su bola en el mismo hoyo: se apunta jalando hacia
-atrás como una cauchera. El servidor simula el tiro (golf_physics.py) y le
-manda el camino a los dos para que lo animen igual. Mientras alguien apunta,
-la dirección y la fuerza le llegan en vivo a su pareja como eventos livianos.
+Players take turns shooting their own ball on the same hole, aiming by
+pulling back like a slingshot. The server simulates the shot
+(golf_physics.py) and sends the path to both players so they animate it the
+same way. While someone aims, the direction and power reach their partner
+live as lightweight events.
 
-En cada hoyo se turnan los tiros (quien ya metió la bola no tira más). Caer
-al agua suma un golpe y la bola vuelve a donde estaba. Con 10 golpes la bola
-se levanta. Gana quien termine el recorrido con menos golpes.
+Shots alternate on each hole (a player who holed out stops shooting). Water
+adds a stroke and the ball goes back to where it was. At 10 strokes the ball
+is picked up. Fewest total strokes wins.
 """
 
 import math
@@ -36,7 +37,7 @@ class GolfGame:
         self.turn: str | None = None
         self.shot_id = 0
         self.last_shot: dict | None = None
-        self.card: list[dict] = []  # golpes por hoyo
+        self.card: list[dict] = []  # strokes per hole
         self.first = self.rng.choice(self.players)
         self.winner: str | None = None
 
@@ -52,7 +53,7 @@ class GolfGame:
             raise ValueError("Elige 3, 6 o 9 hoyos")
         return cls(players, holes=holes, rng=rng)
 
-    # --- interfaz con la sala -------------------------------------------
+    # --- room interface -------------------------------------------------
     @property
     def in_progress(self) -> bool:
         return self.phase in ("playing", "hole_over")
@@ -81,7 +82,7 @@ class GolfGame:
         if player != self.turn:
             raise ValueError(f"Le toca a {self.turn}")
         if kind == "gf_aim":
-            # solo se reenvía a la pareja: no cambia el estado
+            # only relayed to the partner: it does not change the state
             try:
                 angle, power = float(msg.get("angle")), float(msg.get("power"))
             except (TypeError, ValueError):
@@ -94,7 +95,7 @@ class GolfGame:
     def remove_player(self, player: str) -> None:
         pass
 
-    # --- hoyos ----------------------------------------------------------
+    # --- holes ----------------------------------------------------------
     @property
     def course(self) -> dict:
         return self.courses[self.hole]
@@ -104,7 +105,7 @@ class GolfGame:
         self.balls = {p: [float(tee[0]), float(tee[1])] for p in self.players}
         self.strokes = {p: 0 for p in self.players}
         self.done = {p: False for p in self.players}
-        # se alterna quién empieza cada hoyo
+        # the first shooter alternates every hole
         start = (self.players.index(self.first) + self.hole) % len(self.players)
         self.turn = self.players[start]
         self.last_shot = None
@@ -171,7 +172,7 @@ class GolfGame:
     def totals(self) -> dict[str, int]:
         return {p: sum(h["strokes"][p] for h in self.card) for p in self.players}
 
-    # --- estado para los clientes ---------------------------------------
+    # --- state for clients ----------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
         return {
             "name": self.name,
