@@ -37,7 +37,9 @@ class Connection(Protocol):
 
 
 class RoomError(Exception):
-    pass
+    def __init__(self, message: str, code: str | None = None):
+        super().__init__(message)
+        self.code = code  # lets the client tell apart errors it can retry
 
 
 class Room:
@@ -70,7 +72,8 @@ class Room:
         if not name:
             raise RoomError("Escribe tu nombre")
         if name in self.connections:
-            raise RoomError("Ese nombre ya está en la sala")
+            # Usually the same player reconnecting before the old connection closed: the client retries
+            raise RoomError("Ese nombre ya está en la sala", code="name_taken")
         if name not in self.order and len(self.order) >= MAX_PLAYERS:
             raise RoomError("La sala está llena")
         self.connections[name] = conn

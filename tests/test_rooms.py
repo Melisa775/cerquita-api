@@ -283,3 +283,10 @@ async def test_chess_clock_flags_over_the_room():
     result = leo.last["game"]["result"]
     assert result["winner"] == "Leo" and result["reason"] == "timeout"
     room.close()
+
+
+def test_name_taken_error_has_a_code_the_client_can_retry():
+    from app.rooms import RoomError
+
+    err = RoomError("Ese nombre ya está en la sala", code="name_taken")
+    assert err.code == "name_taken" and str(err) == "Ese nombre ya está en la sala"

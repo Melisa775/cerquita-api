@@ -66,7 +66,7 @@ async def room_socket(ws: WebSocket, code: str, name: str = ""):
     try:
         await room.join(name, ws)
     except RoomError as exc:
-        await ws.send_json({"type": "error", "message": str(exc), "fatal": True})
+        await ws.send_json({"type": "error", "message": str(exc), "fatal": True, "code": exc.code})
         await ws.close()
         return
 
