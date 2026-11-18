@@ -24,6 +24,7 @@ GUESS_SECONDS = LEVELS[DEFAULT_LEVEL]["guess"]
 
 class ColorGame:
     name = "color"
+    max_players = 6
     actions = {"color_guess", "next_round"}
 
     def __init__(

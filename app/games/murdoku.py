@@ -308,6 +308,7 @@ def _clues_for(case: Case, sol: dict, murderer: int, rng: random.Random) -> list
 
 class MurdokuGame:
     name = "murdoku"
+    max_players = 6
     actions = {"md_place", "md_note", "md_clear", "next_round"}
 
     def __init__(

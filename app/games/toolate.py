@@ -70,6 +70,7 @@ CATEGORIES = [
 
 class TooLateGame:
     name = "toolate"
+    max_players = 6
     actions = {"tl_reroll", "tl_begin", "tl_pick", "tl_undo", "next_round"}
 
     def __init__(

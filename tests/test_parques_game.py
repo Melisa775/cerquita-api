@@ -129,3 +129,26 @@ def test_options():
         ParquesGame.from_options(["Ana", "Leo"], {"pieces": 3}, rng)
     with pytest.raises(ValueError):
         ParquesGame.from_options(["Ana"], {}, rng)
+
+
+def test_four_players_get_one_arm_each_and_take_turns():
+    g = ParquesGame(["Ana", "Leo", "Sol", "Mar"], pieces=4, rng=random.Random(3))
+    g.start()
+    assert sorted(g.arm.values()) == [0, 1, 2, 3]
+    g.turn = "Ana"
+    g.roll((1, 2))
+    g.roll((3, 4))
+    g.roll((5, 6))
+    assert g.turn == "Leo"
+
+
+def test_a_capture_reaches_any_rival():
+    g = ParquesGame(["Ana", "Leo", "Sol"], pieces=4, rng=random.Random(3))
+    g.start()
+    g.turn = "Ana"
+    # Sol has a piece on a square that isn't safe; Ana lands there
+    target = next(sq for sq in range(LOOP) if sq not in SAFE)
+    prog_sol = (target - g.exit_square("Sol")) % LOOP
+    g.pieces["Sol"][0] = prog_sol
+    g._capture(target)
+    assert g.pieces["Sol"][0] == -1

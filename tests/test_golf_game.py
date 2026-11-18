@@ -103,3 +103,17 @@ def test_options():
     assert len(GolfGame.from_options(["Ana", "Leo"], {"holes": 3}, rng).courses) == 3
     with pytest.raises(ValueError):
         GolfGame.from_options(["Ana", "Leo"], {"holes": 4}, rng)
+
+
+def test_turns_rotate_among_more_players():
+    from app.games.golf import GolfGame
+    import random as _r
+
+    g = GolfGame(["Ana", "Leo", "Sol"], rng=_r.Random(1))
+    g.start()
+    first = g.turn
+    g.done = {p: False for p in g.players}
+    assert g.next_shooter(first) == g.players[(g.players.index(first) + 1) % 3]
+    nxt = g.players[(g.players.index(first) + 1) % 3]
+    g.done[nxt] = True
+    assert g.next_shooter(first) == g.players[(g.players.index(first) + 2) % 3]

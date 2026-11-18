@@ -50,6 +50,7 @@ def questions() -> list[dict]:
 
 class TriviaGame:
     name = "trivia"
+    max_players = 6
     actions = {"tv_spin", "tv_crown", "tv_answer", "next_round"}
 
     def __init__(

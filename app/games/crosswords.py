@@ -77,6 +77,7 @@ def word_ok(word: str) -> bool:
 
 class CrosswordsGame:
     name = "crosswords"
+    max_players = 2
     actions = {"cw_play", "cw_exchange", "cw_pass"}
 
     def __init__(self, players: list[str], check: bool = True, rng: random.Random | None = None, timings: dict | None = None, words=None):

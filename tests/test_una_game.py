@@ -170,3 +170,64 @@ def test_random_games_finish_and_keep_108_cards():
             total = len(g.pile) + len(g.discard) + sum(len(h) for h in g.hands.values())
             assert total == 108
         assert g.phase == "finished"
+
+
+def make_four():
+    g = UnaGame(["Ana", "Leo", "Sol", "Mar"], goal=0, stacking=False, rng=random.Random(2))
+    g.start()
+    g.hands = {p: [card("r", "1"), card("r", "2"), card("r", "3")] for p in g.players}
+    g.discard = [card("r", "9")]
+    g.color = "r"
+    g.turn = "Ana"
+    g.drawn = None
+    g.pending = 0
+    g.catchable = None
+    g.said_una = {p: False for p in g.players}
+    g.direction = 1
+    return g
+
+
+def test_four_players_take_turns_in_order():
+    g = make_four()
+    g.play("Ana", g.hands["Ana"][0]["id"])
+    assert g.turn == "Leo"
+    g.play("Leo", g.hands["Leo"][0]["id"])
+    assert g.turn == "Sol"
+
+
+def test_skip_and_reverse_with_more_players():
+    g = make_four()
+    skip = card("r", "skip")
+    g.hands["Ana"].append(skip)
+    g.play("Ana", skip["id"])
+    assert g.turn == "Sol"  # Leo was skipped
+    rev = card("r", "reverse")
+    g.hands["Sol"].append(rev)
+    g.play("Sol", rev["id"])
+    assert g.direction == -1 and g.turn == "Leo"  # now it goes backwards
+
+
+def test_draw_two_hits_the_next_player_who_loses_the_turn():
+    g = make_four()
+    d2 = card("r", "draw2")
+    g.hands["Ana"].append(d2)
+    g.play("Ana", d2["id"])
+    assert len(g.hands["Leo"]) == 5 and g.turn == "Sol"
+
+
+def test_winner_scores_everyone_elses_cards():
+    g = make_four()
+    g.hands["Ana"] = [card("r", "5")]
+    g.play("Ana", g.hands["Ana"][0]["id"])
+    # three players left with 1 + 2 + 3 each
+    assert g.result == {"winner": "Ana", "points": 18}
+
+
+def test_anyone_can_catch_whoever_forgot_una():
+    g = make_four()
+    g.hands["Leo"] = [card("r", "1"), card("r", "2")]
+    g.turn = "Leo"
+    g.play("Leo", g.hands["Leo"][0]["id"])
+    assert g.catchable == "Leo"
+    g.catch("Mar")
+    assert len(g.hands["Leo"]) == 3

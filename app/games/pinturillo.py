@@ -52,6 +52,7 @@ def _points(raw) -> list[list[int]]:
 
 class PinturilloGame:
     name = "pinturillo"
+    max_players = 6
     actions = {"pz_choose", "pz_stroke", "pz_points", "pz_undo", "pz_clear", "pz_guess", "next_round"}
 
     def __init__(

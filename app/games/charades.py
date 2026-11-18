@@ -46,6 +46,7 @@ def deck() -> list[dict]:
 
 class CharadesGame:
     name = "charades"
+    max_players = 6
     actions = {"cg_start", "cg_hit", "cg_pass", "next_round"}
 
     def __init__(

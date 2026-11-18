@@ -109,6 +109,7 @@ def random_fleet(size: int, no_touch: bool, rng: random.Random) -> list[dict]:
 
 class BattleshipGame:
     name = "battleship"
+    max_players = 2
     actions = {"bn_place", "bn_unready", "bn_fire"}
 
     def __init__(

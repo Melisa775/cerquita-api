@@ -9,13 +9,15 @@ cards and 4 wild +4 cards.
   - If you can't (or don't want to) play, you draw one. If it is playable
     you may play it; otherwise the turn passes.
   - With two players, Skip and Reverse do the same thing: you play again.
-    +2 and +4 make the other player draw and you also play again.
+    +2 and +4 make the next player draw and lose their turn (with two, you play again).
   - With stacking enabled, a +2 can be answered with another +2 (or a +4)
     and whoever cannot answer draws the whole stack.
   - When you are down to one card you must call "¡Una!". If you don't and
-    your partner catches you before their next play, you draw 2.
-  - The hand goes to whoever runs out of cards; they score the other
-    player's cards (numbers: face value; action cards: 20; wilds: 50).
+    someone catches you before the next play, you draw 2.
+  - Skip jumps over the next player and reverse changes direction (with
+    two players both mean you play again).
+  - The hand goes to whoever runs out of cards; they score the cards left
+    in everyone else's hands (numbers: face value; action cards: 20; wilds: 50).
 """
 
 import random
@@ -45,6 +47,7 @@ def points(card: dict) -> int:
 
 class UnaGame:
     name = "una"
+    max_players = 4
     actions = {"un_play", "un_draw", "un_pass", "un_una", "un_catch", "next_round"}
 
     def __init__(self, players: list[str], goal: int = 0, stacking: bool = False, rng: random.Random | None = None, timings: dict | None = None):
@@ -68,6 +71,7 @@ class UnaGame:
         self.result: dict | None = None
         self.winner: str | None = None
         self.starter_index = self.rng.randrange(len(self.players))
+        self.direction = 1  # 1 = in join order, -1 = reversed
 
     @classmethod
     def from_options(cls, players: list[str], options: dict, rng: random.Random, timings: dict | None = None):
@@ -124,8 +128,10 @@ class UnaGame:
         pass
 
     # --- dealing ----------------------------------------------------------
-    def other(self, player: str) -> str:
-        return next(p for p in self.players if p != player)
+    def next_player(self, player: str, steps: int = 1) -> str:
+        """Who plays `steps` turns after `player`, following the current direction."""
+        i = self.players.index(player)
+        return self.players[(i + self.direction * steps) % len(self.players)]
 
     def _deal(self) -> None:
         deck = build_deck()
@@ -143,6 +149,7 @@ class UnaGame:
         self.pending = 0
         self.said_una = {p: False for p in self.players}
         self.catchable = None
+        self.direction = 1
         self.log = []
         self.result = None
         self.phase = "playing"
@@ -187,7 +194,7 @@ class UnaGame:
         return [c["id"] for c in self.hands[player] if self.playable(c)]
 
     def _close_catch_window(self, actor: str) -> None:
-        # Once the other player acts, whoever didn't call "¡Una!" can no longer be caught
+        # Once someone else acts, whoever didn't call "¡Una!" can no longer be caught
         if self.catchable and self.catchable != actor:
             self.catchable = None
 
@@ -207,8 +214,6 @@ class UnaGame:
         self.color = color if card["color"] is None else card["color"]
         self.drawn = None
         self.log.append({"player": player, "action": "play", "card": card, "color": self.color})
-        rival = self.other(player)
-
         if not self.hands[player]:
             self._end_round(player, card)
             return
@@ -216,18 +221,23 @@ class UnaGame:
             self.catchable = player
 
         value = card["value"]
+        if value == "reverse":
+            self.direction *= -1
+        victim = self.next_player(player)
         if value in ("draw2", "wild4"):
             amount = 2 if value == "draw2" else 4
             if self.stacking:
                 self.pending += amount
-                self.turn = rival
+                self.turn = victim
                 return
-            got = self._take(rival, amount)
-            self.log.append({"player": rival, "action": "drew", "count": len(got), "forced": True})
-            return  # the other player loses the turn: you keep playing
-        if value in ("skip", "reverse"):
-            return  # with two players, you play again
-        self.turn = rival
+            got = self._take(victim, amount)
+            self.log.append({"player": victim, "action": "drew", "count": len(got), "forced": True})
+            self.turn = self.next_player(player, 2)  # the victim loses the turn (with two, you play again)
+            return
+        if value == "skip" or (value == "reverse" and len(self.players) == 2):
+            self.turn = self.next_player(player, 2)  # skips one (with two players, you play again)
+            return
+        self.turn = victim
 
     def draw(self, player: str) -> None:
         if self.drawn:
@@ -237,21 +247,21 @@ class UnaGame:
             got = self._take(player, self.pending)
             self.log.append({"player": player, "action": "drew", "count": len(got), "forced": True})
             self.pending = 0
-            self.turn = self.other(player)
+            self.turn = self.next_player(player)
             return
         got = self._take(player, 1)
         self.log.append({"player": player, "action": "drew", "count": len(got)})
         if got and self.playable(got[0]):
             self.drawn = got[0]
         else:
-            self.turn = self.other(player)
+            self.turn = self.next_player(player)
 
     def pass_turn(self, player: str) -> None:
         if not self.drawn:
             raise ValueError("Primero roba una carta")
         self.drawn = None
         self.log.append({"player": player, "action": "pass"})
-        self.turn = self.other(player)
+        self.turn = self.next_player(player)
 
     # --- "¡Una!" call -----------------------------------------------------
     def say_una(self, player: str) -> None:
@@ -266,8 +276,8 @@ class UnaGame:
         self.log.append({"player": player, "action": "una"})
 
     def catch(self, player: str) -> None:
-        target = self.other(player)
-        if self.catchable != target:
+        target = self.catchable
+        if not target or target == player:
             raise ValueError("No hay a quién pillar")
         got = self._take(target, 2)
         self.catchable = None
@@ -275,12 +285,12 @@ class UnaGame:
 
     # --- end of hand ------------------------------------------------------
     def _end_round(self, winner: str, last_card: dict) -> None:
-        loser = self.other(winner)
-        # if the last card was +2/+4, the other player still draws before counting
+        # if the last card was +2/+4, the next player still draws before counting
         if last_card["value"] in ("draw2", "wild4"):
-            self._take(loser, (2 if last_card["value"] == "draw2" else 4) + self.pending)
+            self._take(self.next_player(winner), (2 if last_card["value"] == "draw2" else 4) + self.pending)
             self.pending = 0
-        gained = sum(points(c) for c in self.hands[loser])
+        # the winner scores the cards left in everyone else's hands
+        gained = sum(points(c) for p in self.players if p != winner for c in self.hands[p])
         self.scores[winner] += gained
         self.result = {"winner": winner, "points": gained}
         self.turn = None
@@ -314,6 +324,7 @@ class UnaGame:
             "playable": self.playable_ids(viewer) if viewer else [],
             "drawn": self.drawn["id"] if self.drawn and viewer == self.turn else None,
             "pending": self.pending,
+            "direction": self.direction,
             "saidUna": self.said_una,
             "catchable": self.catchable,
             "log": self.log[-8:],

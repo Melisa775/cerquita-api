@@ -141,6 +141,7 @@ def empty_hand() -> dict:
 
 class ColonosGame:
     name = "colonos"
+    max_players = 2
     actions = {
         "co_place", "co_roll", "co_build", "co_end", "co_discard", "co_robber",
         "co_bank", "co_offer", "co_accept", "co_reject", "co_cancel", "co_buy_dev", "co_play_dev",

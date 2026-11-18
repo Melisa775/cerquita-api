@@ -36,6 +36,7 @@ def norm(tile) -> tuple[int, int]:
 
 class DominoGame:
     name = "domino"
+    max_players = 2
     actions = {"dm_play", "dm_draw", "next_round"}
 
     def __init__(
