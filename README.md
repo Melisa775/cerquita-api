@@ -38,6 +38,7 @@ FastAPI + WebSockets. Rooms live in memory; the server is the single source of t
 - **Una (UNO-style) for two.** A 108-card deck with two-player rules (Skip and Reverse give another turn; +2 and +4 make the other draw and give another turn), drawing with the option to play the drawn card, and optional stacking of +2 and +4. Calling "¡Una!" has a window: if someone is left with one card without calling it, the other can catch them until they make their own move. When the deck runs out the discard pile is reshuffled; a test plays 25 random games and checks that there are always 108 cards.
 - **Mini golf with server-side physics.** A shot is an angle and a power; the server simulates it at 240 steps per second (walls, bumpers, sand, water, slopes, portals and the hole, which pulls a slow ball in slightly) and sends the path sampled at 60 frames per second so both browsers animate it identically. While someone aims, the direction and power travel as lightweight events (`relay`) so their partner sees it live. A test uses brute-force search to check that all nine holes can be sunk and that the ball never leaves the green.
 - **Colonos (Catan-style) with its own geometry.** The board is 19 hexagons in axial coordinates; their 54 vertices and 72 edges are computed once and the rules follow from them: distance between settlements, connected roads (a rival settlement cuts the connection), coastal ports, production by number and the longest road via depth-first search. Terrains and numbers are shuffled without leaving two 6/8 next to each other. Each hand and each development card only goes to its owner, and the server sends the legal build spots, so the browser doesn't need the rules. A test plays full random games and checks that cards are never created or lost (bank + hands = 19 of each resource).
+- **Mazmorras, a d20 dungeon crawl with an automatic or human Dungeon Master.** A simplified, original take on classic fantasy role-play: four classes (fighter, wizard, rogue, cleric), d20 + modifier against armor or a difficulty, criticals, spells with limited uses, short rests, potions and three levels. Two handcrafted adventures of six rooms each, with fights, traps, chests and checks. Monsters scale with the party size. With the automatic DM the server narrates and plays the monsters through the room's bot loop; with a human DM that person narrates, asks for checks, adds monsters, heals or hurts, moves the party and decides each monster's target. Bot companions (`mazmorras_bot.py`) fill the party, and a test plays whole adventures with bots only.
 - **Más cerca, connection without pressure.** About 300 original questions in three levels (icebreaker, deep and deeper) plus wildcards with small actions, in an editable file (`app/data/deeper.txt`; a card starting with `[ambos]` is answered by both). Turns alternate, cards don't repeat until a level runs out, and wildcards show up now and then but never twice in a row. Going deeper and ending the game need both players' votes, so nobody is pushed further than they want. The closing letters are only sent to their author until both are written, and then revealed at the same time.
 - **Each player sees only their own state.** The room builds a different snapshot for each connection, so in Enredo de letras each player receives their own words and only the other player's count.
 - **Perceptual scoring.** Players pick colors in HSB (hue, saturation, brightness), but the distance is measured in CIELAB (ΔE76), which is closer to how the eye perceives the difference between colors.
@@ -78,6 +79,7 @@ Client → server:
 { "type": "start_game", "game": "una", "goal": 0, "stacking": false }   // goal: 0 (single hand) | 200 | 500
 { "type": "start_game", "game": "golf", "holes": 9 }   // 3 | 6 | 9 holes
 { "type": "start_game", "game": "colonos", "goal": 10, "friendly": false }   // goal 8 | 10; friendly: friendly robber
+{ "type": "start_game", "game": "mazmorras", "adventure": "cripta", "dm": "auto", "companions": 1 }   // cripta | cueva; dm: "auto" or a player's name; 0-4 bot companions
 { "type": "start_game", "game": "deeper", "start": "icebreaker", "wildcards": true, "letter": true }   // icebreaker | deep | deeper; letter: closing letter
 { "type": "next_round" }
 { "type": "back_to_lobby" }
@@ -184,6 +186,18 @@ Client → server:
 { "type": "co_buy_dev" }
 { "type": "co_play_dev", "card": "year_of_plenty", "resources": ["grain", "ore"] }   // knight | road_building | year_of_plenty | monopoly
 
+// Mazmorras (heroes)
+{ "type": "mz_pick", "cls": "mago" }                     // guerrero | mago | picaro | clerigo
+{ "type": "mz_move", "room": "pasillo" }  { "type": "mz_feature" }  { "type": "mz_rest" }
+{ "type": "mz_attack", "target": "m2" }  { "type": "mz_defend" }  { "type": "mz_potion", "target": "Ana" }
+{ "type": "mz_power", "power": "curar_heridas", "target": "Ana" }   // the target is a hero or a monster id
+{ "type": "mz_roll" }  { "type": "mz_skip" }               // roll a check the DM asked for; skip the current turn
+// Mazmorras (human Dungeon Master only)
+{ "type": "mz_narrate", "text": "Se oye un rugido…" }
+{ "type": "mz_check", "hero": "Ana", "ability": "des", "dc": 12, "reason": "Saltar el foso" }
+{ "type": "mz_spawn", "monster": "goblin" }  { "type": "mz_give" }  { "type": "mz_hp", "hero": "Leo", "amount": -4 }
+{ "type": "mz_monster", "target": "Leo" }                 // the monster on turn attacks; "auto" lets it choose
+
 // Más cerca
 { "type": "dp_next", "at": 4 }    // next card (at: the card being viewed, so a double tap is ignored)
 { "type": "dp_skip", "at": 4 }    // another card for the same player
@@ -256,6 +270,9 @@ app/
   games/golf_physics.py Mini golf physics (bounces, sand, water, slopes, portals)
   games/golf_courses.py The nine holes
   games/colonos.py Colonos: island geometry, placement, production, robber, trading, cards and awards
+  games/mazmorras.py Mazmorras: party, exploring, checks, turn-based fights, levels and the DM's tools
+  games/mazmorras_data.py Mazmorras classes, monsters and the two adventures
+  games/mazmorras_bot.py The automatic Dungeon Master and the bot companions
   games/deeper.py  Más cerca: question cards by level, wildcards, votes to go deeper and sealed closing letters
   dictionary.py    Spanish dictionary (data/words.txt.gz, MIT license)
   spelling.py      Stop spell checking: cities, dictionary, extras and suggestions
