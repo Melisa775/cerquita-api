@@ -1,25 +1,27 @@
-"""Colonos: an island-settling game for two (Catan-style).
+"""Colonos: an island-settling game for 2 to 4 players (Catan-style), with
+optional bots that play by themselves (see colonos_bot.py).
 
 The board is an island of 19 hexes laid out at random: forests (wood), hills
 (brick), pastures (wool), fields (grain), mountains (ore) and one desert.
 Each hex has a number; when the dice show it, the surrounding settlements and
 cities produce.
 
-  - Setup: two settlements with a road each, in snake order: A, B, B, A.
+  - Setup: two settlements with a road each, in snake order: A, B, C, C, B, A.
     The second settlement yields one card per terrain it touches.
   - On your turn you roll, produce, and then build, trade or play a
     development card.
   - On a 7 nobody produces: anyone with more than 7 cards discards half, and
-    the roller moves the robber (blocking a hex) and steals a card.
+    the roller moves the robber (blocking a hex) and steals a card from
+    someone with a building there (choosing whom, if there are several).
   - Costs: road = wood + brick; settlement = wood + brick + wool + grain;
     city = 2 grain + 3 ore; development card = wool + grain + ore.
-  - Trading: 4:1 with the bank, 3:1 or 2:1 with ports, and with the partner
-    by proposing an exchange they accept or decline.
+  - Trading: 4:1 with the bank, 3:1 or 2:1 with ports, and with the others
+    by proposing an exchange anyone can accept (or everyone declines).
   - Points: settlement 1, city 2, longest road (5+) 2, largest army
     (3+ knights) 2, plus victory point cards. You win by reaching the goal
     on your own turn.
 
-The server keeps each hand private; of the other player only the card count is known.
+The server keeps each hand private; of the others only the card count is known.
 """
 
 import math
@@ -40,6 +42,7 @@ PIECES = {"road": 15, "settlement": 5, "city": 4}
 DEV_DECK = ["knight"] * 14 + ["victory_point"] * 5 + ["road_building"] * 2 + ["year_of_plenty"] * 2 + ["monopoly"] * 2
 BANK_EACH = 19
 GOALS = (8, 10)
+BOT_NAMES = ["Robi 🤖", "Tuerca 🤖", "Chispa 🤖"]
 
 
 # --- board geometry ----------------------------------------------------------
@@ -141,14 +144,16 @@ def empty_hand() -> dict:
 
 class ColonosGame:
     name = "colonos"
-    max_players = 2
+    max_players = 4  # people and bots together
     actions = {
-        "co_place", "co_roll", "co_build", "co_end", "co_discard", "co_robber",
+        "co_place", "co_roll", "co_build", "co_end", "co_discard", "co_robber", "co_steal",
         "co_bank", "co_offer", "co_accept", "co_reject", "co_cancel", "co_buy_dev", "co_play_dev",
     }
 
-    def __init__(self, players: list[str], goal: int = 10, friendly: bool = False, rng: random.Random | None = None, timings: dict | None = None, board: dict | None = None):
-        self.players = list(players)
+    def __init__(self, players: list[str], goal: int = 10, friendly: bool = False, rng: random.Random | None = None, timings: dict | None = None, board: dict | None = None, bots: list[str] | None = None):
+        self.bots = list(bots or [])
+        self.players = list(players) + self.bots
+        self.order: list[str] = list(self.players)  # turn order, decided at the start
         self.goal = goal
         self.friendly = friendly
         self.rng = rng or random.Random()
@@ -181,22 +186,31 @@ class ColonosGame:
         self.after_robber = "main"
         self.dev_played = False
         self.free_roads = 0
-        self.offer: dict | None = None
+        self.offer: dict | None = None  # {"from", "give", "get", "rejected": [...]}
+        self.steal_from: list[str] = []  # after moving the robber onto several rivals
+        self._bot_actions = 0  # actions of the bot on turn, to cap its turn
         self.log: list[dict] = []
         self.last_steal: dict | None = None
         self.winner: str | None = None
 
     @classmethod
     def from_options(cls, players, options, rng, timings=None):
-        if len(players) < 2:
-            raise ValueError("Colonos se juega entre los dos. Esperen a que entre tu pareja.")
         try:
             goal = int(options.get("goal", 10))
+            n_bots = int(options.get("bots", 0))
         except (TypeError, ValueError) as exc:
-            raise ValueError("Meta no válida") from exc
+            raise ValueError("Opciones no válidas") from exc
         if goal not in GOALS:
             raise ValueError("La meta es 8 o 10 puntos")
-        return cls(players, goal=goal, friendly=bool(options.get("friendly", False)), rng=rng)
+        if not 0 <= n_bots <= 3:
+            raise ValueError("Pueden ser de 0 a 3 bots")
+        if len(players) + n_bots < 2:
+            raise ValueError("Hacen falta al menos dos jugadores: invita a alguien o agrega un bot.")
+        if len(players) + n_bots > cls.max_players:
+            raise ValueError(f"Colonos es para máximo {cls.max_players}, contando los bots")
+        taken = set(players)
+        bots = [n for n in BOT_NAMES if n not in taken][:n_bots]
+        return cls(players, goal=goal, friendly=bool(options.get("friendly", False)), rng=rng, bots=bots)
 
     # --- room interface -------------------------------------------------
     @property
@@ -212,14 +226,65 @@ class ColonosGame:
         return None
 
     def start(self):
-        first = self.rng.choice(self.players)
-        second = self.other(first)
-        self.setup_order = [first, second, second, first]
-        self.turn = first
+        i = self.rng.randrange(len(self.players))
+        self.order = self.players[i:] + self.players[:i]
+        self.setup_order = self.order + self.order[::-1]
+        self.turn = self.order[0]
         self.phase = "setup"
 
     def on_timeout(self):
         pass
+
+    # --- bots -----------------------------------------------------------
+    def bot_move(self):
+        """(bot, message) if a bot has to act now, else None (see colonos_bot.py)."""
+        from app.games.colonos_bot import next_bot_move
+
+        return next_bot_move(self)
+
+    def play_bot(self) -> bool:
+        """Plays one bot action. A bot never gets stuck: if its move is refused,
+        it falls back to the simplest safe one."""
+        move = self.bot_move()
+        if not move:
+            return False
+        bot, msg = move
+        try:
+            self.handle(bot, msg)
+        except ValueError:
+            fallback = self._bot_fallback(bot)
+            if not fallback:
+                return False
+            try:
+                self.handle(bot, fallback)
+            except ValueError:
+                return False
+        if self.turn == bot and self.phase == "main":
+            self._bot_actions += 1
+        return True
+
+    def _bot_fallback(self, bot):
+        if self.offer and self.offer["from"] != bot and bot not in self.offer["rejected"]:
+            return {"type": "co_reject"}
+        if self.phase == "discard" and bot in self.discard_need:
+            hand = dict(self.hands[bot])
+            drop = {r: 0 for r in RESOURCES}
+            for _ in range(self.discard_need[bot]):
+                r = max(RESOURCES, key=lambda x: hand[x])
+                hand[r] -= 1
+                drop[r] += 1
+            return {"type": "co_discard", "cards": drop}
+        if self.turn != bot:
+            return None
+        if self.phase == "robber":
+            return {"type": "co_robber", "hex": self.legal_robber_hexes()[0]}
+        if self.phase == "steal":
+            return {"type": "co_steal", "victim": self.steal_from[0]}
+        if self.phase == "roll":
+            return {"type": "co_roll"}
+        if self.phase == "main":
+            return {"type": "co_end"}
+        return None
 
     def remove_player(self, player):
         pass
@@ -234,6 +299,8 @@ class ColonosGame:
         if kind in ("co_accept", "co_reject"):
             self.answer_offer(player, kind == "co_accept")
             return
+        if player not in self.players:
+            raise ValueError("No estás en esta partida")
         if player != self.turn:
             raise ValueError(f"Le toca a {self.turn}")
         if kind == "co_place":
@@ -246,6 +313,8 @@ class ColonosGame:
             self.end_turn(player)
         elif kind == "co_robber":
             self.move_robber(player, msg.get("hex"))
+        elif kind == "co_steal":
+            self.steal(player, msg.get("victim"))
         elif kind == "co_bank":
             self.bank_trade(player, msg.get("give"), msg.get("get"))
         elif kind == "co_offer":
@@ -259,8 +328,8 @@ class ColonosGame:
         self._check_win(player)
 
     # --- helpers --------------------------------------------------------
-    def other(self, player):
-        return next(p for p in self.players if p != player)
+    def next_player(self, player):
+        return self.order[(self.order.index(player) + 1) % len(self.order)]
 
     def _log(self, **entry):
         self.log.append(entry)
@@ -431,17 +500,35 @@ class ColonosGame:
         if hex_index not in self.legal_robber_hexes():
             raise ValueError("Ahí no se puede poner el ladrón")
         self.robber = hex_index
-        rival = self.other(player)
-        touches = any(self.buildings.get(v, {}).get("owner") == rival for v in GEO["hex_vertices"][hex_index])
+        # rivals with a building on that hex and cards in hand
+        owners = {self.buildings[v]["owner"] for v in GEO["hex_vertices"][hex_index] if v in self.buildings}
+        victims = [p for p in self.order if p in owners and p != player and sum(self.hands[p].values())]
+        self._log(player=player, action="robber", hex=hex_index)
+        if len(victims) > 1:
+            self.steal_from = victims  # whoever moved the robber chooses
+            self.phase = "steal"
+            return
+        self._steal_from(player, victims[0] if victims else None)
+
+    def steal(self, player, victim):
+        if self.phase != "steal":
+            raise ValueError("Ahora no hay a quién robarle")
+        if victim not in self.steal_from:
+            raise ValueError("Elige a alguien que tenga algo junto al ladrón")
+        self._steal_from(player, victim)
+
+    def _steal_from(self, player, victim):
         stolen = None
-        if touches:
-            pool = [r for r in RESOURCES for _ in range(self.hands[rival][r])]
+        if victim:
+            pool = [r for r in RESOURCES for _ in range(self.hands[victim][r])]
             if pool:
                 stolen = self.rng.choice(pool)
-                self.hands[rival][stolen] -= 1
+                self.hands[victim][stolen] -= 1
                 self.hands[player][stolen] += 1
-        self._log(player=player, action="robber", hex=hex_index, stole=bool(stolen))
-        self.last_steal = {"thief": player, "victim": rival, "res": stolen}
+        if stolen:
+            self._log(player=player, action="steal", victim=victim)
+        self.last_steal = {"thief": player, "victim": victim, "res": stolen} if victim else None
+        self.steal_from = []
         self.phase = self.after_robber
 
     # --- building -------------------------------------------------------
@@ -484,8 +571,9 @@ class ColonosGame:
         if self.phase != "main":
             raise ValueError("Primero lanza los dados" if self.phase == "roll" else "Termina lo que estás haciendo")
         self.offer = None
-        self.turn = self.other(player)
+        self.turn = self.next_player(player)
         self.turn_no += 1
+        self._bot_actions = 0
         self.dice = None
         self.dev_played = False
         self.phase = "roll"
@@ -536,17 +624,21 @@ class ColonosGame:
             raise ValueError("Pon qué das y qué pides")
         if any(self.hands[player][r] < n for r, n in give.items()):
             raise ValueError("No tienes lo que ofreces")
-        self.offer = {"from": player, "give": give, "get": get}
+        self.offer = {"from": player, "give": give, "get": get, "rejected": []}
         self._log(player=player, action="offer")
 
     def answer_offer(self, player, accept):
-        if not self.offer or self.offer["from"] == player:
+        if not self.offer or self.offer["from"] == player or player not in self.players or player in self.offer["rejected"]:
             raise ValueError("No hay ninguna oferta para ti")
         o = self.offer
-        self.offer = None
         if not accept:
+            # the offer stays open for the others until everyone has said no
+            o["rejected"].append(player)
             self._log(player=player, action="reject")
+            if len(o["rejected"]) >= len(self.players) - 1:
+                self.offer = None
             return
+        self.offer = None
         a, b = o["from"], player
         if any(self.hands[a][r] < n for r, n in o["give"].items()):
             raise ValueError(f"{a} ya no tiene lo que ofreció")
@@ -608,9 +700,11 @@ class ColonosGame:
                 self._give(player, r)
         elif kind == "monopoly":
             res = msg["resource"]
-            rival = self.other(player)
-            n = self.hands[rival][res]
-            self.hands[rival][res] = 0
+            n = 0
+            for rival in self.players:
+                if rival != player:
+                    n += self.hands[rival][res]
+                    self.hands[rival][res] = 0
             self.hands[player][res] += n
             self._log(player=player, action="monopoly", resource=res, count=n)
 
@@ -700,6 +794,8 @@ class ColonosGame:
                     legal["city"] = self.legal_cities(viewer) if self.pieces_left(viewer, "city") > 0 else []
             elif self.phase == "robber":
                 legal["robber"] = self.legal_robber_hexes()
+            elif self.phase == "steal":
+                legal["steal"] = self.steal_from
         players = {}
         for p in self.players:
             players[p] = {
@@ -714,6 +810,8 @@ class ColonosGame:
             "name": self.name,
             "phase": self.phase,
             "players": self.players,
+            "order": self.order,
+            "bots": self.bots,
             "turn": self.turn,
             "turnNo": self.turn_no,
             "setupNeed": self.setup_need if self.phase == "setup" else None,
@@ -747,5 +845,5 @@ class ColonosGame:
             "stolen": self.last_steal if self.last_steal and viewer in (self.last_steal["thief"], self.last_steal["victim"]) else None,
             "winner": self.winner,
             "costs": COSTS,
-            "options": {"goal": self.goal, "friendly": self.friendly},
+            "options": {"goal": self.goal, "friendly": self.friendly, "bots": len(self.bots)},
         }

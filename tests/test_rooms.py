@@ -302,3 +302,20 @@ async def test_each_game_has_its_own_player_limit(room):
     # Stop is for up to six
     await room.handle("Ana", {"type": "start_game", "game": "stop", "rounds": 1})
     assert room.game.players == ["Ana", "Leo", "Sol"]
+
+
+async def test_bots_play_by_themselves_in_the_room():
+    room = Room("BOTSS", timings={"bot": 0.001})
+    await room.join("Ana", FakeConn())
+    # alone in the room, with two bots
+    await room.handle("Ana", {"type": "start_game", "game": "colonos", "bots": 2})
+    game = room.game
+    assert len(game.players) == 3 and game.bots
+    for _ in range(200):
+        await asyncio.sleep(0.005)
+        if game.turn == "Ana":
+            break
+    # the bots placed their pieces until it was Ana's turn
+    assert game.turn == "Ana"
+    assert any(b["owner"] in game.bots for b in game.buildings.values()) or game.order[0] == "Ana"
+    room.close()
