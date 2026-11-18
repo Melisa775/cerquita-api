@@ -85,7 +85,7 @@ def test_production_and_cities_double():
 def test_seven_discard_and_robber_steal():
     g = make()
     do_setup(g)
-    me, rival = g.turn, g.other(g.turn)
+    me, rival = g.turn, g.next_player(g.turn)
     give(g, rival, wood=4, brick=4)  # 8 or more cards
     n = sum(g.hands[rival].values())
     g.roll(forced=(3, 4))
@@ -153,7 +153,7 @@ def test_bank_and_port_rates():
 def test_offer_between_players():
     g = make()
     do_setup(g)
-    a, b = g.turn, g.other(g.turn)
+    a, b = g.turn, g.next_player(g.turn)
     g.phase = "main"
     give(g, a, wool=2)
     give(g, b, ore=1)
@@ -184,7 +184,7 @@ def test_dev_cards_rules():
     # on the next turn it's allowed
     g.end_turn(p)
     g.turn, g.turn_no, g.phase = p, g.turn_no + 1, "main"
-    rival = g.other(p)
+    rival = g.next_player(p)
     give(g, rival, wool=3)
     n = g.hands[rival]["wool"]
     g.play_dev(p, "monopoly", {"resource": "wool"})
@@ -292,3 +292,83 @@ def test_options():
         ColonosGame.from_options(["Ana", "Leo"], {"goal": 12}, rng)
     with pytest.raises(ValueError):
         ColonosGame.from_options(["Ana"], {}, rng)
+
+
+# --- more players and bots ------------------------------------------------------
+
+
+def test_setup_snakes_through_four_players():
+    g = ColonosGame(["Ana", "Leo", "Sol", "Mar"], rng=random.Random(5))
+    g.start()
+    assert g.setup_order == g.order + g.order[::-1] and len(g.setup_order) == 8
+    assert g.turn == g.order[0]
+
+
+def test_bots_fill_the_table_and_play_a_whole_game_alone():
+    g = ColonosGame.from_options([], {"goal": 8, "bots": 3}, rng=random.Random(11))
+    assert g.bots == g.players and len(g.players) == 3
+    g.start()
+    steps = 0
+    while g.phase != "finished" and steps < 20000:
+        assert g.play_bot(), f"a bot got stuck in phase {g.phase}"
+        steps += 1
+    assert g.phase == "finished" and g.winner in g.bots
+
+
+def test_bot_waits_for_people_and_answers_offers():
+    g = ColonosGame.from_options(["Ana"], {"goal": 10, "bots": 1}, rng=random.Random(3))
+    g.start()
+    # play the setup: Ana by hand (best legal spot), the bot by itself
+    while g.phase == "setup":
+        if g.turn == "Ana":
+            if g.setup_need == "settlement":
+                g.handle("Ana", {"type": "co_place", "target": g.legal_settlements("Ana", setup=True)[0]})
+            else:
+                g.handle("Ana", {"type": "co_place", "target": g.legal_roads("Ana", setup_vertex=g.last_setup_vertex)[0]})
+        else:
+            assert g.play_bot()
+    if g.turn != "Ana":
+        while g.turn != "Ana":
+            assert g.play_bot()
+    assert g.bot_move() is None  # Ana's turn: the bot waits
+    g.handle("Ana", {"type": "co_roll"})
+    if g.phase == "main":
+        bot = g.bots[0]
+        g.hands["Ana"] = {r: 3 for r in RESOURCES}
+        g.hands[bot] = {r: 2 for r in RESOURCES}
+        g.handle("Ana", {"type": "co_offer", "give": {"wood": 1}, "get": {"ore": 3}})
+        assert g.bot_move()[0] == bot
+        g.play_bot()
+        assert g.offer is None  # a bad deal: declined, and with one rival the offer closes
+
+
+def test_robber_on_several_rivals_lets_you_choose():
+    g = ColonosGame(["Ana", "Leo", "Sol"], rng=random.Random(2))
+    g.start()
+    h = next(i for i, t in enumerate(g.terrains) if t != "desert")
+    ring = GEO["hex_vertices"][h]
+    g.buildings = {ring[0]: {"owner": "Leo", "kind": "settlement"}, ring[3]: {"owner": "Sol", "kind": "settlement"}}
+    g.hands["Leo"]["wood"] = 2
+    g.hands["Sol"]["ore"] = 1
+    g.turn, g.phase, g.after_robber = "Ana", "robber", "main"
+    g.move_robber("Ana", h)
+    assert g.phase == "steal" and set(g.steal_from) == {"Leo", "Sol"}
+    g.handle("Ana", {"type": "co_steal", "victim": "Sol"})
+    assert g.hands["Ana"]["ore"] == 1 and g.phase == "main"
+
+
+def test_offer_is_open_to_everyone_and_monopoly_takes_from_all():
+    g = ColonosGame(["Ana", "Leo", "Sol"], rng=random.Random(2))
+    g.start()
+    g.phase, g.turn = "main", "Ana"
+    for p in g.players:
+        g.hands[p] = {r: 2 for r in RESOURCES}
+    g.make_offer("Ana", {"wood": 1}, {"ore": 1})
+    g.answer_offer("Leo", False)
+    assert g.offer is not None  # Sol can still take it
+    g.answer_offer("Sol", True)
+    assert g.hands["Sol"]["wood"] == 3 and g.offer is None
+    g.devs["Ana"] = [{"kind": "monopoly", "turn": 0}]
+    g.turn_no = 1
+    g.play_dev("Ana", "monopoly", {"resource": "grain"})
+    assert g.hands["Ana"]["grain"] == 6 and g.hands["Leo"]["grain"] == 0 and g.hands["Sol"]["grain"] == 0

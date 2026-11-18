@@ -60,6 +60,7 @@ class Room:
         self._timer: asyncio.Task | None = None
         self._timer_for: tuple | None = None  # (game, phase key)
         self._phase_ends_at: float | None = None
+        self._bot_task: asyncio.Task | None = None
         self._lock = asyncio.Lock()
 
     # --- players --------------------------------------------------------
@@ -121,6 +122,7 @@ class Room:
             else:
                 raise RoomError("Acción desconocida")
             self._sync_timer()
+            self._wake_bots()
             if relay is not None:
                 # Very frequent changes (like Pinturillo strokes) travel as a small
                 # event instead of the full room snapshot.
@@ -178,8 +180,33 @@ class Room:
         self._timer_for = None
         self._phase_ends_at = None
 
+    # --- bots -----------------------------------------------------------
+    def _wake_bots(self) -> None:
+        """If the game has bots and one has to act, play their moves one by one
+        with a short pause (so people can follow them)."""
+        game = self.game
+        if not game or not hasattr(game, "bot_move") or not game.bot_move():
+            return
+        if self._bot_task and not self._bot_task.done():
+            return
+        self._bot_task = asyncio.create_task(self._run_bots(game))
+
+    async def _run_bots(self, game) -> None:
+        pause = self.timings.get("bot", 0.9)
+        while True:
+            await asyncio.sleep(pause)
+            async with self._lock:
+                if self.game is not game or not game.bot_move():
+                    return
+                if not game.play_bot():
+                    return
+                self._sync_timer()
+                await self.broadcast()
+
     def close(self) -> None:
         self._cancel_timer()
+        if self._bot_task and not self._bot_task.done():
+            self._bot_task.cancel()
 
     # --- state ----------------------------------------------------------
     def snapshot(self, viewer: str | None = None) -> dict:
