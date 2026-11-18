@@ -16,6 +16,7 @@ from app.games.domino import DominoGame
 from app.games.golf import GolfGame
 from app.games.guesswho import GuessWhoGame
 from app.games.hangman import HangmanGame
+from app.games.mazmorras import MazmorrasGame
 from app.games.murdoku import MurdokuGame
 from app.games.parques import ParquesGame
 from app.games.pinturillo import PinturilloGame
@@ -28,7 +29,7 @@ from app.games.wordsearch import WordSearchGame
 
 MAX_PLAYERS = 6  # people in a room; each game has its own max_players
 CODE_ALPHABET = "".join(c for c in string.ascii_uppercase if c not in "IO")
-GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame, GuessWhoGame, PinturilloGame, CharadesGame, MurdokuGame, TriviaGame, ChessGame, BattleshipGame, DominoGame, ParquesGame, CrosswordsGame, UnaGame, GolfGame, ColonosGame, DeeperGame)}
+GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame, GuessWhoGame, PinturilloGame, CharadesGame, MurdokuGame, TriviaGame, ChessGame, BattleshipGame, DominoGame, ParquesGame, CrosswordsGame, UnaGame, GolfGame, ColonosGame, DeeperGame, MazmorrasGame)}
 GAME_ACTIONS = set().union(*(cls.actions for cls in GAMES.values()))
 
 
