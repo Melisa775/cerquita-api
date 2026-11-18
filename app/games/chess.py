@@ -34,6 +34,7 @@ REASONS = {
 
 class ChessGame:
     name = "chess"
+    max_players = 2
     actions = {"ch_move", "ch_resign", "ch_draw", "ch_draw_decline", "ch_undo", "ch_undo_decline"}
 
     def __init__(

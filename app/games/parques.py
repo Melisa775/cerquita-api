@@ -29,18 +29,20 @@ HOME = 71  # heaven
 EXIT_OFFSET = 13  # exit square of each arm (next to its jail)
 SAFE_OFFSETS = (4, 13)  # safe squares of each arm
 SAFE = {ARM * k + o for k in range(4) for o in SAFE_OFFSETS}
-SEATS = (0, 2)  # arms of the two players: opposite corners
+SEATS = {2: (0, 2), 3: (0, 1, 2), 4: (0, 1, 2, 3)}  # arms by number of players (two face each other)
 
 
 class ParquesGame:
     name = "parques"
+    max_players = 4
     actions = {"pa_roll", "pa_move", "pa_release", "pa_bonus"}
 
     def __init__(self, players: list[str], pieces: int = 4, rng: random.Random | None = None, timings: dict | None = None):
         self.players = list(players)
         self.rng = rng or random.Random()
         self.n_pieces = pieces
-        self.arm = {p: SEATS[i] for i, p in enumerate(self.players)}
+        seats = SEATS.get(len(self.players), (0, 2, 1, 3))
+        self.arm = {p: seats[i] for i, p in enumerate(self.players)}
         self.pieces = {p: [-1] * pieces for p in self.players}
         self.phase = "idle"
         self.turn: str | None = None
@@ -101,8 +103,8 @@ class ParquesGame:
         pass
 
     # --- geometry -------------------------------------------------------
-    def other(self, player: str) -> str:
-        return next(p for p in self.players if p != player)
+    def next_player(self, player: str) -> str:
+        return self.players[(self.players.index(player) + 1) % len(self.players)]
 
     def exit_square(self, player: str) -> int:
         return ARM * self.arm[player] + EXIT_OFFSET
@@ -211,12 +213,16 @@ class ParquesGame:
         if sq in SAFE and not on_exit:
             return
         me = self.turn
-        rival = self.other(me)
-        caught = [i for i, p in enumerate(self.pieces[rival]) if self.square(rival, p) == sq]
-        for i in caught:
-            self.pieces[rival][i] = -1
-        if caught:
-            self.log.append({"player": me, "action": "capture", "count": len(caught)})
+        count = 0
+        for rival in self.players:
+            if rival == me:
+                continue
+            caught = [i for i, p in enumerate(self.pieces[rival]) if self.square(rival, p) == sq]
+            for i in caught:
+                self.pieces[rival][i] = -1
+            count += len(caught)
+        if count:
+            self.log.append({"player": me, "action": "capture", "count": count})
 
     def _drop_dead_dice(self) -> None:
         """Drop dice that can no longer be used and close the move if nothing is left."""
@@ -253,7 +259,7 @@ class ParquesGame:
         self._next_turn()
 
     def _next_turn(self) -> None:
-        self.turn = self.other(self.turn)
+        self.turn = self.next_player(self.turn)
         self.unused = []
         self.pairs_in_row = 0
         self.attempts = 0

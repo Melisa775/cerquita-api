@@ -99,6 +99,7 @@ def roll(size: int, rng: random.Random) -> list[str]:
 
 class BoggleGame:
     name = "boggle"
+    max_players = 6
     actions = {"boggle_word", "boggle_done", "boggle_toggle", "next_round"}
 
     def __init__(

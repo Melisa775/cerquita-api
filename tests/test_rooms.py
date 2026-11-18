@@ -23,10 +23,10 @@ def room():
 
 
 async def test_join_limits(room):
-    await room.join("Ana", FakeConn())
-    await room.join("Leo", FakeConn())
+    for name in ("Ana", "Leo", "Sol", "Mar", "Teo", "Ivy"):
+        await room.join(name, FakeConn())
     with pytest.raises(RoomError):
-        await room.join("Tercero", FakeConn())
+        await room.join("Séptimo", FakeConn())
     with pytest.raises(RoomError):
         await room.join("Ana", FakeConn())
     with pytest.raises(RoomError):
@@ -290,3 +290,15 @@ def test_name_taken_error_has_a_code_the_client_can_retry():
 
     err = RoomError("Ese nombre ya está en la sala", code="name_taken")
     assert err.code == "name_taken" and str(err) == "Ese nombre ya está en la sala"
+
+
+async def test_each_game_has_its_own_player_limit(room):
+    for name in ("Ana", "Leo", "Sol"):
+        await room.join(name, FakeConn())
+    # chess is for two: it can't start with three people in the room
+    with pytest.raises(RoomError) as err:
+        await room.handle("Ana", {"type": "start_game", "game": "chess"})
+    assert err.value.code == "too_many_players"
+    # Stop is for up to six
+    await room.handle("Ana", {"type": "start_game", "game": "stop", "rounds": 1})
+    assert room.game.players == ["Ana", "Leo", "Sol"]

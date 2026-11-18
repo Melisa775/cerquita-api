@@ -6,7 +6,7 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.dictionary import spanish
-from app.rooms import RoomError, RoomManager
+from app.rooms import MAX_PLAYERS, RoomError, RoomManager
 from app.spelling import cities
 
 EMPTY_ROOM_TTL_SECONDS = 120  # grace period so a page reload doesn't lose the room
@@ -52,7 +52,7 @@ def get_room(code: str):
     room = manager.get(code)
     if not room:
         raise HTTPException(404, "Esa sala no existe")
-    return {"code": room.code, "players": room.players, "full": len(room.players) >= 2}
+    return {"code": room.code, "players": room.players, "full": len(room.players) >= MAX_PLAYERS}
 
 
 @app.websocket("/ws/{code}")

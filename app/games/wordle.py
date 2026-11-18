@@ -57,6 +57,7 @@ def score_guess(guess: str, answer: str) -> list[str]:
 
 class WordleGame:
     name = "wordle"
+    max_players = 6
     actions = {"wordle_guess", "wordle_draft", "next_round"}
 
     def __init__(

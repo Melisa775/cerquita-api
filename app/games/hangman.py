@@ -79,6 +79,7 @@ def clean_word(raw) -> str:
 
 class HangmanGame:
     name = "hangman"
+    max_players = 6
     actions = {"hangman_word", "hangman_guess", "hangman_solve", "next_round"}
 
     def __init__(

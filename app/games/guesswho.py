@@ -71,6 +71,7 @@ MAX_QUESTION = 120
 
 class GuessWhoGame:
     name = "guesswho"
+    max_players = 2
     actions = {"gw_flip", "gw_ask", "gw_ask_free", "gw_answer", "gw_guess", "next_round"}
 
     def __init__(

@@ -26,7 +26,7 @@ from app.games.una import UnaGame
 from app.games.wordle import WordleGame
 from app.games.wordsearch import WordSearchGame
 
-MAX_PLAYERS = 2
+MAX_PLAYERS = 6  # people in a room; each game has its own max_players
 CODE_ALPHABET = "".join(c for c in string.ascii_uppercase if c not in "IO")
 GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame, GuessWhoGame, PinturilloGame, CharadesGame, MurdokuGame, TriviaGame, ChessGame, BattleshipGame, DominoGame, ParquesGame, CrosswordsGame, UnaGame, GolfGame, ColonosGame, DeeperGame)}
 GAME_ACTIONS = set().union(*(cls.actions for cls in GAMES.values()))
@@ -43,7 +43,7 @@ class RoomError(Exception):
 
 
 class Room:
-    """A two-player room.
+    """A room for up to MAX_PLAYERS people (most games are for two).
 
     Games are plain classes: they receive actions, update their state and
     report whether their current phase has a time limit (`timer_key` and
@@ -135,6 +135,9 @@ class Room:
         cls = GAMES.get(msg.get("game"))
         if not cls:
             raise RoomError("Juego no disponible")
+        limit = getattr(cls, "max_players", 2)
+        if len(self.players) > limit:
+            raise RoomError(f"Este juego es para máximo {limit} jugadores y en la sala hay {len(self.players)}", code="too_many_players")
         try:
             game = cls.from_options(self.players, msg, rng=random.Random(), timings=self.timings)
         except ValueError as exc:

@@ -23,6 +23,7 @@ HOLE_CHOICES = (3, 6, 9)
 
 class GolfGame:
     name = "golf"
+    max_players = 4
     actions = {"gf_shoot", "gf_aim", "next_round"}
 
     def __init__(self, players: list[str], holes: int = 9, rng: random.Random | None = None, timings: dict | None = None):
@@ -111,8 +112,14 @@ class GolfGame:
         self.last_shot = None
         self.phase = "playing"
 
-    def other(self, player: str) -> str:
-        return next(p for p in self.players if p != player)
+    def next_shooter(self, player: str) -> str:
+        """The next player in order who still hasn't holed out (or the same one)."""
+        i = self.players.index(player)
+        for k in range(1, len(self.players) + 1):
+            p = self.players[(i + k) % len(self.players)]
+            if not self.done[p]:
+                return p
+        return player
 
     def shoot(self, player: str, angle, power) -> None:
         try:
@@ -149,8 +156,7 @@ class GolfGame:
         if all(self.done.values()):
             self._end_hole()
             return
-        rival = self.other(player)
-        self.turn = rival if not self.done[rival] else player
+        self.turn = self.next_shooter(player)
 
     def _end_hole(self) -> None:
         self.card.append({"hole": self.hole + 1, "name": self.course["name"], "par": self.course["par"], "strokes": dict(self.strokes)})

@@ -61,6 +61,7 @@ def deck() -> dict[str, list[dict]]:
 
 class DeeperGame:
     name = "deeper"
+    max_players = 2
     actions = {"dp_next", "dp_skip", "dp_save", "dp_deeper", "dp_finish", "dp_letter"}
 
     def __init__(

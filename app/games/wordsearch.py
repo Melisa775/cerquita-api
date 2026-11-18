@@ -119,6 +119,7 @@ def parse_point(raw, size: int) -> tuple[int, int]:
 
 class WordSearchGame:
     name = "wordsearch"
+    max_players = 6
     actions = {"ws_select", "ws_mark", "ws_give_up", "next_round"}
 
     def __init__(

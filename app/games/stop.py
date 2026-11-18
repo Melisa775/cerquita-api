@@ -25,6 +25,7 @@ SHARED_POINTS = 50
 
 class StopGame:
     name = "stop"
+    max_players = 6
     actions = {"stop_answers", "stop_call", "stop_toggle", "next_round"}
 
     def __init__(
