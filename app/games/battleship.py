@@ -11,10 +11,11 @@ When it ends the phase is "finished" and both fleets are revealed.
 
 Options:
   size      -> 8 or 10 cells per side (the fleet depends on the size)
-  noTouch   -> ships may not touch, not even diagonally (the classic
-               Spanish "hundir la flota" rule). With it, sinking a ship
-               marks the surrounding cells as water.
   bonus     -> a hit lets you shoot again
+
+Ships go wherever each player wants, touching or not (only inside the board
+and never on top of each other), and sinking a ship gives no free clues
+about the cells around it.
 
 The server keeps every ship's position and sends each player only their own
 data: of the other board they only know the shots they have already fired.
@@ -36,19 +37,7 @@ def ship_cells(row: int, col: int, length: int, direction: str) -> list[tuple[in
     return [(row + dr * i, col + dc * i) for i in range(length)]
 
 
-def neighbors(cells, size: int) -> set[tuple[int, int]]:
-    """Cells around a ship (including diagonals), excluding the ship itself."""
-    around = set()
-    for r, c in cells:
-        for dr in (-1, 0, 1):
-            for dc in (-1, 0, 1):
-                rr, cc = r + dr, c + dc
-                if 0 <= rr < size and 0 <= cc < size:
-                    around.add((rr, cc))
-    return around - set(cells)
-
-
-def validate_fleet(ships: list[dict], size: int, no_touch: bool) -> list[dict]:
+def validate_fleet(ships: list[dict], size: int) -> list[dict]:
     """Validate a fleet sent by a client and return it normalized."""
     fleet = {sid: length for sid, _, length in FLEETS[size]}
     if not isinstance(ships, list) or len(ships) != len(fleet):
@@ -74,15 +63,10 @@ def validate_fleet(ships: list[dict], size: int, no_touch: bool) -> list[dict]:
         result.append({"id": sid, "row": row, "col": col, "dir": direction, "length": fleet[sid], "cells": cells})
         for cell in cells:
             taken[cell] = sid
-    if no_touch:
-        for ship in result:
-            for cell in neighbors(ship["cells"], size):
-                if cell in taken and taken[cell] != ship["id"]:
-                    raise ValueError("Con esta regla los barcos no se pueden tocar")
     return result
 
 
-def random_fleet(size: int, no_touch: bool, rng: random.Random) -> list[dict]:
+def random_fleet(size: int, rng: random.Random) -> list[dict]:
     """A random valid fleet (used by tests)."""
     while True:
         placed, blocked = [], set()
@@ -101,8 +85,6 @@ def random_fleet(size: int, no_touch: bool, rng: random.Random) -> list[dict]:
             r, c, d, cells = rng.choice(options)
             placed.append({"id": sid, "row": r, "col": c, "dir": d})
             blocked |= set(cells)
-            if no_touch:
-                blocked |= neighbors(cells, size)
         if ok:
             return placed
 
@@ -116,14 +98,12 @@ class BattleshipGame:
         self,
         players: list[str],
         size: int = 10,
-        no_touch: bool = True,
         bonus: bool = True,
         rng: random.Random | None = None,
         timings: dict | None = None,
     ):
         self.players = list(players)
         self.size = size
-        self.no_touch = no_touch
         self.bonus = bonus
         self.rng = rng or random.Random()
         self.phase = "idle"
@@ -131,8 +111,6 @@ class BattleshipGame:
         self.ready: dict[str, bool] = {p: False for p in self.players}
         # shots each player RECEIVED: (row, col) -> "water" | "hit"
         self.shots: dict[str, dict[tuple[int, int], str]] = {p: {} for p in self.players}
-        # cells automatically marked as water around a sunk ship
-        self.auto_water: dict[str, set] = {p: set() for p in self.players}
         self.turn: str | None = None
         self.last_shot: dict | None = None
         self.winner: str | None = None
@@ -148,7 +126,7 @@ class BattleshipGame:
             raise ValueError("Tamaño no válido") from exc
         if size not in FLEETS:
             raise ValueError("El tablero es de 8 o de 10")
-        return cls(players, size=size, no_touch=bool(options.get("noTouch", True)), bonus=bool(options.get("bonus", True)), rng=rng)
+        return cls(players, size=size, bonus=bool(options.get("bonus", True)), rng=rng)
 
     # --- room interface -------------------------------------------------
     @property
@@ -188,7 +166,7 @@ class BattleshipGame:
     def place(self, player: str, ships) -> None:
         if self.phase != "placing":
             raise ValueError("Ya no se pueden mover los barcos")
-        self.fleets[player] = validate_fleet(ships, self.size, self.no_touch)
+        self.fleets[player] = validate_fleet(ships, self.size)
         self.ready[player] = True
         if all(self.ready.get(p) for p in self.players):
             self.turn = self.rng.choice(self.players)
@@ -215,7 +193,7 @@ class BattleshipGame:
             raise ValueError("Disparo fuera del tablero")
         target = self.opponent(player)
         cell = (row, col)
-        if cell in self.shots[target] or cell in self.auto_water[target]:
+        if cell in self.shots[target]:
             raise ValueError("Ya disparaste ahí")
         ship = self._ship_at(target, cell)
         self.stats[player]["shots"] += 1
@@ -228,10 +206,6 @@ class BattleshipGame:
             if self._sunk(target, ship):
                 result = "sunk"
                 sunk = ship["id"]
-                if self.no_touch:
-                    for around in neighbors(ship["cells"], self.size):
-                        if around not in self.shots[target]:
-                            self.auto_water[target].add(around)
         else:
             self.shots[target][cell] = "water"
         self.last_shot = {"by": player, "row": row, "col": col, "result": result, "ship": sunk}
@@ -252,7 +226,6 @@ class BattleshipGame:
         shown = [self._public_ship(s, owner) for s in ships if reveal or self._sunk(owner, s)]
         return {
             "shots": [[r, c, v] for (r, c), v in sorted(self.shots[owner].items())],
-            "autoWater": sorted([r, c] for r, c in self.auto_water[owner]),
             "ships": shown,
             "afloat": sum(1 for s in ships if not self._sunk(owner, s)),
         }
@@ -275,5 +248,5 @@ class BattleshipGame:
             "lastShot": self.last_shot,
             "winner": self.winner,
             "stats": self.stats,
-            "options": {"size": self.size, "noTouch": self.no_touch, "bonus": self.bonus},
+            "options": {"size": self.size, "bonus": self.bonus},
         }
