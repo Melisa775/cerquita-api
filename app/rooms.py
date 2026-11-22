@@ -4,6 +4,7 @@ import string
 import time
 from typing import Protocol
 
+from app.games.anzuelo import AnzueloGame
 from app.games.battleship import BattleshipGame
 from app.games.boggle import BoggleGame
 from app.games.charades import CharadesGame
@@ -29,7 +30,7 @@ from app.games.wordsearch import WordSearchGame
 
 MAX_PLAYERS = 6  # people in a room; each game has its own max_players
 CODE_ALPHABET = "".join(c for c in string.ascii_uppercase if c not in "IO")
-GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame, GuessWhoGame, PinturilloGame, CharadesGame, MurdokuGame, TriviaGame, ChessGame, BattleshipGame, DominoGame, ParquesGame, CrosswordsGame, UnaGame, GolfGame, ColonosGame, DeeperGame, MazmorrasGame)}
+GAMES = {cls.name: cls for cls in (ColorGame, StopGame, TooLateGame, BoggleGame, HangmanGame, WordleGame, WordSearchGame, GuessWhoGame, PinturilloGame, CharadesGame, MurdokuGame, TriviaGame, ChessGame, BattleshipGame, DominoGame, ParquesGame, CrosswordsGame, UnaGame, GolfGame, ColonosGame, DeeperGame, MazmorrasGame, AnzueloGame)}
 GAME_ACTIONS = set().union(*(cls.actions for cls in GAMES.values()))
 
 

@@ -4,7 +4,7 @@ import pytest
 
 from app.games.battleship import BattleshipGame, FLEETS, random_fleet, validate_fleet
 
-# Fixed 10x10 fleet on separate rows (ships don't touch)
+# Fixed 10x10 fleet on separate rows
 FLEET = [
     {"id": "carrier", "row": 0, "col": 0, "dir": "h"},
     {"id": "battleship", "row": 2, "col": 0, "dir": "h"},
@@ -19,8 +19,8 @@ class FirstRng(random.Random):
         return seq[0]
 
 
-def make(bonus=True, no_touch=True):
-    g = BattleshipGame(["Ana", "Leo"], bonus=bonus, no_touch=no_touch, rng=FirstRng(1))
+def make(bonus=True):
+    g = BattleshipGame(["Ana", "Leo"], bonus=bonus, rng=FirstRng(1))
     g.start()
     g.place("Ana", FLEET)
     g.place("Leo", FLEET)
@@ -28,33 +28,33 @@ def make(bonus=True, no_touch=True):
 
 
 def test_validation_rules():
-    assert len(validate_fleet(FLEET, 10, True)) == 5
+    assert len(validate_fleet(FLEET, 10)) == 5
     with pytest.raises(ValueError, match="todos"):
-        validate_fleet(FLEET[:4], 10, True)
+        validate_fleet(FLEET[:4], 10)
     out = [dict(s) for s in FLEET]
     out[0]["col"] = 7
     with pytest.raises(ValueError, match="fuera"):
-        validate_fleet(out, 10, True)
+        validate_fleet(out, 10)
     over = [dict(s) for s in FLEET]
     over[1]["row"] = 0
     with pytest.raises(ValueError, match="encima"):
-        validate_fleet(over, 10, True)
+        validate_fleet(over, 10)
+    # ships may touch, side by side or end to end
     touching = [dict(s) for s in FLEET]
     touching[1]["row"] = 1  # right below the carrier
-    with pytest.raises(ValueError, match="tocar"):
-        validate_fleet(touching, 10, True)
-    assert validate_fleet(touching, 10, False)
+    touching[2].update(row=1, col=4)  # right after the battleship
+    assert len(validate_fleet(touching, 10)) == 5
     dup = [dict(s) for s in FLEET]
     dup[4]["id"] = "submarine"
     with pytest.raises(ValueError):
-        validate_fleet(dup, 10, True)
+        validate_fleet(dup, 10)
 
 
 @pytest.mark.parametrize("size", [8, 10])
 def test_random_fleets_are_always_valid(size):
     rng = random.Random(4)
     for _ in range(40):
-        assert len(validate_fleet(random_fleet(size, True, rng), size, True)) == len(FLEETS[size])
+        assert len(validate_fleet(random_fleet(size, rng), size)) == len(FLEETS[size])
 
 
 def test_battle_starts_when_both_are_ready_and_ships_stay_private():
@@ -92,16 +92,16 @@ def test_without_bonus_turn_always_passes():
     assert g.turn == "Leo"
 
 
-def test_sinking_reveals_ship_and_marks_water_around():
+def test_sinking_reveals_the_ship_but_gives_no_clues_around():
     g = make()
     g.fire("Ana", 8, 0)
     g.fire("Ana", 8, 1)
     assert g.last_shot == {"by": "Ana", "row": 8, "col": 1, "result": "sunk", "ship": "destroyer"}
     view = g.snapshot("Ana")["boards"]["Leo"]
     assert [s["id"] for s in view["ships"]] == ["destroyer"] and view["afloat"] == 4
-    assert [7, 0] in view["autoWater"] and [9, 2] in view["autoWater"]
-    with pytest.raises(ValueError, match="Ya disparaste"):
-        g.fire("Ana", 9, 0)
+    assert "autoWater" not in view
+    g.fire("Ana", 9, 0)  # the cell next to the sunk ship is still a normal shot
+    assert g.last_shot["result"] == "water"
 
 
 def test_sinking_everything_wins_and_reveals_fleets():
@@ -117,8 +117,8 @@ def test_sinking_everything_wins_and_reveals_fleets():
 
 def test_options():
     rng = random.Random()
-    g = BattleshipGame.from_options(["Ana", "Leo"], {"size": 8, "noTouch": False, "bonus": False}, rng)
-    assert g.size == 8 and not g.no_touch and not g.bonus
+    g = BattleshipGame.from_options(["Ana", "Leo"], {"size": 8, "bonus": False}, rng)
+    assert g.size == 8 and not g.bonus
     with pytest.raises(ValueError):
         BattleshipGame.from_options(["Ana", "Leo"], {"size": 12}, rng)
     with pytest.raises(ValueError):
